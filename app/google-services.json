@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "538087837544",
+    "project_id": "gagyeboost",
+    "storage_bucket": "gagyeboost.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538087837544:android:379b66ceca12fd403e10dd",
+        "android_client_info": {
+          "package_name": "com.example.gagyeboost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "538087837544-dt1d49e0icj647nu61mtgnmgsf7rl4u2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gagyeboost",
+            "certificate_hash": "b334d56acbcd91a3e2a6375f48e755409097eeff"
+          }
+        },
+        {
+          "client_id": "538087837544-o2g9bdsicvk5s15q7frj39o9d3kqe66k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl1o1tqm0SJ962Bfn5Snm6a2mbqoNTxbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "538087837544-o2g9bdsicvk5s15q7frj39o9d3kqe66k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
