@@ -2,9 +2,21 @@ package com.example.gagyeboost.model.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "account_book")
+@Entity(
+    tableName = "account_book",
+    foreignKeys = [
+        ForeignKey(
+            entity = Category::class,
+            parentColumns = ["id"],
+            childColumns = ["category"],
+            onDelete = CASCADE
+        )
+    ]
+)
 data class AccountBook(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
