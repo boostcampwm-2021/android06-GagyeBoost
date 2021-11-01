@@ -30,7 +30,7 @@
             app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/sample"
-            android:contentDescription="@string/icon_image_or_emoji" />
+            android:contentDescription="@string/iv_category" />
 
         <TextView
             android:id="@+id/tv_category"

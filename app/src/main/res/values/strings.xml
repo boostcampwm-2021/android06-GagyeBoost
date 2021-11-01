@@ -12,5 +12,6 @@
     <string name="thursday">목</string>
     <string name="friday">금</string>
     <string name="saturday">토</string>
-    <string name="icon_image_or_emoji">icon image or emoji</string>
+    <string name="iv_category">icon image or emoji</string>
+    <string name="btn_add_description">add earnings or expense</string>
 </resources>
