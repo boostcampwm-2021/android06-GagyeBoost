@@ -8,11 +8,13 @@ import androidx.room.PrimaryKey
 data class Category(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id:Int=0,
+    var id: Int = 0,
 
     @ColumnInfo(name = "category_name")
-    val categoryName:String,
+    var categoryName: String,
 
     @ColumnInfo(name = "emoji")
-    val emoji:String
-)
+    var emoji: String
+) {
+    constructor() : this(0, "", "")
+}

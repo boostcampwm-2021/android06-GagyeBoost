@@ -20,35 +20,37 @@ import androidx.room.PrimaryKey
 data class AccountBook(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Int = 0,
+    var id: Int = 0,
 
     @ColumnInfo(name = "money_type")
-    val moneyType: UByte,
+    var moneyType: Byte,
 
-    @ColumnInfo(name="money")
-    val money:Int,
+    @ColumnInfo(name = "money")
+    var money: Int,
 
     @ColumnInfo(name = "category")
-    val category: Int,
+    var category: Int,
 
     @ColumnInfo(name = "latitude")
-    val latitude: Float,
+    var latitude: Float,
 
     @ColumnInfo(name = "longitude")
-    val longitude: Float,
+    var longitude: Float,
 
     @ColumnInfo(name = "address")
-    val address: String,
+    var address: String,
 
     @ColumnInfo(name = "content")
-    val content: String,
+    var content: String,
 
     @ColumnInfo(name = "year")
-    val year: Int,
+    var year: Int,
 
     @ColumnInfo(name = "month")
-    val month: Int,
+    var month: Int,
 
     @ColumnInfo(name = "day")
-    val day: Int
-)
+    var day: Int
+) {
+    constructor() : this(0, 0.toByte(), 0, 0, 0f, 0f, "", "", 0, 0, 0)
+}
