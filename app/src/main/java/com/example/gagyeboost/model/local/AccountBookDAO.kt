@@ -1,15 +1,12 @@
 package com.example.gagyeboost.model.local
 
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import kotlin.math.sqrt
 
+@Dao
 interface AccountBookDAO {
-
     //선택한 일자의 모든 데이터
     @Query("SELECT * FROM account_book WHERE year=:year AND month=:month AND day=:day")
     fun getDayData(year: Int, month: Int, day: Int): List<AccountBook>
@@ -28,14 +25,21 @@ interface AccountBookDAO {
     @Insert
     fun addCategoryData(category: Category)
 
-    @Delete
-    fun deleteCategoryData(category: Category)
+    @Query("DELETE FROM category WHERE  category_name=:categoryName")
+    fun deleteCategoryData(categoryName: String)
+
+    //카테고리 이름으로 존재하는지 검사
+    @Query("SELECT EXISTS (SELECT * FROM category WHERE category_name=:categoryName) as isExist")
+    fun isExistCategoryName(categoryName: String): Boolean
 
     @Insert
     fun addAccountBookData(accountBook: AccountBook)
 
     @Update
     fun updateAccountBookData(accountBook: AccountBook)
+
+    @Query("DELETE FROM account_book WHERE id=:id")
+    fun deleteAccountBookData(id: Int)
 
     //선택한 월의 모든 데이터
     @Query("SELECT * FROM account_book WHERE year=:year AND month=:month")
