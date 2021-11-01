@@ -18,19 +18,16 @@ abstract class AccountBookDatabase : RoomDatabase() {
     abstract fun accountBookDAO(): AccountBookDAO
 
     companion object {
-        private var INSTANCE: AccountBookDatabase? = null
+        private var instance: AccountBookDatabase? = null
 
-        fun getInstance(context: Context): AccountBookDatabase? {
-            if (INSTANCE == null) {
-                synchronized(AccountBookDatabase::class) {
-                    INSTANCE = Room.databaseBuilder(
-                        context.applicationContext,
-                        AccountBookDatabase::class.java,
-                        "accountBookDatabase"
-                    ).build()
-                }
+        fun getInstance(context: Context): AccountBookDatabase =
+            instance ?: synchronized(this) {
+                instance ?: buildDatabase(context).also { instance }
             }
-            return INSTANCE
-        }
+
+        private fun buildDatabase(context: Context) = Room.databaseBuilder(
+            context,
+            AccountBookDatabase::class.java, "accountBookDatabase"
+        ).build()
     }
 }
