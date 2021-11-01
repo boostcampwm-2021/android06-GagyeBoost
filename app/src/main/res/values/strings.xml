@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">GagyeBoost</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">홈</string>
+    <string name="statistics">통계</string>
+    <string name="map">지도</string>
+    <string name="search">검색</string>
 </resources>
