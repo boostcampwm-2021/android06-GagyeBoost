@@ -6,4 +6,5 @@
     <string name="statistics">통계</string>
     <string name="map">지도</string>
     <string name="search">검색</string>
+    <string name="temp_number">00</string>
 </resources>
