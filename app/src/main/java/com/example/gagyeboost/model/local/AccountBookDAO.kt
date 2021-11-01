@@ -20,7 +20,7 @@ interface AccountBookDAO {
     fun getMonthExpense(year: Int, month: Int): Int
 
     @Query("SELECT * FROM category")
-    fun getCategoryData(): List<Category>
+    fun getCategoryAllData(): List<Category>
 
     @Insert
     fun addCategoryData(category: Category)
@@ -31,6 +31,9 @@ interface AccountBookDAO {
     //카테고리 이름으로 존재하는지 검사
     @Query("SELECT EXISTS (SELECT * FROM category WHERE category_name=:categoryName) as isExist")
     fun isExistCategoryName(categoryName: String): Boolean
+
+    @Query("SELECT * FROM category WHERE id=:id")
+    fun getCategoryData(id:Int): Category
 
     @Insert
     fun addAccountBookData(accountBook: AccountBook)
