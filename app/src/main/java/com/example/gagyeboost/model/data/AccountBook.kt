@@ -22,8 +22,11 @@ data class AccountBook(
     @ColumnInfo(name = "id")
     val id: Int = 0,
 
-    @ColumnInfo(name = "money")
-    val money: UByte,
+    @ColumnInfo(name = "money_type")
+    val moneyType: UByte,
+
+    @ColumnInfo(name="money")
+    val money:Int,
 
     @ColumnInfo(name = "category")
     val category: Int,
