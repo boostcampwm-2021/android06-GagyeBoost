@@ -10,6 +10,9 @@ data class Category(
     @ColumnInfo(name = "id")
     val id:Int=0,
 
+    @ColumnInfo(name = "category_name")
+    val categoryName:String,
+
     @ColumnInfo(name = "emoji")
     val emoji:String
 )
