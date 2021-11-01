@@ -2,4 +2,15 @@
     <string name="app_name">GagyeBoost</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="earnings">수입</string>
+    <string name="expense">지출</string>
+    <string name="balance">현금 잔액</string>
+    <string name="sunday">일</string>
+    <string name="monday">월</string>
+    <string name="tuesday">화</string>
+    <string name="wednesday">수</string>
+    <string name="thursday">목</string>
+    <string name="friday">금</string>
+    <string name="saturday">토</string>
+    <string name="icon_image_or_emoji">icon image or emoji</string>
 </resources>

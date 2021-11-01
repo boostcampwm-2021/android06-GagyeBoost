@@ -1,14 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        tools:context=".ui.home.HomeFragment">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tv_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#C13EA142"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="11월" />
+
+        <LinearLayout
+            android:id="@+id/linear_number_picker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_month">
+
+            <NumberPicker
+                android:id="@+id/np_year"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="10월" />
+
+            <NumberPicker
+                android:id="@+id/np_month"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="10월" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_50percent_vertical"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_start_vertical"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="10dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_end_vertical"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="10dp" />
+
+        <TextView
+            android:id="@+id/tv_earnings_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/earnings"
+            android:textColor="@color/gray1"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_earnings_body"
+            app:layout_constraintRight_toLeftOf="@id/tv_earnings_body"
+            app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+            app:layout_constraintTop_toTopOf="@+id/tv_earnings_body" />
+
+        <TextView
+            android:id="@+id/tv_earnings_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:textColor="@color/earnings_text_color"
+            android:textSize="20sp"
+            app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_month"
+            tools:text="0원" />
+
+        <TextView
+            android:id="@+id/tv_expense_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/expense"
+            android:textColor="@color/gray1"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_expense_body"
+            app:layout_constraintStart_toStartOf="@id/gl_50percent_vertical"
+            app:layout_constraintTop_toTopOf="@+id/tv_expense_body" />
+
+        <TextView
+            android:id="@+id/tv_expense_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/expense_text_color"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_month"
+            tools:text="120,000원" />
+
+        <TextView
+            android:id="@+id/tv_balance_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/balance"
+            android:textColor="@color/gray1"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_balance_body"
+            app:layout_constraintRight_toLeftOf="@id/tv_earnings_body"
+            app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+            app:layout_constraintTop_toTopOf="@+id/tv_balance_body" />
+
+        <TextView
+            android:id="@+id/tv_balance_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:textColor="@color/gray3"
+            android:textSize="20sp"
+            app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_earnings_body"
+            tools:text="-120,000원" />
+
+        <TextView
+            android:id="@+id/tv_sun"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/sunday"
+            app:layout_constraintEnd_toStartOf="@+id/tv_mon"
+            app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+
+        <TextView
+            android:id="@+id/tv_mon"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/monday"
+            app:layout_constraintEnd_toStartOf="@+id/tv_tue"
+            app:layout_constraintStart_toEndOf="@+id/tv_sun"
+            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+
+        <TextView
+            android:id="@+id/tv_tue"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/tuesday"
+            app:layout_constraintEnd_toStartOf="@+id/tv_wen"
+            app:layout_constraintStart_toEndOf="@+id/tv_mon"
+            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+
+        <TextView
+            android:id="@+id/tv_wen"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/wednesday"
+            app:layout_constraintEnd_toStartOf="@+id/tv_thu"
+            app:layout_constraintStart_toEndOf="@+id/tv_tue"
+            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+
+        <TextView
+            android:id="@+id/tv_thu"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/thursday"
+            app:layout_constraintEnd_toStartOf="@+id/tv_fri"
+            app:layout_constraintStart_toEndOf="@+id/tv_wen"
+            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+
+        <TextView
+            android:id="@+id/tv_fri"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/friday"
+            app:layout_constraintEnd_toStartOf="@+id/tv_sat"
+            app:layout_constraintStart_toEndOf="@+id/tv_thu"
+            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+
+        <TextView
+            android:id="@+id/tv_sat"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/saturday"
+            app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+            app:layout_constraintStart_toEndOf="@+id/tv_fri"
+            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+
+
+        <GridView
+            android:id="@+id/gv_calender"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+            app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_sun" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_detail"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gv_calender"
+            tools:listitem="@layout/item_rv_detail" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
