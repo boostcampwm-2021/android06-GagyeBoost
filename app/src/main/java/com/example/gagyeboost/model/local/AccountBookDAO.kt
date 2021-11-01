@@ -60,15 +60,19 @@ interface AccountBookDAO {
         categoryList: List<Int>,
         startMoney: Int = 0,
         endMoney: Int = (1 shl 30)
-    )
+    ): List<AccountBook>
 
     /*
     //선택한 월과 위치범위에 따른 데이터(클러스터링에서 사용?)
     @Query("SELECT *FROM account_book WHERE year=:year AND month=:month AND getDist(:center,latitude,longitude)<=:radius")
-    fun getMonthPositionData(year: Int, month: Int, center: Pair<Float, Float>, radius: Float)
+    fun getMonthPositionData(
+        year: Int,
+        month: Int,
+        center: Pair<Float, Float>,
+        radius: Float
+    ): List<AccountBook>
 
     private fun getDist(center: Pair<Float, Float>, latitude: Float, longitude: Float) =
         sqrt((center.first - latitude) * (center.first - latitude) + (center.second - longitude) * (center.second - longitude))
      */
-
 }
