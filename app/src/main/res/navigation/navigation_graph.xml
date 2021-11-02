@@ -9,7 +9,11 @@
         android:id="@+id/homeFragment"
         android:name="com.example.gagyeboost.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_addFragment"
+            app:destination="@id/addFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.example.gagyeboost.ui.map.MapFragment"
@@ -25,4 +29,9 @@
         android:name="com.example.gagyeboost.ui.statstics.StatisticsFragment"
         android:label="fragment_statistics"
         tools:layout="@layout/fragment_statistics" />
+    <fragment
+        android:id="@+id/addFragment"
+        android:name="com.example.gagyeboost.ui.add.AddFragment"
+        android:label="fragment_add"
+        tools:layout="@layout/fragment_add" />
 </navigation>

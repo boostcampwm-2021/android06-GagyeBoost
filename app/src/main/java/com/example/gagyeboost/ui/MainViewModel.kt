@@ -20,6 +20,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     private val _result = MutableLiveData<String>()
     val result get() = _result
 
+    val money = MutableLiveData<String>("0")
+
     private val formatter = DecimalFormat("###,###")
 
     private val dateFormatter = SimpleDateFormat("yyyy MM dd", Locale.getDefault())
@@ -54,4 +56,6 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
             _result.postValue(result)
         }
     }
+
+    fun getTodayString() = date.joinToString("/") { it.toString() }
 }
