@@ -21,5 +21,6 @@
     <string name="search">검색</string>
     <string name="temp_number">00</string>
     <string name="won">₩</string>
-
+    <string name="history">내역</string>
+    
 </resources>

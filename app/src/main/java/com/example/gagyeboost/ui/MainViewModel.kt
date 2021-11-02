@@ -57,5 +57,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun getTodayString() = date.joinToString("/") { it.toString() }
+    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
+
+    fun getTodayString() = date.joinToString("/")
 }
