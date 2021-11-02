@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.home
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -9,10 +10,12 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentHomeBinding
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
+    private val homeViewModel: HomeViewModel by viewModel()
     private val viewModel by sharedViewModel<MainViewModel>()
 
     private val customCalendarAdapter = CustomCalendarAdapter {
@@ -23,6 +26,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         initView()
+
+        binding.tvMonth.setOnClickListener {
+            val dialog = NumberPickerDialog(binding.root.context)
+            dialog.window?.setGravity(Gravity.TOP)
+            dialog.show()
+        }
         viewModel.getMonthIncome()
         viewModel.getMonthExpense()
         viewModel.setTotalMoney()
