@@ -3,12 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.motion.widget.MotionLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutDescription="@xml/fragment_home_xml_constraintlayout_scene"
-        tools:context=".ui.home.HomeFragment">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv_month"
@@ -23,33 +21,7 @@
             android:textStyle="bold"
             app:layout_constraintBaseline_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="11월" />
-
-        <LinearLayout
-            android:id="@+id/linear_number_picker"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/white"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_month">
-
-            <NumberPicker
-                android:id="@+id/np_year"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <NumberPicker
-                android:id="@+id/np_month"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-        </LinearLayout>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/gl_50percent_vertical"
@@ -92,8 +64,7 @@
             android:textColor="@color/earnings_text_color"
             android:textSize="20sp"
             app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
-            app:layout_constraintTop_toBottomOf="@id/tv_month"
-            tools:text="0원" />
+            app:layout_constraintTop_toBottomOf="@id/tv_month" />
 
         <TextView
             android:id="@+id/tv_expense_title"
@@ -114,8 +85,7 @@
             android:textColor="@color/expense_text_color"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
-            app:layout_constraintTop_toBottomOf="@id/tv_month"
-            tools:text="120,000원" />
+            app:layout_constraintTop_toBottomOf="@id/tv_month" />
 
         <TextView
             android:id="@+id/tv_balance_title"
@@ -138,8 +108,7 @@
             android:textColor="@color/gray3"
             android:textSize="20sp"
             app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
-            app:layout_constraintTop_toBottomOf="@id/tv_earnings_body"
-            tools:text="-120,000원" />
+            app:layout_constraintTop_toBottomOf="@id/tv_earnings_body" />
 
         <TextView
             android:id="@+id/tv_sun"
@@ -178,11 +147,13 @@
 
         <androidx.constraintlayout.helper.widget.Flow
             android:id="@+id/flow_day"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             app:constraint_referenced_ids="tv_sun, tv_mon, tv_tue, tv_wed, tv_thu, tv_fri, tv_sat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
 
         <View
@@ -228,5 +199,5 @@
             app:srcCompat="@drawable/ic_baseline_add_24"
             app:tint="@color/white" />
 
-    </androidx.constraintlayout.motion.widget.MotionLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
