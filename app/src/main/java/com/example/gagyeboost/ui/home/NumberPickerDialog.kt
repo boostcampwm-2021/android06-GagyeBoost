@@ -4,14 +4,13 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.NumberPicker
 import androidx.databinding.DataBindingUtil
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.DialogNumberPickerBinding
 import java.util.*
 
-class NumberPickerDialog(context: Context) : AlertDialog(context), View.OnClickListener {
+class NumberPickerDialog(context: Context) : AlertDialog(context) {
 
     lateinit var binding: DialogNumberPickerBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,9 +46,5 @@ class NumberPickerDialog(context: Context) : AlertDialog(context), View.OnClickL
             maxValue = 12
             value = currentMonth
         }
-    }
-
-    override fun onClick(v: View?) {
-        // TODO 확인, 취소 클릭 시 동작
     }
 }
