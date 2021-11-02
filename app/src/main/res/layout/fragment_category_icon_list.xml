@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.categoryControl.UpdateCategoryFragment">
+    tools:context=".ui.home.categoryControl.CategoryIconListFragment">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_updateCategoryList"
+        android:id="@+id/app_bar_categoryIconList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,15 +20,16 @@
             android:background="@color/green">
 
             <ImageView
-                android:id="@+id/btn_updateCategoryBack"
+                android:id="@+id/btn_categoryIconListBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_baseline_keyboard_backspace_24" />
 
             <TextView
-                android:id="@+id/tv_updateCategoryTitle"
+                android:id="@+id/tv_categoryIconListTitle"
                 style="@style/CategoryControlTitle"
-                android:text="@string/update" />
+                android:text="@string/icon_select"
+                />
         </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>

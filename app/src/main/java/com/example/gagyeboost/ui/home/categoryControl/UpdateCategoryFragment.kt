@@ -1,4 +1,4 @@
-package com.example.gagyeboost.ui.home.categoryCRUD
+package com.example.gagyeboost.ui.home.categoryControl
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
