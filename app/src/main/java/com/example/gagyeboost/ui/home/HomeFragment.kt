@@ -12,9 +12,20 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val viewModel: HomeViewModel by viewModel()
-    private val customCalendarAdapter = CustomCalendarAdapter {
+    private val calendar = CustomCalendar()
+    private val customCalendarAdapter = CustomCalendarAdapter(calendar) {
         Toast.makeText(requireContext(), it + "CLICKED", Toast.LENGTH_SHORT).show()
     }
+    private val dateItemList = mutableListOf<DateItem>()
+
+    // 임시로 customCalendarAdapter 데이터 submit
+    init {
+        calendar.datesInMonth.forEach {
+            dateItemList.add(DateItem((0..10000).random(), (0..10000).random(), it, 2021, 10))
+        }
+    }
+
+
     private lateinit var dialog: NumberPickerDialog
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,6 +70,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 )
             )
         }
+        customCalendarAdapter.submitList(dateItemList)
     }
 
     override fun onStop() {

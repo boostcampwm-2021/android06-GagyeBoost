@@ -5,21 +5,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.databinding.ItemDateBinding
 import java.text.DecimalFormat
 
-class CustomCalendarAdapter(private val itemClickListener: (String) -> Unit) :
-    RecyclerView.Adapter<CustomCalendarAdapter.DateViewHolder>() {
-    private val calendar = CustomCalendar()
-    private val dateItemList = mutableListOf<DateItem>()
-
-    init {
-        calendar.datesInMonth.forEach {
-            dateItemList.add(DateItem((0..10000).random(), (0..10000).random(), it))
-        }
-    }
+class CustomCalendarAdapter(
+    val calendar: CustomCalendar,
+    private val itemClickListener: (String) -> Unit
+) : ListAdapter<DateItem, CustomCalendarAdapter.DateViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DateViewHolder {
         return DateViewHolder(
@@ -32,24 +28,27 @@ class CustomCalendarAdapter(private val itemClickListener: (String) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: DateViewHolder, position: Int) {
-        val date = dateItemList[position].date.toString()
         val layoutParams = GridLayoutManager.LayoutParams(holder.itemView.layoutParams)
         layoutParams.height = layoutParams.width
 
-        with(holder) {
-            bind(dateItemList[position])
-            itemView.setOnClickListener { itemClickListener.invoke(date) }
-            itemView.requestLayout()
-        }
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = dateItemList.size
 
     inner class DateViewHolder(private val binding: ItemDateBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         val dec = DecimalFormat("#,###")
+        var currentItem: DateItem? = null
+
+        init {
+            itemView.setOnClickListener {
+                currentItem?.let { itemClickListener.invoke(it.date.toString()) }
+            }
+            itemView.requestLayout()
+        }
 
         fun bind(dateItem: DateItem) {
+            currentItem = dateItem
             setDate(dateItem.date.toString())
             setMoney(binding.tvEarnings, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
@@ -82,5 +81,16 @@ class CustomCalendarAdapter(private val itemClickListener: (String) -> Unit) :
                 tvDate.text = date
             }
         }
+    }
+
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<DateItem>() {
+            override fun areItemsTheSame(oldItem: DateItem, newItem: DateItem) =
+                oldItem.year == newItem.year && oldItem.month == newItem.month && oldItem.date == newItem.date
+
+            override fun areContentsTheSame(oldItem: DateItem, newItem: DateItem) =
+                oldItem == newItem
+        }
+
     }
 }
