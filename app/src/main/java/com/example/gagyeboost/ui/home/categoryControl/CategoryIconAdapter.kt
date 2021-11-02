@@ -9,15 +9,15 @@ import com.example.gagyeboost.databinding.ItemCategoryIconBinding
 import com.example.gagyeboost.model.data.Category
 
 class CategoryIconAdapter(
-    private val onClickListener: (Int) -> Unit
-) : ListAdapter<Category, CategoryIconAdapter.ViewHolder>(CategoryDiffUtil()) {
+    private val onClickListener: (String) -> Unit
+) : ListAdapter<String, CategoryIconAdapter.ViewHolder>(CategoryDiffUtil()) {
 
     inner class ViewHolder(private val binding: ItemCategoryIconBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: Category) {
-            binding.tvIcon.text = data.emoji
+        fun bind(data: String) {
+            binding.tvIcon.text = data
             binding.tvIcon.setOnClickListener {
-                onClickListener(data.id)
+                onClickListener(data)
             }
         }
     }
@@ -33,10 +33,7 @@ class CategoryIconAdapter(
     }
 }
 
-private class CategoryDiffUtil : DiffUtil.ItemCallback<Category>() {
-    override fun areItemsTheSame(oldItem: Category, newItem: Category) = oldItem.id == newItem.id
-
-
-    override fun areContentsTheSame(oldItem: Category, newItem: Category) = oldItem == newItem
-
+private class CategoryDiffUtil : DiffUtil.ItemCallback<String>() {
+    override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+    override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
 }

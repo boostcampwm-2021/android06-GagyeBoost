@@ -6,42 +6,39 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentCategoryIconListBinding
-import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CategoryIconListFragment :
     BaseFragment<FragmentCategoryIconListBinding>(R.layout.fragment_category_icon_list) {
-    private val categoryIconAdapter = CategoryIconAdapter {
-        //TODO ViewModel에 icon data 변경
-    }
+    private val viewModel: MainViewModel by viewModel()
     private lateinit var navController: NavController
-
+    private val categoryIconAdapter = CategoryIconAdapter {
+        viewModel.setSelectedIcon(it)
+        navController.popBackStack()
+    }
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         init()
     }
 
-    private fun init(){
+    private fun init() {
         binding.rvIconList.adapter = categoryIconAdapter
         categoryIconAdapter.submitList(testData)
-        binding.btnCategoryIconListBack.setOnClickListener{
+        binding.btnCategoryIconListBack.setOnClickListener {
             navController.popBackStack()
         }
     }
 }
 
 private val testData = listOf(
-    Category(id = 1, categoryName = "식비", emoji = "\uD83C\uDF5A"),
-    Category(id = 2, categoryName = "여가", emoji = "\uD83C\uDFBE"),
-    Category(id = 3, categoryName = "교통", emoji = "\uD83D\uDE8C"),
-    Category(id = 4, categoryName = "식비", emoji = "\uD83C\uDF5A"),
-    Category(id = 5, categoryName = "여가", emoji = "\uD83C\uDFBE"),
-    Category(id = 6, categoryName = "교통", emoji = "\uD83D\uDE8C"),
-    Category(id = 7, categoryName = "식비", emoji = "\uD83C\uDF5A"),
-    Category(id = 8, categoryName = "여가", emoji = "\uD83C\uDFBE"),
-    Category(id = 9, categoryName = "교통", emoji = "\uD83D\uDE8C"),
-    Category(id = 10, categoryName = "식비", emoji = "\uD83C\uDF5A"),
-    Category(id = 12, categoryName = "여가", emoji = "\uD83C\uDFBE"),
-    Category(id = 13, categoryName = "교통", emoji = "\uD83D\uDE8C")
+    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
+    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
+    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
+    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
+    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
+    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
 )
