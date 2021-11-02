@@ -12,8 +12,7 @@ class HomeViewModel(val repository: Repository): ViewModel() {
     val month = Transformations.map(_month) { "${it}월" }
 
     init {
-        val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
-        setMonth(currentMonth)
+        setMonth(Calendar.getInstance().get(Calendar.MONTH))
     }
 
     fun setMonth(month: Int) {
