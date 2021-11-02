@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.databinding.ItemDateBinding
 import java.text.DecimalFormat
+import java.util.*
 
 class CustomCalendarAdapter(
     val calendar: CustomCalendar,
@@ -28,9 +28,6 @@ class CustomCalendarAdapter(
     }
 
     override fun onBindViewHolder(holder: DateViewHolder, position: Int) {
-        val layoutParams = GridLayoutManager.LayoutParams(holder.itemView.layoutParams)
-        layoutParams.height = layoutParams.width
-
         holder.bind(getItem(position))
     }
 
@@ -38,31 +35,34 @@ class CustomCalendarAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         val dec = DecimalFormat("#,###")
-        var currentItem: DateItem? = null
+        private var currentItem: DateItem? = null
+        private val cal = Calendar.getInstance()
+        private val currentYear = cal.get(Calendar.YEAR)
+        private val currentMonth = cal.get(Calendar.MONTH)
+        private val currentDate = cal.get(Calendar.DATE)
 
         init {
             itemView.setOnClickListener {
                 currentItem?.let { itemClickListener.invoke(it.date.toString()) }
             }
-            itemView.requestLayout()
         }
 
         fun bind(dateItem: DateItem) {
             currentItem = dateItem
-            setDate(dateItem.date.toString())
+            setDate(dateItem)
             setMoney(binding.tvEarnings, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
         }
 
-        private fun setMoney(textView: TextView, money: Int) {
-            if (money == 0) {
+        private fun setMoney(textView: TextView, money: Int?) {
+            if (money == null) {
                 textView.isGone = true
             } else {
                 textView.text = dec.format(money)
             }
         }
 
-        private fun setDate(date: String) {
+        private fun setDate(dateItem: DateItem) {
             with(binding) {
 
                 when (adapterPosition % CustomCalendar.DAYS_OF_WEEK) {
@@ -78,7 +78,15 @@ class CustomCalendarAdapter(
                 } else {
                     tvDate.alpha = 1f
                 }
-                tvDate.text = date
+
+                if (currentYear == dateItem.year && currentMonth == dateItem.month && currentDate == dateItem.date) {
+                    tvDate.setTextColor(Color.RED)
+                    itemView.setBackgroundColor(Color.parseColor("#e6e6e6"))
+                } else {
+                    tvDate.setTextColor(Color.parseColor("#676d6e"))
+                    itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                }
+                tvDate.text = dateItem.date.toString()
             }
         }
     }
