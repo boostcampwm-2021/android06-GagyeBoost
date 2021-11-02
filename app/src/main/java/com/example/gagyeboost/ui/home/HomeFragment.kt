@@ -1,15 +1,16 @@
 package com.example.gagyeboost.ui.home
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.example.gagyeboost.databinding.FragmentHomeBinding
-import com.example.gagyeboost.ui.base.BaseFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.gagyeboost.R
+import com.example.gagyeboost.databinding.FragmentHomeBinding
+import com.example.gagyeboost.ui.MainViewModel
+import com.example.gagyeboost.ui.base.BaseFragment
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
@@ -19,34 +20,36 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val customCalendarAdapter = CustomCalendarAdapter {
         Toast.makeText(requireContext(), it + "CLICKED", Toast.LENGTH_SHORT).show()
     }
+    private lateinit var dialog: NumberPickerDialog
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         initView()
-
-        binding.tvMonth.setOnClickListener {
-            setDialog()
-        }
+        setDialog()
     }
 
     private fun setDialog() {
 
-        val dialog = NumberPickerDialog(binding.root.context)
-        dialog.window?.setGravity(Gravity.TOP)
-        dialog.show()
+        binding.tvYearAndMonth.setOnClickListener {
+            homeViewModel.startDialog(dialog)
 
-        dialog.setOnCancelListener {
-            viewModel.setYear(dialog.binding.npYear.value)
-            viewModel.setMonth(dialog.binding.npMonth.value)
-        }
-        dialog.binding.tvAgree.setOnClickListener {
-            viewModel.setYear(dialog.binding.npYear.value)
-            viewModel.setMonth(dialog.binding.npMonth.value)
-            dialog.dismiss()
-        }
-        dialog.binding.tvCancel.setOnClickListener {
-            dialog.dismiss()
+            dialog.setOnCancelListener {
+                homeViewModel.setYearAndMonth(
+                    dialog.binding.npYear.value,
+                    dialog.binding.npMonth.value
+                )
+            }
+            dialog.binding.tvAgree.setOnClickListener {
+                homeViewModel.setYearAndMonth(
+                    dialog.binding.npYear.value,
+                    dialog.binding.npMonth.value
+                )
+                dialog.dismiss()
+            }
+            dialog.binding.tvCancel.setOnClickListener {
+                dialog.dismiss()
+            }
         }
         viewModel.getMonthIncome()
         viewModel.getMonthExpense()
@@ -57,7 +60,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun initView() {
-        binding.homeViewModel = viewModel
+        dialog = NumberPickerDialog(binding.root.context)
+        binding.homeViewModel = homeViewModel
         with(binding.rvCalendar) {
             adapter = customCalendarAdapter
             addItemDecoration(
@@ -73,5 +77,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 )
             )
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        dialog.dismiss()
     }
 }
