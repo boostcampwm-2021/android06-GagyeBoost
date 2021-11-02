@@ -144,69 +144,67 @@
         <TextView
             android:id="@+id/tv_sun"
             style="@style/CalenderWeekTextStyle"
-            android:text="@string/sunday"
-            app:layout_constraintEnd_toStartOf="@+id/tv_mon"
-            app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
-            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+            android:text="@string/sunday" />
 
         <TextView
             android:id="@+id/tv_mon"
             style="@style/CalenderWeekTextStyle"
-            android:text="@string/monday"
-            app:layout_constraintEnd_toStartOf="@+id/tv_tue"
-            app:layout_constraintStart_toEndOf="@+id/tv_sun"
-            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+            android:text="@string/monday" />
 
         <TextView
             android:id="@+id/tv_tue"
             style="@style/CalenderWeekTextStyle"
-            android:text="@string/tuesday"
-            app:layout_constraintEnd_toStartOf="@+id/tv_wen"
-            app:layout_constraintStart_toEndOf="@+id/tv_mon"
-            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+            android:text="@string/tuesday" />
 
         <TextView
-            android:id="@+id/tv_wen"
+            android:id="@+id/tv_wed"
             style="@style/CalenderWeekTextStyle"
-            android:text="@string/wednesday"
-            app:layout_constraintEnd_toStartOf="@+id/tv_thu"
-            app:layout_constraintStart_toEndOf="@+id/tv_tue"
-            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+            android:text="@string/wednesday" />
 
         <TextView
             android:id="@+id/tv_thu"
             style="@style/CalenderWeekTextStyle"
-            android:text="@string/thursday"
-            app:layout_constraintEnd_toStartOf="@+id/tv_fri"
-            app:layout_constraintStart_toEndOf="@+id/tv_wen"
-            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+            android:text="@string/thursday" />
 
         <TextView
             android:id="@+id/tv_fri"
             style="@style/CalenderWeekTextStyle"
-            android:text="@string/friday"
-            app:layout_constraintEnd_toStartOf="@+id/tv_sat"
-            app:layout_constraintStart_toEndOf="@+id/tv_thu"
-            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+            android:text="@string/friday" />
 
         <TextView
             android:id="@+id/tv_sat"
             style="@style/CalenderWeekTextStyle"
-            android:text="@string/saturday"
-            app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
-            app:layout_constraintStart_toEndOf="@+id/tv_fri"
+            android:text="@string/saturday" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal"
+            app:constraint_referenced_ids="tv_sun, tv_mon, tv_tue, tv_wed, tv_thu, tv_fri, tv_sat"
             app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_calender"
+        <View
+            android:id="@+id/view_line_1"
             android:layout_width="0dp"
-            android:layout_height="300dp"
+            android:layout_height="1dp"
             android:layout_marginTop="3dp"
+            android:background="@color/gray2"
             app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
             app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
-            app:layout_constraintTop_toBottomOf="@id/tv_sun"
-            app:spanCount="7" />
+            app:layout_constraintTop_toBottomOf="@id/flow_day" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_calendar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_line_1"
+            app:spanCount="7"
+            tools:listitem="item_date" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_detail"
@@ -215,7 +213,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_calender"
+            app:layout_constraintTop_toBottomOf="@id/rv_calendar"
             tools:listitem="@layout/item_rv_detail" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -229,7 +227,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_baseline_add_24"
             app:tint="@color/white" />
-
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>
