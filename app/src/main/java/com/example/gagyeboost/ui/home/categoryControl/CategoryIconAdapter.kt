@@ -9,7 +9,6 @@ import com.example.gagyeboost.databinding.ItemCategoryIconBinding
 import com.example.gagyeboost.model.data.Category
 
 class CategoryIconAdapter(
-    private val categoryList: List<Category>,
     private val onClickListener: (Int) -> Unit
 ) : ListAdapter<Category, CategoryIconAdapter.ViewHolder>(CategoryDiffUtil()) {
 
@@ -30,7 +29,7 @@ class CategoryIconAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(categoryList[position])
+        holder.bind(getItem(position))
     }
 }
 
