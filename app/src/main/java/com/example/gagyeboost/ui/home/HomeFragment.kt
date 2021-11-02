@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentHomeBinding
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
@@ -25,10 +23,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 임시로 customCalendarAdapter 데이터 submit
     init {
         calendar.datesInMonth.forEach {
-            dateItemList.add(DateItem((0..10000).random(), (0..10000).random(), it, 2021, 10))
+            dateItemList.add(DateItem(null, (0..10000).random(), it, 2021, 10))
         }
     }
-
 
     private lateinit var dialog: NumberPickerDialog
 
@@ -70,22 +67,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun initView() {
-        dialog = NumberPickerDialog(binding.root.context)
         binding.homeViewModel = homeViewModel
+        dialog = NumberPickerDialog(binding.root.context)
         with(binding.rvCalendar) {
             adapter = customCalendarAdapter
-            addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.HORIZONTAL
-                )
-            )
-            addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.VERTICAL
-                )
-            )
         }
         customCalendarAdapter.submitList(dateItemList)
     }
