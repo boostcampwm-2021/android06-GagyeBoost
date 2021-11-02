@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.databinding.ItemDateBinding
 
@@ -30,9 +31,15 @@ class CustomCalendarAdapter(private val itemClickListener: (String) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: DateViewHolder, position: Int) {
-        holder.bind(dateItemList[position])
         val date = dateItemList[position].date.toString()
-        holder.itemView.setOnClickListener { itemClickListener.invoke(date) }
+        val layoutParams = GridLayoutManager.LayoutParams(holder.itemView.layoutParams)
+        layoutParams.height = layoutParams.width
+
+        with(holder) {
+            bind(dateItemList[position])
+            itemView.setOnClickListener { itemClickListener.invoke(date) }
+            itemView.requestLayout()
+        }
     }
 
     override fun getItemCount() = dateItemList.size
@@ -48,14 +55,14 @@ class CustomCalendarAdapter(private val itemClickListener: (String) -> Unit) :
                     0 -> tvExpense.isGone = true
                     else -> {
                         tvExpense.isVisible = true
-                        tvExpense.text = "-" + dateItem.expense.toString()
+                        tvExpense.text = dateItem.expense.toString()
                     }
                 }
                 when (dateItem.income) {
-                    0 -> tvIncome.isGone = true
+                    0 -> tvEarnings.isGone = true
                     else -> {
-                        tvIncome.isVisible = true
-                        tvIncome.text = "+" + dateItem.income.toString()
+                        tvEarnings.isVisible = true
+                        tvEarnings.text = dateItem.income.toString()
                     }
                 }
             }
