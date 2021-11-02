@@ -4,9 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.gagyeboost.ui.home.HomeViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,20 +20,20 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tv_month"
+            android:id="@+id/tv_year_and_month"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="#C13EA142"
-            android:gravity="center"
+            android:background="@color/green"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            android:gravity="center"
+            android:text="@{viewModel.yearAndMonth}"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="@{viewModel.month}"
-            app:layout_constraintBaseline_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/gl_50percent_vertical"
@@ -71,7 +76,7 @@
             android:textColor="@color/earnings_text_color"
             android:textSize="20sp"
             app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
-            app:layout_constraintTop_toBottomOf="@id/tv_month" />
+            app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
 
         <TextView
             android:id="@+id/tv_expense_title"
@@ -92,7 +97,7 @@
             android:textColor="@color/expense_text_color"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
-            app:layout_constraintTop_toBottomOf="@id/tv_month" />
+            app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
 
         <TextView
             android:id="@+id/tv_balance_title"

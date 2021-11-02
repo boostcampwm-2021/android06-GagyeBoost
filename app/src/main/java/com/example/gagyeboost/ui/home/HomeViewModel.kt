@@ -1,24 +1,32 @@
 package com.example.gagyeboost.ui.home
 
+import android.view.Gravity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.gagyeboost.model.Repository
 import java.util.*
 
 class HomeViewModel(val repository: Repository): ViewModel() {
 
-    private val _month = MutableLiveData<Int>()
-    val month = Transformations.map(_month) { "${it}월" }
+    private val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+    private val _yearAndMonth = MutableLiveData<String>()
+    val yearAndMonth: LiveData<String> = _yearAndMonth
 
     init {
-        setMonth(Calendar.getInstance().get(Calendar.MONTH))
+        setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH))
     }
 
-    fun setMonth(month: Int) {
-        _month.value = month
+    fun setYearAndMonth(year: Int, month: Int) {
+        val stringDate = if (year == currentYear) "${month}월" else "${year}년 ${month}월"
+
+        _yearAndMonth.value = stringDate
     }
 
-    fun setYear(year: Int) {}
+    fun startDialog(dialog: NumberPickerDialog) {
+        dialog.window?.setGravity(Gravity.TOP)
+        dialog.show()
+    }
 
 }
