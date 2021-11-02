@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.MainViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -80,7 +86,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:textSize="36sp"
+            android:text="@{viewModel.selectedCategory.emoji != null ? viewModel.selectedCategory.emoji:@string/emoji_meal}"
+            android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_icon_title"
             app:layout_constraintStart_toEndOf="@id/tv_icon_title"
             app:layout_constraintTop_toTopOf="@id/tv_icon_title"

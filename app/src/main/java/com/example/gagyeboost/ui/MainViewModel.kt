@@ -1,9 +1,12 @@
 package com.example.gagyeboost.ui
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
-import kotlinx.coroutines.launch
+import com.example.gagyeboost.model.data.Category
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
+    private val _selectedCategory = MutableLiveData<Category?>()
+    val selectedCategory: LiveData<Category?> = _selectedCategory
 }
