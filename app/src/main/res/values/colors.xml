@@ -16,5 +16,6 @@
     <color name="gray3">#7F7F7F</color>
     <color name="expense">#D96D84</color>
     <color name="income">#53A370</color>
+    <color name="money_input_color">#A60F4CE4</color>
 
 </resources>
