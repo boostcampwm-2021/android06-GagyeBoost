@@ -2,6 +2,8 @@ package com.example.gagyeboost.ui.home.categoryControl
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentCategoryIconListBinding
 import com.example.gagyeboost.model.data.Category
@@ -12,11 +14,20 @@ class CategoryIconListFragment :
     private val categoryIconAdapter = CategoryIconAdapter {
         //TODO ViewModel에 icon data 변경
     }
+    private lateinit var navController: NavController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+        init()
+    }
+
+    private fun init(){
         binding.rvIconList.adapter = categoryIconAdapter
         categoryIconAdapter.submitList(testData)
+        binding.btnCategoryIconListBack.setOnClickListener{
+            navController.popBackStack()
+        }
     }
 }
 

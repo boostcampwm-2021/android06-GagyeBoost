@@ -25,4 +25,27 @@
         android:name="com.example.gagyeboost.ui.statstics.StatisticsFragment"
         android:label="fragment_statistics"
         tools:layout="@layout/fragment_statistics" />
+    <fragment
+        android:id="@+id/addCategoryFragment"
+        android:name="com.example.gagyeboost.ui.home.categoryControl.AddCategoryFragment"
+        android:label="AddCategoryFragment"
+        tools:layout="@layout/fragment_add_category">
+        <action
+            android:id="@+id/action_addCategoryFragment_to_categoryIconListFragment"
+            app:destination="@id/categoryIconListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryIconListFragment"
+        android:name="com.example.gagyeboost.ui.home.categoryControl.CategoryIconListFragment"
+        android:label="CategoryIconListFragment"
+        tools:layout="@layout/fragment_category_icon_list" />
+    <fragment
+        android:id="@+id/updateCategoryFragment"
+        android:name="com.example.gagyeboost.ui.home.categoryControl.UpdateCategoryFragment"
+        android:label="UpdateCategoryFragment"
+        tools:layout="@layout/fragment_update_category">
+        <action
+            android:id="@+id/action_updateCategoryFragment_to_categoryIconListFragment"
+            app:destination="@id/categoryIconListFragment" />
+    </fragment>
 </navigation>
