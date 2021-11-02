@@ -8,17 +8,17 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentCategoryIconListBinding
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class CategoryIconListFragment :
     BaseFragment<FragmentCategoryIconListBinding>(R.layout.fragment_category_icon_list) {
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel by sharedViewModel<MainViewModel>()
     private lateinit var navController: NavController
     private val categoryIconAdapter = CategoryIconAdapter {
         viewModel.setSelectedIcon(it)
         navController.popBackStack()
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)

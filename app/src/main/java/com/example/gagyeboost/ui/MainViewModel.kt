@@ -7,6 +7,10 @@ import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.Category
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
-    private val _selectedCategory = MutableLiveData<Category?>()
-    val selectedCategory: LiveData<Category?> = _selectedCategory
+    private val _selectedCategory = MutableLiveData<String?>()
+    val selectedCategory: LiveData<String?> = _selectedCategory
+
+    fun setSelectedIcon(icon: String) {
+        _selectedCategory.value = icon
+    }
 }
