@@ -1,5 +1,6 @@
 package com.example.gagyeboost.ui
 
+import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -73,4 +74,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 
     fun getTodayString() = date.joinToString("/")
+
+    fun afterMoneyTextChanged(e: Editable) {
+        if (e.isEmpty()) money.value = "0"
+    }
 }
