@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="item"
+            type="com.example.gagyeboost.model.data.DateDetailItem" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,11 +32,11 @@
             android:id="@+id/iv_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:contentDescription="@string/iv_category"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/sample"
-            android:contentDescription="@string/iv_category" />
+            tools:src="@drawable/sample" />
 
         <TextView
             android:id="@+id/tv_category"
@@ -38,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:maxLines="2"
+            android:text="@{item.category}"
             android:textColor="@color/gray3"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -49,6 +56,7 @@
             android:id="@+id/tv_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{item.content}"
             android:textColor="@color/gray1"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,6 +69,7 @@
             android:id="@+id/tv_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{item.money}"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
