@@ -50,6 +50,12 @@
         <action
             android:id="@+id/action_categoryFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_updateCategoryFragment"
+            app:destination="@id/updateCategoryFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_addCategoryFragment"
+            app:destination="@id/addCategoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/addCategoryFragment"
