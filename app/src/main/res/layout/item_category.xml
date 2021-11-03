@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="com.example.gagyeboost.model.data.Category" />
 
         <variable
@@ -9,8 +10,8 @@
             type="Category" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,8 +22,8 @@
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:background="@drawable/category_emoji_background"
-            android:padding="5dp"
             android:gravity="center"
+            android:padding="5dp"
             android:text="@{category.emoji}"
             android:textColor="@color/black"
             android:textSize="15sp" />
@@ -32,21 +33,21 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:background="@drawable/category_name_background"
-            android:padding="5dp"
-            android:maxLines="1"
             android:ellipsize="end"
             android:gravity="center"
+            android:maxLines="1"
+            android:padding="5dp"
             android:text="@{category.categoryName}"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="15sp" />
+            android:textColor="@color/gray3"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <androidx.constraintlayout.helper.widget.Flow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="10dp"
             android:layout_margin="5dp"
+            android:layout_marginVertical="10dp"
+            android:orientation="horizontal"
             app:constraint_referenced_ids="tv_emoji, tv_category_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
