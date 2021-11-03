@@ -20,6 +20,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     private val _categoryName = MutableLiveData("")
     val categoryName get() = _categoryName
 
+    private var selectedCategoryId = -1
+
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
     }
@@ -33,13 +35,35 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
                 )
             )
             loadCategoryList()
+            selectedCategoryReset()
         }
-        selectedCategoryReset()
     }
 
     fun selectedCategoryReset() {
         _categoryName.value = ""
         _selectedCategoryIcon.value = ""
+        selectedCategoryId = -1
+    }
+
+    // 선택한 카테고리를 인자로 UpdateCategory에 표시(카테고리 long click 시 호출)
+    fun setCategoryData(category: Category) {
+        selectedCategoryId = category.id
+        _categoryName.value = category.categoryName
+        _selectedCategoryIcon.value = category.emoji
+    }
+
+    fun updateCategory() {
+        viewModelScope.launch {
+            repository.updateCategoryData(
+                Category(
+                    selectedCategoryId,
+                    categoryName.value ?: "",
+                    selectedCategoryIcon.value ?: nothingEmoji
+                )
+            )
+            loadCategoryList()
+            selectedCategoryReset()
+        }
     }
 
     private val _income = MutableLiveData<String>()
