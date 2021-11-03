@@ -37,7 +37,6 @@ class AddCategoryFragment :
                 Toast.makeText(requireContext(), "이름을 반드시 입력해야 합니다", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.addCategory()
-                viewModel.selectedCategoryReset()
                 navController.popBackStack()
             }
         }
