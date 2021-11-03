@@ -1,7 +1,5 @@
 package com.example.gagyeboost.model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.local.AccountBookDAO
@@ -19,4 +17,6 @@ class Repository(private val accountBookDao: AccountBookDAO) {
     }
 
     suspend fun getMonthExpense(year: Int, month: Int) = accountBookDao.getMonthExpense(year, month)
+
+    suspend fun loadCategoryList() = accountBookDao.getCategoryAllData()
 }

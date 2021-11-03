@@ -16,7 +16,10 @@ val appModule = module {
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
-                    // TODO 초기 데이터 추가
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('뷰티/미용', '\uD83D\uDC84');")
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('식비', '\uD83C\uDF7D');")
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('주거/통신', '\uD83C\uDFE0');")
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('여행', '✈️️');")
                 }
             }).build()
     }

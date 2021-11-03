@@ -1,9 +1,11 @@
 package com.example.gagyeboost.model.local
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
-import kotlin.math.sqrt
 
 @Dao
 interface AccountBookDAO {
@@ -20,7 +22,7 @@ interface AccountBookDAO {
     suspend fun getMonthExpense(year: Int, month: Int): Int?
 
     @Query("SELECT * FROM category")
-    fun getCategoryAllData(): List<Category>
+    suspend fun getCategoryAllData(): List<Category>
 
     @Insert
     suspend fun addCategoryData(category: Category)
