@@ -14,26 +14,33 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
-    private val _selectedCategory = MutableLiveData<String?>()
-    val selectedCategory: LiveData<String?> = _selectedCategory
+    private val _selectedCategoryIcon = MutableLiveData("")
+    val selectedCategoryIcon: LiveData<String> = _selectedCategoryIcon
 
+    private val _categoryName = MutableLiveData("")
+    val categoryName get() = _categoryName
 
     fun setSelectedIcon(icon: String) {
-        _selectedCategory.value = icon
+        _selectedCategoryIcon.value = icon
     }
 
-    fun addCategory(name: String) {
+    fun addCategory() {
         viewModelScope.launch {
             repository.addCategoryData(
                 Category(
-                    categoryName = name,
-                    emoji = _selectedCategory.value ?: nothingEmoji
+                    categoryName = _categoryName.value ?: "",
+                    emoji = _selectedCategoryIcon.value ?: nothingEmoji
                 )
             )
             loadCategoryList()
         }
+        selectedCategoryReset()
     }
 
+    fun selectedCategoryReset() {
+        _categoryName.value = ""
+        _selectedCategoryIcon.value = ""
+    }
 
     private val _income = MutableLiveData<String>()
     val income get() = _income

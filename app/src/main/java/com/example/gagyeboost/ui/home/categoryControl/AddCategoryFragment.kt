@@ -26,6 +26,7 @@ class AddCategoryFragment :
     private fun init() {
         binding.viewModel = viewModel
         binding.btnAddCategoryBack.setOnClickListener {
+            viewModel.selectedCategoryReset()
             navController.popBackStack()
         }
         binding.tvIconBody.setOnClickListener {
@@ -35,7 +36,8 @@ class AddCategoryFragment :
             if (binding.etNameBody.text.isEmpty()) {
                 Toast.makeText(requireContext(), "이름을 반드시 입력해야 합니다", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.addCategory(binding.etNameBody.text.toString())
+                viewModel.addCategory()
+                viewModel.selectedCategoryReset()
                 navController.popBackStack()
             }
         }
