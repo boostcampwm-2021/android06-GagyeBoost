@@ -76,7 +76,9 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 
-    fun getTodayString() = date.joinToString("/")
+    fun getTodayString() = selectedDate.value?.let {
+        it.year.toString() + "/" + it.month + "/" + it.date
+    } ?: ""
 
     fun afterMoneyTextChanged(e: Editable) {
         if (e.isEmpty()) money.value = "0"
