@@ -8,12 +8,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.ui.home.DateItem
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
+
+    var selectedDate: DateItem? = null
 
     private val _income = MutableLiveData<String>()
     val income get() = _income

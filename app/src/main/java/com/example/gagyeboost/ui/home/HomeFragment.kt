@@ -16,8 +16,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val homeViewModel: HomeViewModel by viewModel()
     private val viewModel by sharedViewModel<MainViewModel>()
     private val calendar = CustomCalendar()
-    private val customCalendarAdapter = CustomCalendarAdapter(calendar) {
-        Toast.makeText(requireContext(), it + "CLICKED", Toast.LENGTH_SHORT).show()
+    private val customCalendarAdapter by lazy {
+        CustomCalendarAdapter(calendar, viewModel) {
+            Toast.makeText(requireContext(), it.date.toString() + "CLICKED", Toast.LENGTH_SHORT)
+                .show()
+
+            viewModel.selectedDate = it
+        }
     }
     private val dateItemList = mutableListOf<DateItem>()
 
