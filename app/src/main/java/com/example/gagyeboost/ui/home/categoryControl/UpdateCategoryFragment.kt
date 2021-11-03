@@ -1,21 +1,19 @@
 package com.example.gagyeboost.ui.home.categoryControl
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentUpdateCategoryBinding
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class UpdateCategoryFragment :
     BaseFragment<FragmentUpdateCategoryBinding>(R.layout.fragment_update_category) {
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel by sharedViewModel<MainViewModel>()
     private lateinit var navController: NavController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -24,9 +22,18 @@ class UpdateCategoryFragment :
         init()
     }
 
-    private fun init(){
-        binding.btnUpdateCategoryBack.setOnClickListener{
-            navController.popBackStack()
+    private fun init() {
+        binding.viewModel = viewModel
+        binding.tvIconBody.setOnClickListener {
+            navController.navigate(R.id.action_updateCategoryFragment_to_categoryIconListFragment)
+        }
+        binding.btnUpdateCategoryComplete.setOnClickListener {
+            if (binding.etNameBody.text.isEmpty()) {
+                Toast.makeText(requireContext(), "이름을 반드시 입력해야 합니다", Toast.LENGTH_SHORT).show()
+            } else {
+                //TODO DB에 데이터 갱신
+                //TODO 이전화면으로 돌아가기
+            }
         }
     }
 
