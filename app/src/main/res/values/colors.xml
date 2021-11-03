@@ -18,6 +18,7 @@
     <color name="holiday">#D96D84</color>
     <color name="expense">#D96D84</color>
     <color name="income">#53A370</color>
-    <color name="money_input_color">#A60F4CE4</color>
+    <color name="money_input_color">#4392BC</color>
+    <color name="cursor_color">#496BE6</color>
 
 </resources>

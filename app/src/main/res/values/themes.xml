@@ -23,4 +23,8 @@
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
     </style>
+
+    <style name="EditTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/cursor_color</item>
+    </style>
 </resources>

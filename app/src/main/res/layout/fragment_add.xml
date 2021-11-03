@@ -62,6 +62,7 @@
             android:text="@={viewModel.money}"
             android:textColor="@color/money_input_color"
             android:textSize="80sp"
+            android:theme="@style/EditTheme"
             app:layout_constraintBottom_toBottomOf="@id/tv_won_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_won_title"
