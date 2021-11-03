@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.IS_EXPENSE_KEY
 import com.example.gagyeboost.databinding.FragmentCategoryBinding
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
@@ -31,7 +32,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         binding.rvCategory.adapter = categoryAdapter
 
         arguments?.let {
-            if (it.getBoolean("isExpense")) binding.tvMoney.setTextColor(
+            if (it.getBoolean(IS_EXPENSE_KEY)) binding.tvMoney.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.income
