@@ -1,4 +1,4 @@
-package com.example.gagyeboost.ui.home
+package com.example.gagyeboost.ui.category
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

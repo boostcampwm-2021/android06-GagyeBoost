@@ -1,7 +1,6 @@
 package com.example.gagyeboost.ui.category
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -12,15 +11,24 @@ import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment_category) {
-
+    private val categoryAdapter = CategoryAdapter()
     private val viewModel by sharedViewModel<MainViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initView()
+        initClickListeners()
+        setObservers()
+    }
+
+    private fun initView() {
+        viewModel.loadCategoryList()
         binding.viewModel = viewModel
 
         binding.tvMoney.text = viewModel.getFormattedMoneyText(viewModel.money.value?.toInt() ?: 0)
+
+        binding.rvCategory.adapter = categoryAdapter
 
         arguments?.let {
             if (it.getBoolean("isExpense")) binding.tvMoney.setTextColor(
@@ -37,8 +45,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
                 )
             }
         }
-
-        initClickListeners()
     }
 
     private fun initClickListeners() {
@@ -48,6 +54,12 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
         binding.btnClose.setOnClickListener {
             findNavController().navigate(R.id.action_categoryFragment_to_homeFragment)
+        }
+    }
+
+    private fun setObservers() {
+        viewModel.categoryList.observe(viewLifecycleOwner) {
+            categoryAdapter.submitList(it)
         }
     }
 }
