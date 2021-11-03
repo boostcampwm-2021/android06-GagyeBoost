@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentCategoryIconListBinding
+import com.example.gagyeboost.model.data.emojiList
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -27,18 +28,9 @@ class CategoryIconListFragment :
 
     private fun init() {
         binding.rvIconList.adapter = categoryIconAdapter
-        categoryIconAdapter.submitList(testData)
+        categoryIconAdapter.submitList(emojiList)
         binding.btnCategoryIconListBack.setOnClickListener {
             navController.popBackStack()
         }
     }
 }
-
-private val testData = listOf(
-    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
-    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
-    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
-    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
-    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
-    "\uD83C\uDF5A", "\uD83C\uDFBE", "\uD83D\uDE8C",
-)
