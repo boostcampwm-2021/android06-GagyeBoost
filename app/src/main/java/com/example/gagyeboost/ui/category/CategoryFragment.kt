@@ -2,6 +2,8 @@ package com.example.gagyeboost.ui.category
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
@@ -12,7 +14,7 @@ import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment_category) {
-    private val categoryAdapter = CategoryAdapter()
+    private lateinit var categoryAdapter: CategoryAdapter
     private val viewModel by sharedViewModel<MainViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -25,8 +27,19 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
     private fun initView() {
         viewModel.loadCategoryList()
+
         binding.tvMoney.text =
             viewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
+
+        categoryAdapter = CategoryAdapter(
+            {
+                Toast.makeText(requireContext(), "clicked", LENGTH_SHORT).show()
+                // TODO: 지도 선택 화면으로 이동
+            }, {
+                Toast.makeText(requireContext(), "$it long clicked", LENGTH_SHORT).show()
+                // TODO: 카테고리 수정 화면으로 이동(category id 값 넘겨주기)
+                return@CategoryAdapter true
+            })
 
         with(binding) {
             viewModel = viewModel

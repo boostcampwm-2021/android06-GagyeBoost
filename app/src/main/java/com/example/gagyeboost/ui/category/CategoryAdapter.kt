@@ -11,16 +11,17 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemCategoryBinding
 import com.example.gagyeboost.model.data.Category
 
-class CategoryAdapter : ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(diffUtil) {
+class CategoryAdapter(
+    private val categoryClickListener: () -> Unit,
+    private val categoryLongClickListener: (Int) -> Boolean
+) : ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        return CategoryViewHolder(
-            ItemCategoryBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+        val binding =
+            ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding.categoryClickListener = categoryClickListener
+        binding.categoryLongClickListener = categoryLongClickListener
+        return CategoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
@@ -51,8 +52,8 @@ class CategoryAdapter : ListAdapter<Category, CategoryAdapter.CategoryViewHolder
                     else -> ContextCompat.getColor(this, R.color.expense)
                 }
                 emojiBackground.setStroke(3, colorId)
-                nameBackground.setStroke(3, colorId)
                 emojiBackground.setColor(colorId)
+                nameBackground.setStroke(3, colorId)
             }
         }
     }

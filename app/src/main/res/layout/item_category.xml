@@ -4,10 +4,21 @@
     <data>
 
         <import type="com.example.gagyeboost.model.data.Category" />
+        <import type="kotlin.jvm.functions.Function1" />
+        <import type="kotlin.jvm.functions.Function0" />
+        <import type="kotlin.Unit" />
 
         <variable
             name="category"
             type="Category" />
+
+        <variable
+            name="categoryClickListener"
+            type="Function0&lt;Unit>" />
+
+        <variable
+            name="categoryLongClickListener"
+            type="Function1&lt;Integer, Boolean>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,6 +26,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="@{_ -> categoryClickListener.invoke()}"
+        android:onLongClick="@{_ -> categoryLongClickListener.invoke(category.id)}"
         tools:ignore="MissingConstraints">
 
         <TextView
@@ -23,7 +36,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/category_emoji_background"
             android:gravity="center"
-            android:padding="5dp"
+            android:padding="10dp"
             android:text="@{category.emoji}"
             android:textColor="@color/black"
             android:textSize="15sp" />
@@ -36,7 +49,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:padding="5dp"
+            android:padding="10dp"
             android:text="@{category.categoryName}"
             android:textColor="@color/gray3"
             android:textSize="15sp"
@@ -45,7 +58,7 @@
         <androidx.constraintlayout.helper.widget.Flow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:layout_marginVertical="10dp"
             android:orientation="horizontal"
             app:constraint_referenced_ids="tv_emoji, tv_category_name"
