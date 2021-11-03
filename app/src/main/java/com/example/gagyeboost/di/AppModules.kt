@@ -6,6 +6,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.local.AccountBookDatabase
 import com.example.gagyeboost.ui.MainViewModel
+import com.example.gagyeboost.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -34,4 +35,5 @@ val appModule = module {
 
 val viewModelModule = module {
     viewModel { MainViewModel(get()) }
+    viewModel { HomeViewModel(get()) }
 }

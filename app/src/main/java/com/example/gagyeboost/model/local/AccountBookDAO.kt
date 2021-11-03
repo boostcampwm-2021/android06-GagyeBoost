@@ -15,17 +15,17 @@ interface AccountBookDAO {
 
     //선택한 달의 수입 총 합
     @Query("SELECT SUM(money) FROM account_book WHERE year=:year AND month=:month AND money_type=1")
-    fun getMonthIncome(year: Int, month: Int): Int
+    suspend fun getMonthIncome(year: Int, month: Int): Int?
 
     //선택한 달의 지출 총 합
     @Query("SELECT SUM(money) FROM account_book WHERE year=:year AND month=:month AND money_type=0")
-    fun getMonthExpense(year: Int, month: Int): Int
+    suspend fun getMonthExpense(year: Int, month: Int): Int?
 
     @Query("SELECT * FROM category")
     suspend fun getCategoryAllData(): List<Category>
 
     @Insert
-    fun addCategoryData(category: Category)
+    suspend fun addCategoryData(category: Category)
 
     @Query("DELETE FROM category WHERE  category_name=:categoryName")
     fun deleteCategoryData(categoryName: String)
@@ -38,7 +38,7 @@ interface AccountBookDAO {
     fun getCategoryData(id:Int): Category
 
     @Insert
-    fun addAccountBookData(accountBook: AccountBook)
+    suspend fun addAccountBookData(accountBook: AccountBook)
 
     @Update
     fun updateAccountBookData(accountBook: AccountBook)
