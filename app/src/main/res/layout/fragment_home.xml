@@ -12,6 +12,8 @@
         <variable
             name="homeViewModel"
             type="com.example.gagyeboost.ui.home.HomeViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -214,6 +216,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_baseline_add_24"
+            android:visibility='@{viewModel.selectedDate != null ? View.VISIBLE : View.GONE}'
             app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

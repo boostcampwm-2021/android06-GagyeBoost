@@ -21,7 +21,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             Toast.makeText(requireContext(), it.date.toString() + "CLICKED", Toast.LENGTH_SHORT)
                 .show()
 
-            viewModel.selectedDate = it
+            viewModel.selectedDate.value = it
         }
     }
     private val dateItemList = mutableListOf<DateItem>()

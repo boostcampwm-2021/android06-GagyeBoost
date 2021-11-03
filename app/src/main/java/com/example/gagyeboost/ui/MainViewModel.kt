@@ -16,7 +16,7 @@ import java.util.*
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
 
-    var selectedDate: DateItem? = null
+    val selectedDate = MutableLiveData<DateItem>()
 
     private val _income = MutableLiveData<String>()
     val income get() = _income
