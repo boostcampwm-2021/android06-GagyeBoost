@@ -25,6 +25,9 @@ class AddCategoryFragment :
 
     private fun init() {
         binding.viewModel = viewModel
+        binding.btnAddCategoryBack.setOnClickListener {
+            navController.popBackStack()
+        }
         binding.tvIconBody.setOnClickListener {
             navController.navigate(R.id.action_addCategoryFragment_to_categoryIconListFragment)
         }
@@ -32,8 +35,8 @@ class AddCategoryFragment :
             if (binding.etNameBody.text.isEmpty()) {
                 Toast.makeText(requireContext(), "이름을 반드시 입력해야 합니다", Toast.LENGTH_SHORT).show()
             } else {
-                //TODO DB에 데이터 추가
-                //TODO 이전화면으로 돌아가기
+                viewModel.addCategory(binding.etNameBody.text.toString())
+                navController.popBackStack()
             }
         }
     }

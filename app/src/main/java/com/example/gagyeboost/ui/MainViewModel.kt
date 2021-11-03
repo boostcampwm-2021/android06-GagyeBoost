@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.nothingEmoji
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -16,8 +17,21 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedCategory = MutableLiveData<String?>()
     val selectedCategory: LiveData<String?> = _selectedCategory
 
+
     fun setSelectedIcon(icon: String) {
         _selectedCategory.value = icon
+    }
+
+    fun addCategory(name: String) {
+        viewModelScope.launch {
+            repository.addCategoryData(
+                Category(
+                    categoryName = name,
+                    emoji = _selectedCategory.value ?: nothingEmoji
+                )
+            )
+            loadCategoryList()
+        }
     }
 
 
