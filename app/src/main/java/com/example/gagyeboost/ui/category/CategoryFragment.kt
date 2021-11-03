@@ -25,25 +25,27 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
     private fun initView() {
         viewModel.loadCategoryList()
-        binding.viewModel = viewModel
-
         binding.tvMoney.text = viewModel.getFormattedMoneyText(viewModel.money.value?.toInt() ?: 0)
 
-        binding.rvCategory.adapter = categoryAdapter
+        with(binding) {
+            viewModel = viewModel
 
-        arguments?.let {
-            if (it.getBoolean(IS_EXPENSE_KEY)) binding.tvMoney.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.income
-                )
-            ) else {
-                binding.tvMoney.setTextColor(
+            rvCategory.adapter = categoryAdapter
+
+            arguments?.let {
+                if (it.getBoolean(IS_EXPENSE_KEY)) tvMoney.setTextColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.expense
+                        R.color.income
                     )
-                )
+                ) else {
+                    tvMoney.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.expense
+                        )
+                    )
+                }
             }
         }
     }
