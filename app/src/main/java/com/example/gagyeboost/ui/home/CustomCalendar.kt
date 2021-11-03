@@ -1,5 +1,6 @@
 package com.example.gagyeboost.ui.home
 
+import android.util.Log
 import java.util.*
 
 class CustomCalendar {
@@ -14,23 +15,26 @@ class CustomCalendar {
     val datesInMonth get() = _datesInMonth
 
     init {
-        calendar.time = Date()
-        initCalendar { }
+        makeMonthDate(calendar)
     }
 
-    private fun initCalendar(refreshCallback: (Calendar) -> Unit) {
-        makeMonthDate(refreshCallback)
+    fun setYearAndMonth(year: Int, month: Int) {
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month - 1)
+        Log.e("calendar","set year: $year , set month: $month")
+        makeMonthDate(calendar)
     }
 
-    private fun makeMonthDate(refreshCallback: (Calendar) -> Unit) {
+    private fun makeMonthDate(calendar: Calendar) {
         _datesInMonth.clear()
 
         calendar.set(Calendar.DATE, 1)
 
-        currentMonthMaxDate = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-
+        currentMonthMaxDate = calendar.getActualMaximum(Calendar.DATE)
         prevMonthTailOffset = calendar.get(Calendar.DAY_OF_WEEK) - 1
 
+        Log.e("calendar","Month : ${calendar.get(Calendar.MONTH) +1}")
+        Log.e("calendar","currentMonthMaxDate : $currentMonthMaxDate")
         makePrevMonthTail(calendar.clone() as Calendar)
         makeCurrentMonth(calendar)
 
@@ -38,7 +42,6 @@ class CustomCalendar {
             LOW_OF_CALENDAR * DAYS_OF_WEEK - (prevMonthTailOffset + currentMonthMaxDate)
         makeNextMonthHead()
 
-        refreshCallback(calendar)
     }
 
     private fun makePrevMonthTail(calendar: Calendar) {

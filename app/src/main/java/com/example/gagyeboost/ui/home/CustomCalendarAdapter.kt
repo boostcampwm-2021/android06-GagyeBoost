@@ -18,13 +18,8 @@ class CustomCalendarAdapter(
 ) : ListAdapter<DateItem, CustomCalendarAdapter.DateViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DateViewHolder {
-        return DateViewHolder(
-            ItemDateBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+        val binding = ItemDateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return DateViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: DateViewHolder, position: Int) {
@@ -99,6 +94,5 @@ class CustomCalendarAdapter(
             override fun areContentsTheSame(oldItem: DateItem, newItem: DateItem) =
                 oldItem == newItem
         }
-
     }
 }

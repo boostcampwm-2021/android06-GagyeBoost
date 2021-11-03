@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -21,10 +22,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
     private val dateItemList = mutableListOf<DateItem>()
 
-    // 임시로 customCalendarAdapter 데이터 submit
     init {
+        tempSetDataItemList()
+    }
+
+    // 임시로 customCalendarAdapter 데이터 생성
+    private fun tempSetDataItemList() {
+        dateItemList.clear()
         calendar.datesInMonth.forEach {
-            dateItemList.add(DateItem(null, (0..10000).random(), it, 2021, 10))
+            dateItemList.add(DateItem(null, (0..10000).random(), it, 2021, 11))
         }
     }
 
@@ -41,7 +47,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         binding.tvYearAndMonth.setOnClickListener {
             homeViewModel.startDialog(dialog)
-
             dialog.setOnCancelListener {
                 homeViewModel.setYearAndMonth(
                     dialog.binding.npYear.value,
@@ -54,6 +59,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     dialog.binding.npMonth.value
                 )
                 dialog.dismiss()
+                calendar.setYearAndMonth(dialog.binding.npYear.value,dialog.binding.npMonth.value)
+                tempSetDataItemList()
+                Log.e("calendar",dateItemList.toString())
+                customCalendarAdapter.submitList(dateItemList)
             }
             dialog.binding.tvCancel.setOnClickListener {
                 dialog.dismiss()
