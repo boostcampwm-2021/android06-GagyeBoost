@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.nothingEmoji
 import kotlinx.coroutines.launch
@@ -63,6 +64,27 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
             )
             loadCategoryList()
             selectedCategoryReset()
+        }
+    }
+
+    //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
+    fun addAccountBookData() {
+        viewModelScope.launch {
+            repository.addAccountBookData(
+                AccountBook(
+                    moneyType = 1.toByte(),
+                    money = if (money.value != null) money.value!!.toInt() else 0,
+                    category = 13,
+                    address = "",
+                    latitude = 0.0f,
+                    longitude = 0.0f,
+                    content = "",
+                    year = date[0],
+                    month = date[1],
+                    day = date[2]
+                )
+            )
+            //TODO 달력 데이터 갱신
         }
     }
 

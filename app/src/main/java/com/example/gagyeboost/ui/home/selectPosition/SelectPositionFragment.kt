@@ -1,60 +1,31 @@
 package com.example.gagyeboost.ui.home.selectPosition
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.gagyeboost.R
+import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
+import com.example.gagyeboost.ui.MainViewModel
+import com.example.gagyeboost.ui.base.BaseFragment
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class SelectPositionFragment :
+    BaseFragment<FragmentSelectPositionBinding>(R.layout.fragment_select_position) {
+    private val viewModel by sharedViewModel<MainViewModel>()
+    private lateinit var navController: NavController
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SelectPositionFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SelectPositionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+        init()
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private fun init() {
+        binding.btnComplete.setOnClickListener {
+            navController.popBackStack(R.id.homeFragment, false)
+            viewModel.addAccountBookData()
+            //TODO DB에 데이터 추가
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_select_position, container, false)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SelectPositionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SelectPositionFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }
