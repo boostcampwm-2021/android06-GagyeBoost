@@ -38,7 +38,7 @@ class CustomCalendarAdapter(
         private var currentItem: DateItem? = null
         private val cal = Calendar.getInstance()
         private val currentYear = cal.get(Calendar.YEAR)
-        private val currentMonth = cal.get(Calendar.MONTH)
+        private val currentMonth = cal.get(Calendar.MONTH) + 1
         private val currentDate = cal.get(Calendar.DATE)
 
         init {
