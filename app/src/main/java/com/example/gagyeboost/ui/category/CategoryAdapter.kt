@@ -40,7 +40,7 @@ class CategoryAdapter(
             with(this.itemView.context) {
                 val emojiBackground = binding.tvEmoji.background as GradientDrawable
                 val nameBackground = binding.tvCategoryName.background as GradientDrawable
-                val colorId: Int = when (adapterPosition % 8) {
+                val colorId: Int = when (adapterPosition % 10) {
                     0 -> ContextCompat.getColor(this, R.color.category1)
                     1 -> ContextCompat.getColor(this, R.color.category2)
                     2 -> ContextCompat.getColor(this, R.color.category3)
@@ -49,6 +49,8 @@ class CategoryAdapter(
                     5 -> ContextCompat.getColor(this, R.color.category6)
                     6 -> ContextCompat.getColor(this, R.color.category7)
                     7 -> ContextCompat.getColor(this, R.color.category8)
+                    8 -> ContextCompat.getColor(this, R.color.category9)
+                    9 -> ContextCompat.getColor(this, R.color.category10)
                     else -> ContextCompat.getColor(this, R.color.expense)
                 }
                 emojiBackground.setStroke(3, colorId)
