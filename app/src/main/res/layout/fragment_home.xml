@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.MainViewModel" />
+    </data>
+
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -30,8 +37,8 @@
             android:id="@+id/linear_number_picker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@color/white"
+            android:orientation="horizontal"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -89,6 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
+            android:text="@{viewModel.income}"
             android:textColor="@color/earnings_text_color"
             android:textSize="20sp"
             app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
@@ -111,6 +119,7 @@
             android:id="@+id/tv_expense_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{viewModel.expense}"
             android:textColor="@color/expense_text_color"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
@@ -135,6 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
+            android:text="@{viewModel.result}"
             android:textColor="@color/gray3"
             android:textSize="20sp"
             app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
