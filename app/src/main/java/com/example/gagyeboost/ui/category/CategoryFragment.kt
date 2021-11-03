@@ -25,7 +25,8 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
     private fun initView() {
         viewModel.loadCategoryList()
-        binding.tvMoney.text = viewModel.getFormattedMoneyText(viewModel.money.value?.toInt() ?: 0)
+        binding.tvMoney.text =
+            viewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
 
         with(binding) {
             viewModel = viewModel
