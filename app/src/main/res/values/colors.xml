@@ -21,4 +21,14 @@
     <color name="money_input_color">#4392BC</color>
     <color name="cursor_color">#496BE6</color>
 
+    <!--category 8 colors-->
+    <color name="category1">#FFB1B0</color>
+    <color name="category2">#FFDFBE</color>
+    <color name="category3">#FFFDBD</color>
+    <color name="category4">#B4F0A7</color>
+    <color name="category5"> #A9D1F7</color>
+    <color name="category6">#4392BC</color>
+    <color name="category7">#CC99FF</color>
+    <color name="category8">#BBBCE7</color>
+
 </resources>
