@@ -19,6 +19,7 @@ data class Category(
     constructor() : this(0, "", "")
 }
 
+val nothingEmoji = "❌"
 val emojiList = listOf(
     "\uD83C\uDF5A",
     "\uD83C\uDFBE",
