@@ -5,5 +5,7 @@ data class DateItem(
     val income: Int?,
     val date: Int,
     val year: Int,
-    val month: Int
+    val month: Int,
+    val color: String,
+    val alpha: Float
 )

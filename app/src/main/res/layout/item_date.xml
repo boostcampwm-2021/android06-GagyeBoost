@@ -3,6 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.home.HomeViewModel" />
+
+        <variable
+            name="item"
+            type="com.example.gagyeboost.ui.home.DateItem" />
+
+        <import type="android.graphics.Color" />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -12,6 +26,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
+            android:text="@{String.valueOf(item.date)}"
+            android:alpha="@{item.alpha}"
+            android:textColor="@{Color.parseColor(item.color)}"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

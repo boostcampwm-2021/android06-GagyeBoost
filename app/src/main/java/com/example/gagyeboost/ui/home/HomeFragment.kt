@@ -1,7 +1,6 @@
 package com.example.gagyeboost.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -16,23 +15,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by viewModel()
     private val viewModel by sharedViewModel<MainViewModel>()
-    private val calendar = CustomCalendar()
-    private val customCalendarAdapter = CustomCalendarAdapter(calendar) {
-        Toast.makeText(requireContext(), it + "CLICKED", Toast.LENGTH_SHORT).show()
-    }
-    private val dateItemList = mutableListOf<DateItem>()
-
-    init {
-        tempSetDataItemList()
-    }
-
-    // 임시로 customCalendarAdapter 데이터 생성
-    private fun tempSetDataItemList() {
-        dateItemList.clear()
-        calendar.datesInMonth.forEach {
-            dateItemList.add(DateItem(null, (0..10000).random(), it, 2021, 11))
-        }
-    }
+    private lateinit var customCalendarAdapter: CustomCalendarAdapter
 
     private lateinit var dialog: NumberPickerDialog
 
@@ -41,6 +24,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.viewModel = viewModel
         initView()
         setDialog()
+        observe()
+
+        viewModel.getMonthIncome()
+        viewModel.getMonthExpense()
+        viewModel.setTotalMoney()
+        binding.fabAdd.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_addFragment)
+        }
+    }
+
+    private fun initView() {
+        binding.homeViewModel = homeViewModel
+        dialog = NumberPickerDialog(binding.root.context)
+        customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
+            Toast.makeText(requireContext(), it + "CLICKED", Toast.LENGTH_SHORT)
+                .show()
+        }
+
+        binding.rvCalendar.adapter = customCalendarAdapter
     }
 
     private fun setDialog() {
@@ -59,30 +61,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     dialog.binding.npMonth.value
                 )
                 dialog.dismiss()
-                calendar.setYearAndMonth(dialog.binding.npYear.value,dialog.binding.npMonth.value)
-                tempSetDataItemList()
-                Log.e("calendar",dateItemList.toString())
-                customCalendarAdapter.submitList(dateItemList)
             }
             dialog.binding.tvCancel.setOnClickListener {
                 dialog.dismiss()
             }
         }
-        viewModel.getMonthIncome()
-        viewModel.getMonthExpense()
-        viewModel.setTotalMoney()
-        binding.fabAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addFragment)
-        }
     }
 
-    private fun initView() {
-        binding.homeViewModel = homeViewModel
-        dialog = NumberPickerDialog(binding.root.context)
-        with(binding.rvCalendar) {
-            adapter = customCalendarAdapter
+    private fun observe() {
+        homeViewModel.dateItemList.observe(viewLifecycleOwner) {
+            customCalendarAdapter.submitList(it)
         }
-        customCalendarAdapter.submitList(dateItemList)
     }
 
     override fun onStop() {

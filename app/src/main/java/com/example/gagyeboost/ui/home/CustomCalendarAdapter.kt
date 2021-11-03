@@ -13,7 +13,7 @@ import java.text.DecimalFormat
 import java.util.*
 
 class CustomCalendarAdapter(
-    val calendar: CustomCalendar,
+    val viewModel: HomeViewModel,
     private val itemClickListener: (String) -> Unit
 ) : ListAdapter<DateItem, CustomCalendarAdapter.DateViewHolder>(diffUtil) {
 
@@ -44,7 +44,10 @@ class CustomCalendarAdapter(
 
         fun bind(dateItem: DateItem) {
             currentItem = dateItem
-            setDate(dateItem)
+            binding.item = dateItem
+            binding.viewModel = viewModel
+            binding.executePendingBindings()
+            setToday(dateItem)
             setMoney(binding.tvEarnings, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
         }
@@ -57,31 +60,12 @@ class CustomCalendarAdapter(
             }
         }
 
-        private fun setDate(dateItem: DateItem) {
+        private fun setToday(dateItem: DateItem) {
             with(binding) {
-
-                when (adapterPosition % CustomCalendar.DAYS_OF_WEEK) {
-                    0 -> tvDate.setTextColor(Color.parseColor("#D96D84"))
-                    6 -> tvDate.setTextColor(Color.parseColor("#6395e6"))
-                    else -> tvDate.setTextColor(Color.parseColor("#676d6e"))
-                }
-
-                if (adapterPosition < calendar.prevMonthTailOffset
-                    || adapterPosition >= calendar.prevMonthTailOffset + calendar.currentMonthMaxDate
-                ) {
-                    tvDate.alpha = 0.3f
-                } else {
-                    tvDate.alpha = 1f
-                }
-
                 if (currentYear == dateItem.year && currentMonth == dateItem.month && currentDate == dateItem.date) {
                     tvDate.setTextColor(Color.RED)
                     itemView.setBackgroundColor(Color.parseColor("#e6e6e6"))
-                } else {
-                    tvDate.setTextColor(Color.parseColor("#676d6e"))
-                    itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
                 }
-                tvDate.text = dateItem.date.toString()
             }
         }
     }
