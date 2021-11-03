@@ -25,21 +25,20 @@ class NumberPickerDialog(context: Context) : AlertDialog(context) {
         setNumberPicker()
     }
 
-    private fun setNumberPicker(){
-
+    private fun setNumberPicker() {
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
         val currentMonth = calendar.get(Calendar.MONTH)
 
-        with(binding.npYear){
+        with(binding.npYear) {
             wrapSelectorWheel = false
             descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
-            minValue =  currentYear - 10
+            minValue = currentYear - 10
             maxValue = currentYear + 1
             value = currentYear
         }
 
-        with(binding.npMonth){
+        with(binding.npMonth) {
             wrapSelectorWheel = false
             descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
             minValue = 1

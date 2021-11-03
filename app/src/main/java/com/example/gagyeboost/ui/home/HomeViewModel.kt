@@ -1,6 +1,5 @@
 package com.example.gagyeboost.ui.home
 
-import android.view.Gravity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -35,11 +34,6 @@ class HomeViewModel(val repository: Repository) : ViewModel() {
         _yearMonthPair.value = Pair(year, month)
     }
 
-    fun startDialog(dialog: NumberPickerDialog) {
-        dialog.window?.setGravity(Gravity.TOP)
-        dialog.show()
-    }
-
     private fun tempSetDataItemList(): MutableList<DateItem> {
         // TODO repository에서 가져온 데이터 가공
         val list = mutableListOf<DateItem>()
@@ -47,7 +41,7 @@ class HomeViewModel(val repository: Repository) : ViewModel() {
             list.add(
                 DateItem(
                     null,
-                    (0..10000).random(),
+                    (0..100000).random(),
                     it,
                     2021,
                     11,

@@ -1,6 +1,5 @@
 package com.example.gagyeboost.ui.home
 
-import android.util.Log
 import java.util.*
 
 class CustomCalendar {
@@ -17,7 +16,6 @@ class CustomCalendar {
     fun setYearAndMonth(year: Int, month: Int) {
         calendar.set(Calendar.YEAR, year)
         calendar.set(Calendar.MONTH, month - 1)
-        Log.e("month", "set year: $year , set month: $month")
         makeMonthDate(calendar)
     }
 

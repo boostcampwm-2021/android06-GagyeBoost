@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.home
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -48,7 +49,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun setDialog() {
 
         binding.tvYearAndMonth.setOnClickListener {
-            homeViewModel.startDialog(dialog)
+            dialog.window?.setGravity(Gravity.TOP)
+            dialog.show()
+
             dialog.setOnCancelListener {
                 homeViewModel.setYearAndMonth(
                     dialog.binding.npYear.value,
