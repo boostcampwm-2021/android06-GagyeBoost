@@ -12,7 +12,7 @@ import com.example.gagyeboost.databinding.ItemCategoryBinding
 import com.example.gagyeboost.model.data.Category
 
 class CategoryAdapter(
-    private val categoryClickListener: () -> Unit,
+    private val categoryClickListener: (Int) -> Boolean,
     private val categoryLongClickListener: (Int) -> Boolean
 ) : ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(diffUtil) {
 

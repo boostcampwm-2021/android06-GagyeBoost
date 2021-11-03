@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.IS_EXPENSE_KEY
 import com.example.gagyeboost.databinding.FragmentCategoryBinding
+import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -34,10 +35,15 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         categoryAdapter = CategoryAdapter(
             {
                 Toast.makeText(requireContext(), "clicked", LENGTH_SHORT).show()
-                // TODO: 지도 선택 화면으로 이동
+                if (it < 0) {
+                    // TODO: 카테고리 추가 화면으로 이동
+                } else {
+                    // TODO: 지도 선택 화면으로 이동
+                }
+                return@CategoryAdapter true
             }, {
-                Toast.makeText(requireContext(), "$it long clicked", LENGTH_SHORT).show()
                 // TODO: 카테고리 수정 화면으로 이동(category id 값 넘겨주기)
+                Toast.makeText(requireContext(), "$it long clicked", LENGTH_SHORT).show()
                 return@CategoryAdapter true
             })
 
@@ -76,7 +82,9 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
     private fun setObservers() {
         viewModel.categoryList.observe(viewLifecycleOwner) {
-            categoryAdapter.submitList(it)
+            val categoryList = it.toMutableList()
+            categoryList.add(Category(-1, getString(R.string.add), "➕"))
+            categoryAdapter.submitList(categoryList)
         }
     }
 }
