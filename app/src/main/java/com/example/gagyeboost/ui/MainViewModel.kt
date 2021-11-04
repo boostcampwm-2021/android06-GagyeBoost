@@ -148,7 +148,9 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 
-    fun afterMoneyTextChanged(e: Editable) {
-        if (e.isEmpty()) money.value = "0"
+    fun afterMoneyTextChanged() {
+        if (money.value.isNullOrEmpty()) money.value = "0"
+
+        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "");
     }
 }
