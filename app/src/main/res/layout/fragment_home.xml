@@ -61,24 +61,24 @@
             app:layout_constraintGuide_end="10dp" />
 
         <TextView
-            android:id="@+id/tv_earnings_title"
+            android:id="@+id/tv_income_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/earnings"
             android:textColor="@color/gray1"
             android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_earnings_body"
-            app:layout_constraintRight_toLeftOf="@id/tv_earnings_body"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_income_body"
+            app:layout_constraintRight_toLeftOf="@id/tv_income_body"
             app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
-            app:layout_constraintTop_toTopOf="@+id/tv_earnings_body" />
+            app:layout_constraintTop_toTopOf="@+id/tv_income_body" />
 
         <TextView
-            android:id="@+id/tv_earnings_body"
+            android:id="@+id/tv_income_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:text="@{viewModel.income}"
-            android:textColor="@color/earnings_text_color"
+            android:textColor="@color/income"
             android:textSize="20sp"
             app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
             app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
@@ -100,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{viewModel.expense}"
-            android:textColor="@color/expense_text_color"
+            android:textColor="@color/expense"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
             app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
@@ -113,7 +113,7 @@
             android:textColor="@color/gray1"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_balance_body"
-            app:layout_constraintRight_toLeftOf="@id/tv_earnings_body"
+            app:layout_constraintRight_toLeftOf="@id/tv_income_body"
             app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
             app:layout_constraintTop_toTopOf="@+id/tv_balance_body" />
 
@@ -127,7 +127,7 @@
             android:textColor="@color/gray3"
             android:textSize="20sp"
             app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
-            app:layout_constraintTop_toBottomOf="@id/tv_earnings_body" />
+            app:layout_constraintTop_toBottomOf="@id/tv_income_body" />
 
         <TextView
             android:id="@+id/tv_sun"
@@ -194,7 +194,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_line_1"
             app:spanCount="7"
-            tools:listitem="item_date" />
+            tools:listitem="@layout/item_date" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_detail"
