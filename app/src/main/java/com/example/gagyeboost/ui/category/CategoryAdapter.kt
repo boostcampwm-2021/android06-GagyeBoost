@@ -13,7 +13,7 @@ import com.example.gagyeboost.model.data.Category
 
 class CategoryAdapter(
     private val categoryClickListener: (Int) -> Boolean,
-    private val categoryLongClickListener: (Int) -> Boolean
+    private val categoryLongClickListener: (Category) -> Boolean
 ) : ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {

@@ -46,7 +46,8 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
                 }
                 return@CategoryAdapter true
             }, {
-                // TODO: 카테고리 수정 화면으로 이동(category id 값 넘겨주기)
+                viewModel.setCategoryData(it)
+                navController.navigate(R.id.action_categoryFragment_to_updateCategoryFragment)
                 Toast.makeText(requireContext(), "$it long clicked", LENGTH_SHORT).show()
                 return@CategoryAdapter true
             })

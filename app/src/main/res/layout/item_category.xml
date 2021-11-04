@@ -16,7 +16,7 @@
 
         <variable
             name="categoryLongClickListener"
-            type="Function1&lt;Integer, Boolean>" />
+            type="Function1&lt;Category, Boolean>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="@{_ -> categoryClickListener.invoke(category.id)}"
-        android:onLongClick="@{_ -> categoryLongClickListener.invoke(category.id)}"
+        android:onLongClick="@{_ -> categoryLongClickListener.invoke(category)}"
         tools:ignore="MissingConstraints">
 
         <TextView
