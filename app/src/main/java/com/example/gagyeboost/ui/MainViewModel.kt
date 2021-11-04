@@ -20,8 +20,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedCategoryIcon = MutableLiveData("🍚")
     val selectedCategoryIcon: LiveData<String> = _selectedCategoryIcon
 
-    private val _categoryName = MutableLiveData("")
-    val categoryName get() = _categoryName
+    val categoryName = MutableLiveData("")
 
     private var selectedCategoryId = -1
 
@@ -45,6 +44,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     private val _categoryList = MutableLiveData<List<Category>>()
     val categoryList: LiveData<List<Category>> = _categoryList
 
+    val content = MutableLiveData("")
+
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
     }
@@ -53,7 +54,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch {
             repository.addCategoryData(
                 Category(
-                    categoryName = _categoryName.value ?: "",
+                    categoryName = categoryName.value ?: "",
                     emoji = _selectedCategoryIcon.value ?: nothingEmoji
                 )
             )
@@ -63,7 +64,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun selectedCategoryReset() {
-        _categoryName.value = ""
+        categoryName.value = ""
         _selectedCategoryIcon.value = "\uD83C\uDF5A"
         selectedCategoryId = -1
     }
@@ -71,7 +72,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     // 선택한 카테고리를 인자로 UpdateCategory에 표시(카테고리 long click 시 호출)
     fun setCategoryData(category: Category) {
         selectedCategoryId = category.id
-        _categoryName.value = category.categoryName
+        categoryName.value = category.categoryName
         _selectedCategoryIcon.value = category.emoji
     }
 
@@ -92,15 +93,16 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
     fun addAccountBookData() {
         viewModelScope.launch {
+            Log.i("TEST","tst:"+content.value.toString())
             repository.addAccountBookData(
                 AccountBook(
                     moneyType = 1.toByte(),
                     money = if (money.value != null) money.value!!.toInt() else 0,
-                    category = 13,
+                    category = selectedCategoryId,
                     address = "",
                     latitude = 0.0f,
                     longitude = 0.0f,
-                    content = "",
+                    content = content.value ?: "",
                     year = date[0],
                     month = date[1],
                     day = date[2]
