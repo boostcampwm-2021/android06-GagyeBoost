@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
-    private val _selectedCategoryIcon = MutableLiveData("")
+    private val _selectedCategoryIcon = MutableLiveData("🍚")
     val selectedCategoryIcon: LiveData<String> = _selectedCategoryIcon
 
     private val _categoryName = MutableLiveData("")
@@ -64,7 +64,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     fun selectedCategoryReset() {
         _categoryName.value = ""
-        _selectedCategoryIcon.value = ""
+        _selectedCategoryIcon.value = "\uD83C\uDF5A"
         selectedCategoryId = -1
     }
 
