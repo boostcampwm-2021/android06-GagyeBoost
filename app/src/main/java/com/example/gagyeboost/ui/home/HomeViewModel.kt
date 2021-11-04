@@ -150,7 +150,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                         category?.emoji ?: "NO",
                         category?.categoryName ?: "NO",
                         account.content,
-                        getFormattedMoneyText(account.money)
+                        getFormattedMoneyText(account.money),
+                        account.moneyType == 1.toByte()
                     )
                 )
             }
