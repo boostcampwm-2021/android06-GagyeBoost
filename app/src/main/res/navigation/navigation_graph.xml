@@ -49,10 +49,7 @@
         android:id="@+id/categoryFragment"
         android:name="com.example.gagyeboost.ui.category.CategoryFragment"
         android:label="fragment_category"
-        tools:layout="@layout/fragment_category" >
-        <action
-            android:id="@+id/action_categoryFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+        tools:layout="@layout/fragment_category">
         <action
             android:id="@+id/action_categoryFragment_to_updateCategoryFragment"
             app:destination="@id/updateCategoryFragment" />
@@ -90,5 +87,5 @@
         android:id="@+id/selectPositionFragment"
         android:name="com.example.gagyeboost.ui.home.selectPosition.SelectPositionFragment"
         android:label="SelectPositionFragment"
-        tools:layout="@layout/fragment_select_position"/>
+        tools:layout="@layout/fragment_select_position" />
 </navigation>

@@ -5,6 +5,8 @@ import android.view.View
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.IS_EXPENSE_KEY
@@ -17,9 +19,11 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment_category) {
     private lateinit var categoryAdapter: CategoryAdapter
     private val viewModel by sharedViewModel<MainViewModel>()
+    private lateinit var navController: NavController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
 
         initView()
         initClickListeners()
@@ -35,21 +39,22 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         categoryAdapter = CategoryAdapter(
             {
                 Toast.makeText(requireContext(), "clicked", LENGTH_SHORT).show()
-                if (it < 0) {
-                    // TODO: 카테고리 추가 화면으로 이동
+                if (it.id < 0) {
+                    navController.navigate(R.id.action_categoryFragment_to_addCategoryFragment)
                 } else {
-                    // TODO: 지도 선택 화면으로 이동
+                    viewModel.setCategoryData(it)
+                    navController.navigate(R.id.action_categoryFragment_to_selectPositionFragment)
                 }
                 return@CategoryAdapter true
             }, {
-                // TODO: 카테고리 수정 화면으로 이동(category id 값 넘겨주기)
+                viewModel.setCategoryData(it)
+                navController.navigate(R.id.action_categoryFragment_to_updateCategoryFragment)
                 Toast.makeText(requireContext(), "$it long clicked", LENGTH_SHORT).show()
                 return@CategoryAdapter true
             })
 
         with(binding) {
-            viewModel = viewModel
-
+            viewModel = this@CategoryFragment.viewModel
             rvCategory.adapter = categoryAdapter
 
             arguments?.let {
@@ -76,7 +81,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         }
 
         binding.btnClose.setOnClickListener {
-            findNavController().navigate(R.id.action_categoryFragment_to_homeFragment)
+            findNavController().popBackStack(R.id.homeFragment, false)
         }
     }
 
