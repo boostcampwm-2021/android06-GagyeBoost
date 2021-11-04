@@ -24,14 +24,15 @@
 
         <TextView
             android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:text="@{String.valueOf(item.date)}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:alpha="@{item.alpha}"
+            android:gravity="center"
+            android:text="@{String.valueOf(item.date)}"
             android:textColor="@{viewModel.selectedDate == item ? @color/white : Color.parseColor(item.color)}"
             android:textSize="14sp"
             android:textStyle="bold"
+            app:layout_constraintDimensionRatio="3:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -45,12 +46,6 @@
             android:maxLines="1"
             android:textColor="@{viewModel.selectedDate == item ? @color/white : @color/earnings_text_color}"
             android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/tv_expense"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_date"
-            app:layout_constraintVertical_chainStyle="packed"
             tools:text="00" />
 
         <TextView
@@ -61,12 +56,18 @@
             android:maxLines="1"
             android:textColor="@{viewModel.selectedDate == item ? @color/white : @color/expense_text_color}"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_earnings"
             tools:text="00" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:constraint_referenced_ids="tv_earnings,tv_expense"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="3:2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_date" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
