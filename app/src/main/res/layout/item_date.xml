@@ -11,7 +11,7 @@
 
         <variable
             name="item"
-            type="com.example.gagyeboost.ui.home.DateItem" />
+            type="com.example.gagyeboost.model.data.DateItem" />
 
         <import type="android.graphics.Color" />
 
