@@ -98,6 +98,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         homeViewModel.dateItemList.observe(viewLifecycleOwner) {
             customCalendarAdapter.submitList(it)
         }
+
+        homeViewModel.detailItemList.observe(viewLifecycleOwner) {
+            detailAdapter.submitList(it)
+        }
     }
 
     override fun onStop() {

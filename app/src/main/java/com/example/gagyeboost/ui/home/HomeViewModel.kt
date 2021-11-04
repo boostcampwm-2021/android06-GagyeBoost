@@ -3,8 +3,11 @@ package com.example.gagyeboost.ui.home
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.DateDetailItem
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.util.*
 
@@ -27,6 +30,10 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     val categoryList: LiveData<List<Category>> = _categoryList
 
     val selectedDate = MutableLiveData<DateItem>()
+
+    val detailItemList = Transformations.switchMap(selectedDate) {
+        getDateDetailItemList(it)
+    }
 
     val money = MutableLiveData<String>("0")
 
@@ -124,4 +131,34 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
+
+    fun getDateDetailItemList(date: DateItem): LiveData<MutableList<DateDetailItem>> {
+        val data = MutableLiveData<MutableList<DateDetailItem>>()
+
+        val list = mutableListOf<DateDetailItem>()
+
+        viewModelScope.launch {
+            val categoryList = repository.loadCategoryList()
+
+            repository.loadDayData(date.year, date.month, date.date).forEach { account ->
+                val category = categoryList.find { category ->
+                    category.id == account.category
+                }
+                list.add(
+                    DateDetailItem(
+                        account.id.toString(),
+                        category?.emoji ?: "NO",
+                        category?.categoryName ?: "NO",
+                        account.content,
+                        getFormattedMoneyText(account.money)
+                    )
+                )
+            }
+
+            data.postValue(list)
+        }
+
+        return data
+    }
 }
+
