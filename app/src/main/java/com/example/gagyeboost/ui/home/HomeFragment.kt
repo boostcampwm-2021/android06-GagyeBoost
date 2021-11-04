@@ -55,18 +55,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.rvCalendar.adapter = customCalendarAdapter
 
         binding.rvDetail.adapter = detailAdapter
-        detailAdapter.submitList(
-            listOf(
-                DateDetailItem("1", "2", "식비", "TEST1", "30000"),
-                DateDetailItem("1", "2", "유흥", "TEST2", "900000"),
-                DateDetailItem("1", "2", "문화", "TEST3", "30000"),
-                DateDetailItem("1", "2", "식비", "TEST4", "30000"),
-                DateDetailItem("1", "2", "식비", "TEST5", "32220000"),
-                DateDetailItem("1", "2", "생활", "TEST6", "3034000"),
-                DateDetailItem("1", "2", "통신", "TEST7", "30000"),
-                DateDetailItem("1", "2", "문화", "TEST8", "30000")
-            )
-        )
     }
 
     private fun setDialog() {

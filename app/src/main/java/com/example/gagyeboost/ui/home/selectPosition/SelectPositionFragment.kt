@@ -8,11 +8,12 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SelectPositionFragment :
     BaseFragment<FragmentSelectPositionBinding>(R.layout.fragment_select_position) {
-    private val viewModel by sharedViewModel<MainViewModel>()
+    private val viewModel by sharedViewModel<HomeViewModel>()
     private lateinit var navController: NavController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
