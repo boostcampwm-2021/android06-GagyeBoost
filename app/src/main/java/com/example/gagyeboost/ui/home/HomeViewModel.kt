@@ -1,6 +1,9 @@
 package com.example.gagyeboost.ui.home
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
 import kotlinx.coroutines.launch
 import java.util.*
@@ -13,17 +16,18 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     val yearAndMonth: LiveData<String> = _yearAndMonth
 
     private val _yearMonthPair = MutableLiveData<Pair<Int, Int>>()
+    val yearMonthPair: LiveData<Pair<Int, Int>> = _yearMonthPair
+
+    private val _dateItemList = MutableLiveData<List<DateItem>>()
+    val dateItemList: LiveData<List<DateItem>> = _dateItemList
 
     private val calendar = CustomCalendar()
-
-    val dateItemList = Transformations.map(_yearMonthPair) {
-        tempSetDataItemList()
-    }
 
     val selectedDate = MutableLiveData<DateItem>()
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
+        loadAllDayDataInMonth()
     }
 
     fun setYearAndMonth(year: Int, month: Int) {
@@ -32,25 +36,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         calendar.setYearAndMonth(year, month)
         _yearAndMonth.value = stringDate
         _yearMonthPair.value = Pair(year, month)
-    }
-
-    private fun tempSetDataItemList(): MutableList<DateItem> {
-        // TODO repository에서 가져온 데이터 가공
-        val list = mutableListOf<DateItem>()
-        calendar.datesInMonth.forEachIndexed { index, it ->
-            list.add(
-                DateItem(
-                    null,
-                    (0..100000).random(),
-                    it,
-                    2021,
-                    11,
-                    setDateColor(index),
-                    setDateAlpha(index)
-                )
-            )
-        }
-        return list
     }
 
     private fun setDateColor(position: Int): String =
@@ -73,7 +58,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     fun loadAllDayDataInMonth() {
         viewModelScope.launch {
-            val dateItemList = calendar.datesInMonth.map { date ->
+            val dateItems = mutableListOf<DateItem>()
+            calendar.datesInMonth.forEachIndexed { index, date ->
                 val accountDataList =
                     repository.loadDayData(
                         _yearMonthPair.value?.first ?: 0,
@@ -90,9 +76,20 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                         1.toByte() -> totalIncome += record.money
                     }
                 }
-                // TODO DateItem 작성
-//                DateItem(totalExpense, totalIncome, date, _yearMonthPair.value?.first ?: 0, _yearMonthPair.value?.second ?: 0, setDateColor())
+
+                dateItems.add(
+                    DateItem(
+                        if (totalExpense == 0) null else totalExpense,
+                        if (totalIncome == 0) null else totalIncome,
+                        date,
+                        _yearMonthPair.value?.first ?: 0,
+                        _yearMonthPair.value?.second ?: 0,
+                        setDateColor(index),
+                        setDateAlpha(index)
+                    )
+                )
             }
+            _dateItemList.postValue(dateItems)
         }
     }
 

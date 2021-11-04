@@ -95,6 +95,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun observe() {
+        homeViewModel.yearMonthPair.observe(viewLifecycleOwner) {
+            homeViewModel.loadAllDayDataInMonth()
+        }
+
         homeViewModel.dateItemList.observe(viewLifecycleOwner) {
             customCalendarAdapter.submitList(it)
         }
