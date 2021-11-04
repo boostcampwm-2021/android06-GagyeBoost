@@ -1,8 +1,11 @@
 package com.example.gagyeboost.ui.home
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.Category
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import java.util.*
 
 class HomeViewModel(private val repository: Repository) : ViewModel() {
@@ -20,7 +23,14 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         tempSetDataItemList()
     }
 
+    private val _categoryList = MutableLiveData<List<Category>>()
+    val categoryList: LiveData<List<Category>> = _categoryList
+
     val selectedDate = MutableLiveData<DateItem>()
+
+    val money = MutableLiveData<String>("0")
+
+    private val formatter = DecimalFormat("###,###")
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
@@ -100,4 +110,18 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         it.year.toString() + "/" + it.month + "/" + it.date
     } ?: ""
 
+    fun afterMoneyTextChanged() {
+        if (money.value.isNullOrEmpty()) money.value = "0"
+
+        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "");
+    }
+
+    fun loadCategoryList() {
+        viewModelScope.launch {
+            _categoryList.value = repository.loadCategoryList()
+            Log.d("TAG", _categoryList.value.toString())
+        }
+    }
+
+    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 }
