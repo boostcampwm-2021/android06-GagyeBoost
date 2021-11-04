@@ -19,5 +19,6 @@
     <color name="expense">#D96D84</color>
     <color name="income">#53A370</color>
     <color name="money_input_color">#A60F4CE4</color>
+    <color name="light_green">#19A81F</color>
 
 </resources>

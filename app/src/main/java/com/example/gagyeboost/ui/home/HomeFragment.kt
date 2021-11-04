@@ -6,8 +6,10 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentHomeBinding
+import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -16,10 +18,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val homeViewModel: HomeViewModel by viewModel()
     private val viewModel by sharedViewModel<MainViewModel>()
     private val calendar = CustomCalendar()
-    private val customCalendarAdapter = CustomCalendarAdapter(calendar) {
-        Toast.makeText(requireContext(), it + "CLICKED", Toast.LENGTH_SHORT).show()
+    private val customCalendarAdapter by lazy {
+        CustomCalendarAdapter(calendar, viewModel) {
+            Toast.makeText(requireContext(), it.date.toString() + "CLICKED", Toast.LENGTH_SHORT)
+                .show()
+
+            viewModel.selectedDate.value = it
+        }
     }
     private val dateItemList = mutableListOf<DateItem>()
+
+    private val detailAdapter: DateDetailAdapter by inject()
 
     // 임시로 customCalendarAdapter 데이터 submit
     init {
@@ -74,6 +83,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             adapter = customCalendarAdapter
         }
         customCalendarAdapter.submitList(dateItemList)
+
+        binding.rvDetail.adapter = detailAdapter
+
+        detailAdapter.submitList(
+            listOf(
+                DateDetailItem("1", "2", "식비", "TEST1", "30000"),
+                DateDetailItem("1", "2", "유흥", "TEST2", "900000"),
+                DateDetailItem("1", "2", "문화", "TEST3", "30000"),
+                DateDetailItem("1", "2", "식비", "TEST4", "30000"),
+                DateDetailItem("1", "2", "식비", "TEST5", "32220000"),
+                DateDetailItem("1", "2", "생활", "TEST6", "3034000"),
+                DateDetailItem("1", "2", "통신", "TEST7", "30000"),
+                DateDetailItem("1", "2", "문화", "TEST8", "30000")
+            )
+        )
     }
 
     override fun onStop() {
