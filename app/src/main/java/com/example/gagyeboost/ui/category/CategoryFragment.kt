@@ -54,8 +54,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             })
 
         with(binding) {
-            viewModel = viewModel
-
+            viewModel = this@CategoryFragment.viewModel
             rvCategory.adapter = categoryAdapter
 
             arguments?.let {
