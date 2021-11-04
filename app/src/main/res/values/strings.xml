@@ -1,5 +1,40 @@
 <resources>
     <string name="app_name">GagyeBoost</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="earnings">수입</string>
+    <string name="expense">지출</string>
+    <string name="balance">현금 잔액</string>
+    <string name="sunday">일</string>
+    <string name="monday">월</string>
+    <string name="tuesday">화</string>
+    <string name="wednesday">수</string>
+    <string name="thursday">목</string>
+    <string name="friday">금</string>
+    <string name="saturday">토</string>
+    <string name="iv_category">icon image or emoji</string>
+    <string name="btn_add_description">add earnings or expense</string>
+    <string name="home">홈</string>
+    <string name="statistics">통계</string>
+    <string name="map">지도</string>
+    <string name="search">검색</string>
+    <string name="temp_number">00</string>
+    <string name="agree">확인</string>
+    <string name="cancel">취소</string>
+    <string name="won">₩</string>
+    <string name="history">내역</string>
+    <string name="add">추가</string>
+    <string name="icon_select">아이콘 선택</string>
+    <string name="update">수정</string>
+    <string name="name">이름</string>
+    <string name="icon">아이콘</string>
+    <string name="add_category_name_hint">추가할 카테고리 이름</string>
+    <string name="emoji_meal">🍚</string>
+    <string name="position">위치</string>
+    <string name="complete">완료</string>
+    <string name="back_button">back button</string>
+    <string name="close_btn">close fragment or activity</string>
+    <string name="add_category_btn">add category btn</string>
+
 </resources>

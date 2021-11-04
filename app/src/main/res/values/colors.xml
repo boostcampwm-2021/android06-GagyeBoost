@@ -7,4 +7,29 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="green">#3EA142</color>
+    <color name="gray1">#2F2F2F</color>
+    <color name="gray2">#C8C8C8</color>
+    <color name="gray3">#7F7F7F</color>
+    <color name="gray4">#676d6e</color>
+    <color name="expense">#D96D84</color>
+    <color name="income">#53A370</color>
+    <color name="money_input_color">#4392BC</color>
+    <color name="cursor_color">#496BE6</color>
+    <color name="light_green">#19A81F</color>
+
+    <!--category 8 colors-->
+    <color name="category1">#FFB1B0</color>
+    <color name="category2">#FFDFBE</color>
+    <color name="category3">#FFFDBD</color>
+    <color name="category4">#B4F0A7</color>
+    <color name="category5">#A9D1F7</color>
+    <color name="category6">#4392BC</color>
+    <color name="category7">#CC99FF</color>
+    <color name="category8">#BBBCE7</color>
+    <color name="category9">#F2E4D8</color>
+    <color name="category10">#D8AF8C</color>
+
+    <color name="baseColor">#58C8AE</color>
 </resources>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.example.gagyeboost.model.data.Category" />
+
+        <import type="kotlin.jvm.functions.Function1" />
+
+        <variable
+            name="category"
+            type="Category" />
+
+        <variable
+            name="categoryClickListener"
+            type="Function1&lt;Category, Boolean>" />
+
+        <variable
+            name="categoryLongClickListener"
+            type="Function1&lt;Category, Boolean>" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="@{_ -> categoryClickListener.invoke(category)}"
+        android:onLongClick="@{_ -> categoryLongClickListener.invoke(category)}"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/tv_emoji"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/category_emoji_background"
+            android:gravity="center"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="10dp"
+            android:text="@{category.emoji}"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_category_name"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/category_name_background"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:text="@{category.categoryName}"
+            android:textColor="@color/gray3"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginVertical="10dp"
+            android:orientation="horizontal"
+            app:constraint_referenced_ids="tv_emoji, tv_category_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

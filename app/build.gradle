@@ -38,6 +38,9 @@ android {
 
 dependencies {
 
+    // DataBinding
+    implementation 'androidx.databinding:databinding-runtime:7.0.3'
+
     // Room DB
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
