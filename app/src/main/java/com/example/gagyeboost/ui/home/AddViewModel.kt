@@ -1,4 +1,4 @@
-package com.example.gagyeboost.ui
+package com.example.gagyeboost.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +13,7 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainViewModel(private val repository: Repository) : ViewModel() {
+class AddViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedCategoryIcon = MutableLiveData("🍚")
     val selectedCategoryIcon: LiveData<String> = _selectedCategoryIcon
 

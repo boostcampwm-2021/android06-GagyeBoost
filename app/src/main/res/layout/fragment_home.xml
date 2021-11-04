@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.gagyeboost.ui.MainViewModel" />
+            type="com.example.gagyeboost.ui.home.AddViewModel" />
 
         <variable
             name="homeViewModel"

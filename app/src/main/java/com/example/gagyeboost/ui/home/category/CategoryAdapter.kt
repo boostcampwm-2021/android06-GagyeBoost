@@ -1,4 +1,4 @@
-package com.example.gagyeboost.ui.category
+package com.example.gagyeboost.ui.home.category
 
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater

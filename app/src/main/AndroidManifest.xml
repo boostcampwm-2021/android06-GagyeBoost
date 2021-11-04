@@ -11,9 +11,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GagyeBoost">
         <activity
-            android:name=".ui.detail.DetailActivity"
-            android:exported="true" />
-        <activity
             android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>

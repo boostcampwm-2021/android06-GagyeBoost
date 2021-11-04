@@ -1,4 +1,4 @@
-package com.example.gagyeboost.ui.category
+package com.example.gagyeboost.ui.home.category
 
 import android.os.Bundle
 import android.view.View
@@ -10,14 +10,14 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.common.IS_EXPENSE_KEY
 import com.example.gagyeboost.databinding.FragmentCategoryBinding
 import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.ui.MainViewModel
+import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment_category) {
     private lateinit var categoryAdapter: CategoryAdapter
-    private val viewModel by sharedViewModel<MainViewModel>()
+    private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var navController: NavController
     private val homeViewModel by sharedViewModel<HomeViewModel>()
 

@@ -8,11 +8,12 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ActivityMainBinding
 import com.example.gagyeboost.ui.base.BaseActivity
+import com.example.gagyeboost.ui.home.AddViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var navController: NavController
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: AddViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

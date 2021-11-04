@@ -8,7 +8,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentHomeBinding
-import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -17,7 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by viewModel()
-    private val viewModel by sharedViewModel<MainViewModel>()
+    private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var customCalendarAdapter: CustomCalendarAdapter
     private lateinit var dialog: NumberPickerDialog
     private val detailAdapter: DateDetailAdapter by inject()
