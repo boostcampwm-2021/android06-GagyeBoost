@@ -39,10 +39,11 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         categoryAdapter = CategoryAdapter(
             {
                 Toast.makeText(requireContext(), "clicked", LENGTH_SHORT).show()
-                if (it < 0) {
+                if (it.id < 0) {
                     navController.navigate(R.id.action_categoryFragment_to_addCategoryFragment)
                 } else {
-                    // TODO: 지도 선택 화면으로 이동
+                    viewModel.setCategoryData(it)
+                    navController.navigate(R.id.action_categoryFragment_to_selectPositionFragment)
                 }
                 return@CategoryAdapter true
             }, {
