@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 
@@ -12,7 +14,7 @@ import com.example.gagyeboost.model.data.Category
         AccountBook::class,
         Category::class
     ],
-    version = 1
+    version = 2
 )
 abstract class AccountBookDatabase : RoomDatabase() {
     abstract fun accountBookDAO(): AccountBookDAO
@@ -28,6 +30,13 @@ abstract class AccountBookDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) = Room.databaseBuilder(
             context,
             AccountBookDatabase::class.java, "accountBookDatabase"
-        ).build()
+            ).addMigrations(MIGRATION_1_2)
+            .build()
+    }
+}
+
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE category ADD COLUMN money_type TINYINT")
     }
 }

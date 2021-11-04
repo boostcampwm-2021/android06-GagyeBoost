@@ -3,14 +3,11 @@ package com.example.gagyeboost.ui.home
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentHomeBinding
-import com.example.gagyeboost.model.data.DateDetailItem
-import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -19,7 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by viewModel()
-    private val viewModel by sharedViewModel<MainViewModel>()
+    private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var customCalendarAdapter: CustomCalendarAdapter
     private lateinit var dialog: NumberPickerDialog
     private val detailAdapter: DateDetailAdapter by inject()
@@ -47,8 +44,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.homeViewModel = homeViewModel
         dialog = NumberPickerDialog(binding.root.context)
         customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
-            Toast.makeText(requireContext(), it.date.toString() + "CLICKED", Toast.LENGTH_SHORT)
-                .show()
             homeViewModel.selectedDate.value = it
         }
 
@@ -58,7 +53,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun setDialog() {
-
         binding.tvYearAndMonth.setOnClickListener {
             dialog.window?.setGravity(Gravity.TOP)
             dialog.show()
@@ -83,6 +77,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun observe() {
+        homeViewModel.yearMonthPair.observe(viewLifecycleOwner) {
+            homeViewModel.loadAllDayDataInMonth()
+        }
+
         homeViewModel.dateItemList.observe(viewLifecycleOwner) {
             customCalendarAdapter.submitList(it)
         }

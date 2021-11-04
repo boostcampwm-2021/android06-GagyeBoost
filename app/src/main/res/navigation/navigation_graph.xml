@@ -34,7 +34,7 @@
         tools:layout="@layout/fragment_statistics" />
     <fragment
         android:id="@+id/addFragment"
-        android:name="com.example.gagyeboost.ui.add.AddFragment"
+        android:name="com.example.gagyeboost.ui.home.add.AddFragment"
         android:label="fragment_add"
         tools:layout="@layout/fragment_add">
         <action
@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="com.example.gagyeboost.ui.category.CategoryFragment"
+        android:name="com.example.gagyeboost.ui.home.category.CategoryFragment"
         android:label="fragment_category"
         tools:layout="@layout/fragment_category">
         <action

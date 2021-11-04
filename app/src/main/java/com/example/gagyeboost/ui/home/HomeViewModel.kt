@@ -1,7 +1,10 @@
 package com.example.gagyeboost.ui.home
 
-import android.util.Log
 import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.DateAlpha
 import com.example.gagyeboost.model.data.DateColor
@@ -21,12 +24,12 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     val yearAndMonth: LiveData<String> = _yearAndMonth
 
     private val _yearMonthPair = MutableLiveData<Pair<Int, Int>>()
+    val yearMonthPair: LiveData<Pair<Int, Int>> = _yearMonthPair
+
+    private val _dateItemList = MutableLiveData<List<DateItem>>()
+    val dateItemList: LiveData<List<DateItem>> = _dateItemList
 
     private val calendar = CustomCalendar()
-
-    val dateItemList = Transformations.map(_yearMonthPair) {
-        tempSetDataItemList()
-    }
 
     private val _categoryList = MutableLiveData<List<Category>>()
     val categoryList: LiveData<List<Category>> = _categoryList
@@ -43,6 +46,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
+        loadAllDayDataInMonth()
     }
 
     fun setYearAndMonth(year: Int, month: Int) {
@@ -51,25 +55,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         calendar.setYearAndMonth(year, month)
         _yearAndMonth.value = stringDate
         _yearMonthPair.value = Pair(year, month)
-    }
-
-    private fun tempSetDataItemList(): MutableList<DateItem> {
-        // TODO repository에서 가져온 데이터 가공
-        val list = mutableListOf<DateItem>()
-        calendar.datesInMonth.forEachIndexed { index, it ->
-            list.add(
-                DateItem(
-                    null,
-                    (0..100000).random(),
-                    it,
-                    2021,
-                    11,
-                    setDateColor(index),
-                    setDateAlpha(index)
-                )
-            )
-        }
-        return list
     }
 
     private fun setDateColor(position: Int): String =
@@ -92,7 +77,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     fun loadAllDayDataInMonth() {
         viewModelScope.launch {
-            val dateItemList = calendar.datesInMonth.map { date ->
+            val dateItems = mutableListOf<DateItem>()
+            calendar.datesInMonth.forEachIndexed { index, date ->
                 val accountDataList =
                     repository.loadDayData(
                         _yearMonthPair.value?.first ?: 0,
@@ -109,9 +95,20 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                         1.toByte() -> totalIncome += record.money
                     }
                 }
-                // TODO DateItem 작성
-//                DateItem(totalExpense, totalIncome, date, _yearMonthPair.value?.first ?: 0, _yearMonthPair.value?.second ?: 0, setDateColor())
+
+                dateItems.add(
+                    DateItem(
+                        if (totalExpense == 0) null else totalExpense,
+                        if (totalIncome == 0) null else totalIncome,
+                        date,
+                        _yearMonthPair.value?.first ?: 0,
+                        _yearMonthPair.value?.second ?: 0,
+                        setDateColor(index),
+                        setDateAlpha(index)
+                    )
+                )
             }
+            _dateItemList.postValue(dateItems)
         }
     }
 
@@ -127,8 +124,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     fun loadCategoryList() {
         viewModelScope.launch {
-            _categoryList.value = repository.loadCategoryList()
-            Log.d("TAG", _categoryList.value.toString())
+            _categoryList.value = repository.loadCategoryList(0.toByte())
         }
     }
 
@@ -140,7 +136,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         val list = mutableListOf<DateDetailItem>()
 
         viewModelScope.launch {
-            val categoryList = repository.loadCategoryList()
+            val categoryList = repository.loadCategoryList(0.toByte())
 
             repository.loadDayData(date.year, date.month, date.date).forEach { account ->
                 val category = categoryList.find { category ->
@@ -184,9 +180,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                     day = date.date
                 )
             )
-            //TODO 달력 데이터 갱신
 
-            tempSetDataItemList()
+            loadAllDayDataInMonth()
         }
     }
 }

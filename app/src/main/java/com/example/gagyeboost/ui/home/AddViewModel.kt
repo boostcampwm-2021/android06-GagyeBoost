@@ -1,6 +1,5 @@
-package com.example.gagyeboost.ui
+package com.example.gagyeboost.ui.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +13,7 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainViewModel(private val repository: Repository) : ViewModel() {
+class AddViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedCategoryIcon = MutableLiveData("🍚")
     val selectedCategoryIcon: LiveData<String> = _selectedCategoryIcon
 
@@ -44,6 +43,9 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     val content = MutableLiveData("")
 
+    private var _categoryType = 0.toByte()
+    val categoryType get() = _categoryType
+
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
     }
@@ -53,12 +55,17 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
             repository.addCategoryData(
                 Category(
                     categoryName = categoryName.value ?: "",
-                    emoji = _selectedCategoryIcon.value ?: nothingEmoji
+                    emoji = _selectedCategoryIcon.value ?: nothingEmoji,
+                    moneyType = _categoryType
                 )
             )
             loadCategoryList()
             selectedCategoryReset()
         }
+    }
+
+    fun setCategoryType(type: Byte) {
+        _categoryType = type
     }
 
     fun selectedCategoryReset() {
@@ -80,7 +87,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
                 Category(
                     selectedCategoryId,
                     categoryName.value ?: "",
-                    selectedCategoryIcon.value ?: nothingEmoji
+                    selectedCategoryIcon.value ?: nothingEmoji,
+                    _categoryType
                 )
             )
             loadCategoryList()
@@ -91,7 +99,6 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
     fun addAccountBookData() {
         viewModelScope.launch {
-            Log.i("TEST","tst:"+content.value.toString())
             repository.addAccountBookData(
                 AccountBook(
                     moneyType = 1.toByte(),
@@ -112,8 +119,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     fun loadCategoryList() {
         viewModelScope.launch {
-            _categoryList.value = repository.loadCategoryList()
-            Log.d("TAG", _categoryList.value.toString())
+            _categoryList.value = repository.loadCategoryList(categoryType)
         }
     }
 

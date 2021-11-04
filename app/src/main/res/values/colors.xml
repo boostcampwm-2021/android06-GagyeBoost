@@ -30,4 +30,6 @@
     <color name="category8">#BBBCE7</color>
     <color name="category9">#F2E4D8</color>
     <color name="category10">#D8AF8C</color>
+
+    <color name="baseColor">#58C8AE</color>
 </resources>

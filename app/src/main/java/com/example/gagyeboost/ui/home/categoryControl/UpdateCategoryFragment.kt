@@ -7,13 +7,13 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentUpdateCategoryBinding
-import com.example.gagyeboost.ui.MainViewModel
+import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class UpdateCategoryFragment :
     BaseFragment<FragmentUpdateCategoryBinding>(R.layout.fragment_update_category) {
-    private val viewModel by sharedViewModel<MainViewModel>()
+    private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var navController: NavController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

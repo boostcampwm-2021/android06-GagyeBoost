@@ -14,9 +14,13 @@ data class Category(
     var categoryName: String,
 
     @ColumnInfo(name = "emoji")
-    var emoji: String
+    var emoji: String,
+
+    @ColumnInfo(name = "money_type")
+    var moneyType: Byte
+
 ) {
-    constructor() : this(0, "", "")
+    constructor() : this(0, "", "", 0.toByte())
 }
 
 val nothingEmoji = "❌"
