@@ -38,7 +38,7 @@
             android:layout_height="50dp"
             android:contentDescription="@string/iv_category"
             android:gravity="center"
-            android:text="@{category.emoji}"
+            android:text="@{item.emoji}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
             app:layout_constraintTop_toTopOf="parent"
