@@ -25,13 +25,13 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     private var selectedCategoryId = -1
 
     private val _income = MutableLiveData<String>()
-    val income get() = _income
+    val income: LiveData<String> get() = _income
 
     private val _expense = MutableLiveData<String>()
-    val expense get() = _expense
+    val expense: LiveData<String> get() = _expense
 
     private val _result = MutableLiveData<String>()
-    val result get() = _result
+    val result: LiveData<String> get() = _result
 
     val money = MutableLiveData<String>("0")
 
