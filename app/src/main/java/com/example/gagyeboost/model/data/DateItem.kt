@@ -1,4 +1,4 @@
-package com.example.gagyeboost.ui.home
+package com.example.gagyeboost.model.data
 
 data class DateItem(
     val expense: Int?,

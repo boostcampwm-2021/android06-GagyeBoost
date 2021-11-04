@@ -5,5 +5,6 @@ data class DateDetailItem(
     val emoji: String,
     val category: String,
     val content: String,
-    val money: String
+    val money: String,
+    val moneyType: Boolean
 )

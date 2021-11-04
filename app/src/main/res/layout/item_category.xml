@@ -4,6 +4,7 @@
     <data>
 
         <import type="com.example.gagyeboost.model.data.Category" />
+
         <import type="kotlin.jvm.functions.Function1" />
 
         <variable
@@ -12,20 +13,19 @@
 
         <variable
             name="categoryClickListener"
-            type="Function1&lt;Integer, Boolean>" />
+            type="Function1&lt;Category, Boolean>" />
 
         <variable
             name="categoryLongClickListener"
-            type="Function1&lt;Integer, Boolean>" />
+            type="Function1&lt;Category, Boolean>" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{_ -> categoryClickListener.invoke(category.id)}"
-        android:onLongClick="@{_ -> categoryLongClickListener.invoke(category.id)}"
+        android:onClick="@{_ -> categoryClickListener.invoke(category)}"
+        android:onLongClick="@{_ -> categoryLongClickListener.invoke(category)}"
         tools:ignore="MissingConstraints">
 
         <TextView
@@ -34,8 +34,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/category_emoji_background"
             android:gravity="center"
-            android:paddingVertical="10dp"
             android:paddingHorizontal="5dp"
+            android:paddingVertical="10dp"
             android:text="@{category.emoji}"
             android:textColor="@color/black"
             android:textSize="14sp" />

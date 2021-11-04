@@ -3,6 +3,8 @@ package com.example.gagyeboost.ui.category
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.IS_EXPENSE_KEY
@@ -10,14 +12,18 @@ import com.example.gagyeboost.databinding.FragmentCategoryBinding
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment_category) {
     private lateinit var categoryAdapter: CategoryAdapter
     private val viewModel by sharedViewModel<MainViewModel>()
+    private lateinit var navController: NavController
+    private val homeViewModel by sharedViewModel<HomeViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
 
         initView()
         initClickListeners()
@@ -26,21 +32,25 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
     private fun initView() {
         binding.tvMoney.text =
-            viewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
+            homeViewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
 
         categoryAdapter = CategoryAdapter(
             {
-                if (it < 0) {
-                    // TODO: 카테고리 추가 화면으로 이동
+                if (it.id < 0) {
+                    navController.navigate(R.id.action_categoryFragment_to_addCategoryFragment)
                 } else {
-                    // TODO: 지도 선택 화면으로 이동
+                    viewModel.setCategoryData(it)
+                    navController.navigate(R.id.action_categoryFragment_to_selectPositionFragment)
                 }
                 return@CategoryAdapter true
             }, {
-                // TODO: 카테고리 수정 화면으로 이동(category id 값 넘겨주기)
+                viewModel.setCategoryData(it)
+                navController.navigate(R.id.action_categoryFragment_to_updateCategoryFragment)
                 return@CategoryAdapter true
             })
 
+        binding.viewModel = viewModel
+        binding.rvCategory.adapter = categoryAdapter
         binding.viewModel = viewModel
 
         binding.rvCategory.adapter = categoryAdapter
@@ -74,7 +84,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         }
 
         binding.btnClose.setOnClickListener {
-            findNavController().navigate(R.id.action_categoryFragment_to_homeFragment)
+            findNavController().popBackStack(R.id.homeFragment, false)
         }
     }
 
