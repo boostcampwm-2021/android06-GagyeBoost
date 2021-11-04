@@ -18,6 +18,19 @@
     <color name="holiday">#D96D84</color>
     <color name="expense">#D96D84</color>
     <color name="income">#53A370</color>
-    <color name="money_input_color">#A60F4CE4</color>
+    <color name="money_input_color">#4392BC</color>
+    <color name="cursor_color">#496BE6</color>
+    <color name="light_green">#19A81F</color>
 
+    <!--category 8 colors-->
+    <color name="category1">#FFB1B0</color>
+    <color name="category2">#FFDFBE</color>
+    <color name="category3">#FFFDBD</color>
+    <color name="category4">#B4F0A7</color>
+    <color name="category5"> #A9D1F7</color>
+    <color name="category6">#4392BC</color>
+    <color name="category7">#CC99FF</color>
+    <color name="category8">#BBBCE7</color>
+    <color name="category9">#F2E4D8</color>
+    <color name="category10">#D8AF8C</color>
 </resources>

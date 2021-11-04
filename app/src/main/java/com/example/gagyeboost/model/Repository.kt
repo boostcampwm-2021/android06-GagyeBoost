@@ -21,4 +21,8 @@ class Repository(private val accountBookDao: AccountBookDAO) {
     suspend fun loadCategoryList() = accountBookDao.getCategoryAllData()
 
     suspend fun updateCategoryData(category: Category) = accountBookDao.updateCategoryData(category)
+
+    suspend fun loadDayData(year: Int, month: Int, day: Int): List<AccountBook> {
+        return accountBookDao.getDayData(year, month, day)
+    }
 }

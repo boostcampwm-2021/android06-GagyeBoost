@@ -1,14 +1,16 @@
 package com.example.gagyeboost.ui
 
+import android.text.Editable
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.nothingEmoji
+import com.example.gagyeboost.ui.home.DateItem
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -88,6 +90,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
+    val selectedDate = MutableLiveData<DateItem>()
+
     private val _income = MutableLiveData<String>()
     val income get() = _income
 
@@ -146,5 +150,11 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 
-    fun getTodayString() = date.joinToString("/")
+    fun getTodayString() = selectedDate.value?.let {
+        it.year.toString() + "/" + it.month + "/" + it.date
+    } ?: ""
+
+    fun afterMoneyTextChanged(e: Editable) {
+        if (e.isEmpty()) money.value = "0"
+    }
 }

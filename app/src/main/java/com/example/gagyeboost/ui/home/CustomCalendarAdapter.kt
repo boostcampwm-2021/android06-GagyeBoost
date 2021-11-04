@@ -9,13 +9,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.databinding.ItemDateBinding
+import com.example.gagyeboost.ui.MainViewModel
 import java.text.DecimalFormat
 import java.util.*
 
 class CustomCalendarAdapter(
     val calendar: CustomCalendar,
-    private val itemClickListener: (String) -> Unit
+    val viewModel: MainViewModel,
+    private val itemClickListener: (DateItem) -> Unit
 ) : ListAdapter<DateItem, CustomCalendarAdapter.DateViewHolder>(diffUtil) {
+
+    private var selectedDatePosition: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DateViewHolder {
         return DateViewHolder(
@@ -43,11 +47,18 @@ class CustomCalendarAdapter(
 
         init {
             itemView.setOnClickListener {
-                currentItem?.let { itemClickListener.invoke(it.date.toString()) }
+                currentItem?.let { item -> itemClickListener.invoke(item) }
+
+                notifyItemChanged(adapterPosition)
+                selectedDatePosition?.let { notifyItemChanged(it) }
+                selectedDatePosition = adapterPosition
             }
         }
 
         fun bind(dateItem: DateItem) {
+            binding.viewModel = viewModel
+            binding.item = dateItem
+
             currentItem = dateItem
             setDate(dateItem)
             setMoney(binding.tvEarnings, dateItem.income)
