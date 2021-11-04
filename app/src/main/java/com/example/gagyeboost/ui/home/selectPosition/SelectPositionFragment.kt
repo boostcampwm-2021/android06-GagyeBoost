@@ -26,7 +26,6 @@ class SelectPositionFragment :
         binding.btnComplete.setOnClickListener {
             navController.popBackStack(R.id.homeFragment, false)
             viewModel.addAccountBookData()
-            //TODO DB에 데이터 추가
         }
     }
 }

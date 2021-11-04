@@ -3,11 +3,13 @@ package com.example.gagyeboost.ui.home
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.DateAlpha
+import com.example.gagyeboost.model.data.DateColor
+import com.example.gagyeboost.model.data.DateItem
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.DateDetailItem
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.util.*
 
@@ -72,18 +74,18 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     private fun setDateColor(position: Int): String =
         when (position % CustomCalendar.DAYS_OF_WEEK) {
-            0 -> "#D96D84"
-            6 -> "#6195e6"
-            else -> "#676d6e"
+            0 -> DateColor.Sunday.color
+            6 -> DateColor.Saturday.color
+            else -> DateColor.Weekday.color
         }
 
     private fun setDateAlpha(position: Int): Float {
         val alpha = if (position < calendar.prevMonthTailOffset
             || position >= calendar.prevMonthTailOffset + calendar.currentMonthMaxDate
         ) {
-            0.3f
+            DateAlpha.Percent30.alpha
         } else {
-            1f
+            DateAlpha.Percent100.alpha
         }
         return alpha
     }
@@ -188,4 +190,3 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 }
-
