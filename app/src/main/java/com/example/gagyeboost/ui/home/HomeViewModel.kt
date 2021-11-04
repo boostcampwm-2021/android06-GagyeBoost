@@ -4,10 +4,12 @@ import android.view.Gravity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
+import kotlinx.coroutines.launch
 import java.util.*
 
-class HomeViewModel(val repository: Repository): ViewModel() {
+class HomeViewModel(val repository: Repository) : ViewModel() {
 
     private val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
@@ -16,6 +18,8 @@ class HomeViewModel(val repository: Repository): ViewModel() {
 
     private val _month = MutableLiveData<Int>()
     private val _year = MutableLiveData<Int>()
+
+    private val calendar = CustomCalendar()
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH))
@@ -34,4 +38,23 @@ class HomeViewModel(val repository: Repository): ViewModel() {
         dialog.show()
     }
 
+    fun loadAllDayDataInMonth() {
+        viewModelScope.launch {
+            val dateItemList = calendar.datesInMonth.map { date ->
+                val accountDataList =
+                    repository.loadDayData(_year.value ?: 0, _month.value ?: 0, date)
+
+                var totalExpense = 0
+                var totalIncome = 0
+
+                accountDataList.forEach { record ->
+                    when (record.moneyType) {
+                        0.toByte() -> totalExpense += record.money
+                        1.toByte() -> totalIncome += record.money
+                    }
+                }
+                DateItem(totalExpense, totalIncome, date, _year.value ?: 0, _month.value ?: 0)
+            }
+        }
+    }
 }

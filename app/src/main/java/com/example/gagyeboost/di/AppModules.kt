@@ -21,6 +21,12 @@ val appModule = module {
                     db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('식비', '\uD83C\uDF7D');")
                     db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('주거/통신', '\uD83C\uDFE0');")
                     db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('여행', '✈️️');")
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('회비', '\uD83D\uDC65');")
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('선물', '\uD83C\uDF81');")
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('패션/쇼핑', '\uD83D\uDECD');")
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('생활', '\uD83E\uDDF4');")
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('교통', '\uD83D\uDE8C');")
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji) values ('기타', '➖');")
                 }
             }).build()
     }
