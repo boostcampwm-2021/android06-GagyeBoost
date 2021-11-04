@@ -20,6 +20,7 @@
     <color name="income">#53A370</color>
     <color name="money_input_color">#4392BC</color>
     <color name="cursor_color">#496BE6</color>
+    <color name="light_green">#19A81F</color>
 
     <!--category 8 colors-->
     <color name="category1">#FFB1B0</color>

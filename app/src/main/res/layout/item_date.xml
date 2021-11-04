@@ -3,15 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="item"
+            type="com.example.gagyeboost.ui.home.DateItem" />
+
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.MainViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@{viewModel.selectedDate == item ? @color/light_green : @color/white}">
 
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
+            android:textColor="@{viewModel.selectedDate == item ? @color/white : @android:color/tab_indicator_text}"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +38,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/earnings_text_color"
+            android:textColor="@{viewModel.selectedDate == item ? @color/white : @color/earnings_text_color}"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/tv_expense"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +54,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/expense_text_color"
+            android:textColor="@{viewModel.selectedDate == item ? @color/white : @color/expense_text_color}"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -54,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
+            android:afterTextChanged="@{viewModel::afterMoneyTextChanged}"
             android:background="@null"
             android:gravity="end"
             android:inputType="numberDecimal"
