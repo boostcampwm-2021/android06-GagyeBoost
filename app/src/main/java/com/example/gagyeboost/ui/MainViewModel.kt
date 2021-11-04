@@ -10,7 +10,6 @@ import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.nothingEmoji
-import com.example.gagyeboost.ui.home.DateItem
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -54,7 +53,9 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
             repository.addCategoryData(
                 Category(
                     categoryName = _categoryName.value ?: "",
-                    emoji = _selectedCategoryIcon.value ?: nothingEmoji
+                    emoji = _selectedCategoryIcon.value ?: nothingEmoji,
+                    //TODO: 지출/수입 중 어느 카테고리인지 지정 필요
+                    moneyType = 0.toByte()
                 )
             )
             loadCategoryList()
@@ -81,7 +82,9 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
                 Category(
                     selectedCategoryId,
                     categoryName.value ?: "",
-                    selectedCategoryIcon.value ?: nothingEmoji
+                    selectedCategoryIcon.value ?: nothingEmoji,
+                    //TODO: 지출/수입 중 어느 카테고리인지 지정 필요
+                    moneyType = 0.toByte()
                 )
             )
             loadCategoryList()

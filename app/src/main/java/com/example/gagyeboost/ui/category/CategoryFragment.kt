@@ -83,7 +83,11 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     private fun setObservers() {
         viewModel.categoryList.observe(viewLifecycleOwner) {
             val categoryList = it.toMutableList()
-            categoryList.add(Category(-1, getString(R.string.add), "➕"))
+            val categoryType = arguments?.let { bundle ->
+                if (bundle.getBoolean(IS_EXPENSE_KEY)) 0.toByte() else 1.toByte()
+            } ?: 0.toByte()
+
+            categoryList.add(Category(-1, getString(R.string.add), "➕", categoryType))
             categoryAdapter.submitList(categoryList)
         }
     }
