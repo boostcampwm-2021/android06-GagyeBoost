@@ -39,12 +39,12 @@
             tools:text="00" />
 
         <TextView
-            android:id="@+id/tv_earnings"
+            android:id="@+id/tv_income"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@{viewModel.selectedDate == item ? @color/white : @color/earnings_text_color}"
+            android:textColor="@{viewModel.selectedDate == item ? @color/white : @color/income}"
             android:textSize="14sp"
             tools:text="00" />
 
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@{viewModel.selectedDate == item ? @color/white : @color/expense_text_color}"
+            android:textColor="@{viewModel.selectedDate == item ? @color/white : @color/expense}"
             android:textSize="14sp"
             tools:text="00" />
 
@@ -62,7 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
-            app:constraint_referenced_ids="tv_earnings,tv_expense"
+            app:constraint_referenced_ids="tv_income,tv_expense"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="3:2"
             app:layout_constraintEnd_toEndOf="parent"

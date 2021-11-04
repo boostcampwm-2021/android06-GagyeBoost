@@ -55,7 +55,7 @@ class CustomCalendarAdapter(
             binding.viewModel = viewModel
             binding.executePendingBindings()
             setToday(dateItem)
-            setMoney(binding.tvEarnings, dateItem.income)
+            setMoney(binding.tvIncome, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
         }
 
