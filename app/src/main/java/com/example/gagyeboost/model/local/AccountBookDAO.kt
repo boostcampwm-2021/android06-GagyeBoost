@@ -21,8 +21,8 @@ interface AccountBookDAO {
     @Query("SELECT SUM(money) FROM account_book WHERE year=:year AND month=:month AND money_type=0")
     suspend fun getMonthExpense(year: Int, month: Int): Int?
 
-    @Query("SELECT * FROM category")
-    suspend fun getCategoryAllData(): List<Category>
+    @Query("SELECT * FROM category WHERE money_type=:moneyType")
+    suspend fun getCategoryAllData(moneyType: Byte): List<Category>
 
     @Insert
     suspend fun addCategoryData(category: Category)

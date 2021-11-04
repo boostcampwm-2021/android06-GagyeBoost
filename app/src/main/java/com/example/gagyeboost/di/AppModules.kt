@@ -33,6 +33,7 @@ val appModule = module {
 
                     db.execSQL("INSERT INTO CATEGORY (category_name, emoji, money_type) values ('월급', '🏢', $incomeType);")
                     db.execSQL("INSERT INTO CATEGORY (category_name, emoji, money_type) values ('용돈', '\uD83D\uDC5B', $incomeType);")
+                    db.execSQL("INSERT INTO CATEGORY (category_name, emoji, money_type) values ('이월', '📩', $incomeType);")
                     db.execSQL("INSERT INTO CATEGORY (category_name, emoji, money_type) values ('기타', '➖', $incomeType);")
                 }
             }).build()

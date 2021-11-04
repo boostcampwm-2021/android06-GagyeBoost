@@ -44,6 +44,9 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     private val _categoryList = MutableLiveData<List<Category>>()
     val categoryList: LiveData<List<Category>> = _categoryList
 
+    private var _categoryType = 0.toByte()
+    val categoryType get() = _categoryType
+
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
     }
@@ -54,13 +57,16 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
                 Category(
                     categoryName = _categoryName.value ?: "",
                     emoji = _selectedCategoryIcon.value ?: nothingEmoji,
-                    //TODO: 지출/수입 중 어느 카테고리인지 지정 필요
-                    moneyType = 0.toByte()
+                    moneyType = _categoryType
                 )
             )
             loadCategoryList()
             selectedCategoryReset()
         }
+    }
+
+    fun setCategoryType(type: Byte) {
+        _categoryType = type
     }
 
     fun selectedCategoryReset() {
@@ -83,8 +89,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
                     selectedCategoryId,
                     categoryName.value ?: "",
                     selectedCategoryIcon.value ?: nothingEmoji,
-                    //TODO: 지출/수입 중 어느 카테고리인지 지정 필요
-                    moneyType = 0.toByte()
+                    _categoryType
                 )
             )
             loadCategoryList()
@@ -115,8 +120,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     fun loadCategoryList() {
         viewModelScope.launch {
-            _categoryList.value = repository.loadCategoryList()
-            Log.d("TAG", _categoryList.value.toString())
+            Log.d("TAG", _categoryType.toString())
+            _categoryList.value = repository.loadCategoryList(_categoryType)
         }
     }
 

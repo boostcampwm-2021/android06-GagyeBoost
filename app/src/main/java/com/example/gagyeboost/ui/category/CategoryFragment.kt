@@ -27,8 +27,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     }
 
     private fun initView() {
-        viewModel.loadCategoryList()
-
         binding.tvMoney.text =
             viewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
 
@@ -47,27 +45,31 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
                 return@CategoryAdapter true
             })
 
-        with(binding) {
-            viewModel = viewModel
+        binding.viewModel = viewModel
 
-            rvCategory.adapter = categoryAdapter
+        binding.rvCategory.adapter = categoryAdapter
 
-            arguments?.let {
-                if (it.getBoolean(IS_EXPENSE_KEY)) tvMoney.setTextColor(
+        arguments?.let {
+            if (it.getBoolean(IS_EXPENSE_KEY)) {
+                binding.tvMoney.setTextColor(
                     ContextCompat.getColor(
                         requireContext(),
                         R.color.income
                     )
-                ) else {
-                    tvMoney.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.expense
-                        )
+                )
+                viewModel.setCategoryType(1.toByte())
+            } else {
+                binding.tvMoney.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.expense
                     )
-                }
+                )
+                viewModel.setCategoryType(0.toByte())
             }
         }
+
+        viewModel.loadCategoryList()
     }
 
     private fun initClickListeners() {
@@ -83,11 +85,8 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     private fun setObservers() {
         viewModel.categoryList.observe(viewLifecycleOwner) {
             val categoryList = it.toMutableList()
-            val categoryType = arguments?.let { bundle ->
-                if (bundle.getBoolean(IS_EXPENSE_KEY)) 0.toByte() else 1.toByte()
-            } ?: 0.toByte()
 
-            categoryList.add(Category(-1, getString(R.string.add), "➕", categoryType))
+            categoryList.add(Category(-1, getString(R.string.add), "➕", viewModel.categoryType))
             categoryAdapter.submitList(categoryList)
         }
     }
