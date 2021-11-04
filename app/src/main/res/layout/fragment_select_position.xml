@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -31,7 +30,8 @@
                     android:id="@+id/btn_selectPositionBack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_baseline_keyboard_backspace_24" />
+                    android:background="@drawable/ic_baseline_keyboard_backspace_24"
+                    android:contentDescription="@string/back_button" />
 
                 <TextView
                     android:id="@+id/tv_selectPositionTitle"

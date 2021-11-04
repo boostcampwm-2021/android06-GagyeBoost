@@ -214,7 +214,7 @@
             android:layout_margin="20dp"
             android:backgroundTint="@color/green"
             android:contentDescription="@string/btn_add_description"
-            android:visibility='@{viewModel.selectedDate != null ? View.VISIBLE : View.GONE}'
+            android:visibility='@{homeViewModel.selectedDate != null ? View.VISIBLE : View.GONE}'
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_baseline_add_24"

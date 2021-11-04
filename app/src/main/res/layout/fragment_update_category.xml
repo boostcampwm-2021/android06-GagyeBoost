@@ -32,7 +32,8 @@
                     android:id="@+id/btn_updateCategoryBack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_baseline_keyboard_backspace_24" />
+                    android:background="@drawable/ic_baseline_keyboard_backspace_24"
+                    android:contentDescription="@string/back_button" />
 
                 <TextView
                     android:id="@+id/tv_updateCategoryTitle"

@@ -33,5 +33,8 @@
     <string name="emoji_meal">🍚</string>
     <string name="position">위치</string>
     <string name="complete">완료</string>
+    <string name="back_button">back button</string>
+    <string name="close_btn">close fragment or activity</string>
+    <string name="add_category_btn">add category btn</string>
 
 </resources>

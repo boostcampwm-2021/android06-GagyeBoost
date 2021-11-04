@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_addFragment"
             app:destination="@id/addFragment" />
+        <argument
+            android:name="today"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"

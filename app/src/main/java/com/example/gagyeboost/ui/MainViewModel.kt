@@ -25,6 +25,26 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     private var selectedCategoryId = -1
 
+    private val _income = MutableLiveData<String>()
+    val income get() = _income
+
+    private val _expense = MutableLiveData<String>()
+    val expense get() = _expense
+
+    private val _result = MutableLiveData<String>()
+    val result get() = _result
+
+    val money = MutableLiveData<String>("0")
+
+    private val formatter = DecimalFormat("###,###")
+
+    private val dateFormatter = SimpleDateFormat("yyyy MM dd", Locale.getDefault())
+    private val date =
+        dateFormatter.format(Date(System.currentTimeMillis())).split(" ").map { it.toInt() }
+
+    private val _categoryList = MutableLiveData<List<Category>>()
+    val categoryList: LiveData<List<Category>> = _categoryList
+
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
     }
@@ -90,28 +110,6 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    val selectedDate = MutableLiveData<DateItem>()
-
-    private val _income = MutableLiveData<String>()
-    val income get() = _income
-
-    private val _expense = MutableLiveData<String>()
-    val expense get() = _expense
-
-    private val _result = MutableLiveData<String>()
-    val result get() = _result
-
-    val money = MutableLiveData<String>("0")
-
-    private val formatter = DecimalFormat("###,###")
-
-    private val dateFormatter = SimpleDateFormat("yyyy MM dd", Locale.getDefault())
-    private val date =
-        dateFormatter.format(Date(System.currentTimeMillis())).split(" ").map { it.toInt() }
-
-    private val _categoryList = MutableLiveData<List<Category>>()
-    val categoryList: LiveData<List<Category>> = _categoryList
-
     fun loadCategoryList() {
         viewModelScope.launch {
             _categoryList.value = repository.loadCategoryList()
@@ -149,10 +147,6 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
-
-    fun getTodayString() = selectedDate.value?.let {
-        it.year.toString() + "/" + it.month + "/" + it.date
-    } ?: ""
 
     fun afterMoneyTextChanged(e: Editable) {
         if (e.isEmpty()) money.value = "0"

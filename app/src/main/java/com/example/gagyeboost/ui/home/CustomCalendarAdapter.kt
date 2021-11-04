@@ -9,26 +9,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.databinding.ItemDateBinding
-import com.example.gagyeboost.ui.MainViewModel
 import java.text.DecimalFormat
 import java.util.*
 
 class CustomCalendarAdapter(
-    val calendar: CustomCalendar,
-    val viewModel: MainViewModel,
+    val viewModel: HomeViewModel,
     private val itemClickListener: (DateItem) -> Unit
 ) : ListAdapter<DateItem, CustomCalendarAdapter.DateViewHolder>(diffUtil) {
 
     private var selectedDatePosition: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DateViewHolder {
-        return DateViewHolder(
-            ItemDateBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+        val binding = ItemDateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return DateViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: DateViewHolder, position: Int) {
@@ -56,11 +49,11 @@ class CustomCalendarAdapter(
         }
 
         fun bind(dateItem: DateItem) {
-            binding.viewModel = viewModel
-            binding.item = dateItem
-
             currentItem = dateItem
-            setDate(dateItem)
+            binding.item = dateItem
+            binding.viewModel = viewModel
+            binding.executePendingBindings()
+            setToday(dateItem)
             setMoney(binding.tvEarnings, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
         }
@@ -73,31 +66,12 @@ class CustomCalendarAdapter(
             }
         }
 
-        private fun setDate(dateItem: DateItem) {
+        private fun setToday(dateItem: DateItem) {
             with(binding) {
-
-                when (adapterPosition % CustomCalendar.DAYS_OF_WEEK) {
-                    0 -> tvDate.setTextColor(Color.parseColor("#D96D84"))
-                    6 -> tvDate.setTextColor(Color.parseColor("#6395e6"))
-                    else -> tvDate.setTextColor(Color.parseColor("#676d6e"))
-                }
-
-                if (adapterPosition < calendar.prevMonthTailOffset
-                    || adapterPosition >= calendar.prevMonthTailOffset + calendar.currentMonthMaxDate
-                ) {
-                    tvDate.alpha = 0.3f
-                } else {
-                    tvDate.alpha = 1f
-                }
-
                 if (currentYear == dateItem.year && currentMonth == dateItem.month && currentDate == dateItem.date) {
                     tvDate.setTextColor(Color.RED)
                     itemView.setBackgroundColor(Color.parseColor("#e6e6e6"))
-                } else {
-                    tvDate.setTextColor(Color.parseColor("#676d6e"))
-                    itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
                 }
-                tvDate.text = dateItem.date.toString()
             }
         }
     }
@@ -110,6 +84,5 @@ class CustomCalendarAdapter(
             override fun areContentsTheSame(oldItem: DateItem, newItem: DateItem) =
                 oldItem == newItem
         }
-
     }
 }
