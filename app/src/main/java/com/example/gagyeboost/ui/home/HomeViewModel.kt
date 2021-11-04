@@ -1,5 +1,6 @@
 package com.example.gagyeboost.ui.home
 
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -43,6 +44,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     val money = MutableLiveData<String>("0")
 
     private val formatter = DecimalFormat("###,###")
+
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
@@ -158,30 +160,5 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         }
 
         return data
-    }
-
-    //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
-    fun addAccountBookData() {
-
-        val date = selectedDate.value ?: return
-
-        viewModelScope.launch {
-            repository.addAccountBookData(
-                AccountBook(
-                    moneyType = 1.toByte(),
-                    money = if (money.value != null) money.value!!.toInt() else 0,
-                    category = 13,
-                    address = "",
-                    latitude = 0.0f,
-                    longitude = 0.0f,
-                    content = "",
-                    year = date.year,
-                    month = date.month,
-                    day = date.date
-                )
-            )
-
-            loadAllDayDataInMonth()
-        }
     }
 }
