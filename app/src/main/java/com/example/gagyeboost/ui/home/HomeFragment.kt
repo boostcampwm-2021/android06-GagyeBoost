@@ -3,7 +3,6 @@ package com.example.gagyeboost.ui.home
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
@@ -47,8 +46,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.homeViewModel = homeViewModel
         dialog = NumberPickerDialog(binding.root.context)
         customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
-            Toast.makeText(requireContext(), it.date.toString() + "CLICKED", Toast.LENGTH_SHORT)
-                .show()
             homeViewModel.selectedDate.value = it
         }
 

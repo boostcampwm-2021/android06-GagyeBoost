@@ -2,8 +2,6 @@ package com.example.gagyeboost.ui.category
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
@@ -32,7 +30,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
         categoryAdapter = CategoryAdapter(
             {
-                Toast.makeText(requireContext(), "clicked", LENGTH_SHORT).show()
                 if (it < 0) {
                     // TODO: 카테고리 추가 화면으로 이동
                 } else {
@@ -41,7 +38,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
                 return@CategoryAdapter true
             }, {
                 // TODO: 카테고리 수정 화면으로 이동(category id 값 넘겨주기)
-                Toast.makeText(requireContext(), "$it long clicked", LENGTH_SHORT).show()
                 return@CategoryAdapter true
             })
 
