@@ -27,6 +27,9 @@ interface AccountBookDAO {
     @Insert
     suspend fun addCategoryData(category: Category)
 
+    @Update
+    suspend fun updateCategoryData(category: Category)
+
     @Query("DELETE FROM category WHERE  category_name=:categoryName")
     fun deleteCategoryData(categoryName: String)
 
@@ -35,7 +38,7 @@ interface AccountBookDAO {
     fun isExistCategoryName(categoryName: String): Boolean
 
     @Query("SELECT * FROM category WHERE id=:id")
-    fun getCategoryData(id:Int): Category
+    fun getCategoryData(id: Int): Category
 
     @Insert
     suspend fun addAccountBookData(accountBook: AccountBook)
