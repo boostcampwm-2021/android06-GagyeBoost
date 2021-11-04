@@ -19,7 +19,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@{viewModel.selectedDate == item ? @color/light_green : @color/white}">
 
         <TextView
             android:id="@+id/tv_date"
@@ -28,7 +29,7 @@
             android:layout_margin="2dp"
             android:text="@{String.valueOf(item.date)}"
             android:alpha="@{item.alpha}"
-            android:textColor="@{Color.parseColor(item.color)}"
+            android:textColor="@{viewModel.selectedDate == item ? @color/white : Color.parseColor(item.color)}"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +43,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/earnings_text_color"
+            android:textColor="@{viewModel.selectedDate == item ? @color/white : @color/earnings_text_color}"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/tv_expense"
             app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +59,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/expense_text_color"
+            android:textColor="@{viewModel.selectedDate == item ? @color/white : @color/expense_text_color}"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -14,8 +14,10 @@ import java.util.*
 
 class CustomCalendarAdapter(
     val viewModel: HomeViewModel,
-    private val itemClickListener: (String) -> Unit
+    private val itemClickListener: (DateItem) -> Unit
 ) : ListAdapter<DateItem, CustomCalendarAdapter.DateViewHolder>(diffUtil) {
+
+    private var selectedDatePosition: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DateViewHolder {
         val binding = ItemDateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -38,7 +40,11 @@ class CustomCalendarAdapter(
 
         init {
             itemView.setOnClickListener {
-                currentItem?.let { itemClickListener.invoke(it.date.toString()) }
+                currentItem?.let { item -> itemClickListener.invoke(item) }
+
+                notifyItemChanged(adapterPosition)
+                selectedDatePosition?.let { notifyItemChanged(it) }
+                selectedDatePosition = adapterPosition
             }
         }
 

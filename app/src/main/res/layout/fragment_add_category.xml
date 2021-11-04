@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.MainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.home.categoryControl.AddCategoryFragment">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_addCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/green">
+
+                <ImageView
+                    android:id="@+id/btn_addCategoryBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_baseline_keyboard_backspace_24"
+                    android:contentDescription="@string/back_button" />
+
+                <TextView
+                    android:id="@+id/tv_addCategoryTitle"
+                    style="@style/CategoryControlTitle"
+                    android:text="@string/add" />
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <TextView
+            android:id="@+id/tv_name_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="60dp"
+            android:text="@string/name"
+            android:textColor="@color/gray3"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar_addCategory" />
+
+        <EditText
+            android:id="@+id/et_name_body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:hint="@string/add_category_name_hint"
+            android:inputType="text"
+            android:maxLength="10"
+            android:text="@={viewModel.categoryName}"
+            android:textColor="@color/gray3"
+            android:textColorHint="@color/gray2"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_name_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_name_title"
+            app:layout_constraintTop_toTopOf="@id/tv_name_title" />
+
+        <TextView
+            android:id="@+id/tv_icon_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/icon"
+            android:textColor="@color/gray3"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_name_title" />
+
+        <TextView
+            android:id="@+id/tv_icon_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@{viewModel.selectedCategoryIcon.isEmpty()? @string/emoji_meal:viewModel.selectedCategoryIcon}"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_icon_title"
+            app:layout_constraintStart_toEndOf="@id/tv_icon_title"
+            app:layout_constraintTop_toTopOf="@id/tv_icon_title"
+            tools:text="@string/emoji_meal" />
+
+        <View
+            android:id="@+id/view_line_1"
+            android:layout_width="0dp"
+            android:layout_height="3dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="32dp"
+            android:background="@color/gray2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_icon_title" />
+
+        <ImageView
+            android:id="@+id/btn_add_category_complete"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/ic_baseline_add_circle_24"
+            android:backgroundTint="@color/green"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/add_category_btn" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

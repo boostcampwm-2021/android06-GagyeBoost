@@ -1,13 +1,11 @@
 package com.example.gagyeboost.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.gagyeboost.model.Repository
+import kotlinx.coroutines.launch
 import java.util.*
 
-class HomeViewModel(val repository: Repository) : ViewModel() {
+class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     private val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
@@ -21,6 +19,8 @@ class HomeViewModel(val repository: Repository) : ViewModel() {
     val dateItemList = Transformations.map(_yearMonthPair) {
         tempSetDataItemList()
     }
+
+    val selectedDate = MutableLiveData<DateItem>()
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
@@ -60,7 +60,6 @@ class HomeViewModel(val repository: Repository) : ViewModel() {
             else -> "#676d6e"
         }
 
-
     private fun setDateAlpha(position: Int): Float {
         val alpha = if (position < calendar.prevMonthTailOffset
             || position >= calendar.prevMonthTailOffset + calendar.currentMonthMaxDate
@@ -71,5 +70,34 @@ class HomeViewModel(val repository: Repository) : ViewModel() {
         }
         return alpha
     }
+
+    fun loadAllDayDataInMonth() {
+        viewModelScope.launch {
+            val dateItemList = calendar.datesInMonth.map { date ->
+                val accountDataList =
+                    repository.loadDayData(
+                        _yearMonthPair.value?.first ?: 0,
+                        _yearMonthPair.value?.second ?: 0,
+                        date
+                    )
+
+                var totalExpense = 0
+                var totalIncome = 0
+
+                accountDataList.forEach { record ->
+                    when (record.moneyType) {
+                        0.toByte() -> totalExpense += record.money
+                        1.toByte() -> totalIncome += record.money
+                    }
+                }
+                // TODO DateItem 작성
+//                DateItem(totalExpense, totalIncome, date, _yearMonthPair.value?.first ?: 0, _yearMonthPair.value?.second ?: 0, setDateColor())
+            }
+        }
+    }
+
+    fun getTodayString() = selectedDate.value?.let {
+        it.year.toString() + "/" + it.month + "/" + it.date
+    } ?: ""
 
 }

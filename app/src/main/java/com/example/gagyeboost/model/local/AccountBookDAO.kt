@@ -11,7 +11,7 @@ import com.example.gagyeboost.model.data.Category
 interface AccountBookDAO {
     //선택한 일자의 모든 데이터
     @Query("SELECT * FROM account_book WHERE year=:year AND month=:month AND day=:day")
-    fun getDayData(year: Int, month: Int, day: Int): List<AccountBook>
+    suspend fun getDayData(year: Int, month: Int, day: Int): List<AccountBook>
 
     //선택한 달의 수입 총 합
     @Query("SELECT SUM(money) FROM account_book WHERE year=:year AND month=:month AND money_type=1")
@@ -27,6 +27,9 @@ interface AccountBookDAO {
     @Insert
     suspend fun addCategoryData(category: Category)
 
+    @Update
+    suspend fun updateCategoryData(category: Category)
+
     @Query("DELETE FROM category WHERE  category_name=:categoryName")
     fun deleteCategoryData(categoryName: String)
 
@@ -35,7 +38,7 @@ interface AccountBookDAO {
     fun isExistCategoryName(categoryName: String): Boolean
 
     @Query("SELECT * FROM category WHERE id=:id")
-    fun getCategoryData(id:Int): Category
+    fun getCategoryData(id: Int): Category
 
     @Insert
     suspend fun addAccountBookData(accountBook: AccountBook)

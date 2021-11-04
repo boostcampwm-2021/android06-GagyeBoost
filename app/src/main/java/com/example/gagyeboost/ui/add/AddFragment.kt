@@ -5,6 +5,8 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.IS_EXPENSE_KEY
+import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentAddBinding
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
@@ -18,6 +20,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewModel = viewModel
+        binding.tvDate.text = arguments?.getString(TODAY_STRING_KEY)
 
         initClickListeners()
     }
@@ -39,7 +42,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
     private fun goToCategoryFragment(isExpense: Boolean) {
         findNavController().navigate(
             R.id.action_addFragment_to_categoryFragment,
-            bundleOf("isExpense" to isExpense)
+            bundleOf(IS_EXPENSE_KEY to isExpense)
         )
     }
 }

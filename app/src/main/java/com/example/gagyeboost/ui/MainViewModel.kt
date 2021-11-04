@@ -1,18 +1,29 @@
 package com.example.gagyeboost.ui
 
+import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.nothingEmoji
+import com.example.gagyeboost.ui.home.DateItem
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
+    private val _selectedCategoryIcon = MutableLiveData("")
+    val selectedCategoryIcon: LiveData<String> = _selectedCategoryIcon
+
+    private val _categoryName = MutableLiveData("")
+    val categoryName get() = _categoryName
+
+    private var selectedCategoryId = -1
 
     private val _income = MutableLiveData<String>()
     val income get() = _income
@@ -33,6 +44,71 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     private val _categoryList = MutableLiveData<List<Category>>()
     val categoryList: LiveData<List<Category>> = _categoryList
+
+    fun setSelectedIcon(icon: String) {
+        _selectedCategoryIcon.value = icon
+    }
+
+    fun addCategory() {
+        viewModelScope.launch {
+            repository.addCategoryData(
+                Category(
+                    categoryName = _categoryName.value ?: "",
+                    emoji = _selectedCategoryIcon.value ?: nothingEmoji
+                )
+            )
+            loadCategoryList()
+            selectedCategoryReset()
+        }
+    }
+
+    fun selectedCategoryReset() {
+        _categoryName.value = ""
+        _selectedCategoryIcon.value = ""
+        selectedCategoryId = -1
+    }
+
+    // 선택한 카테고리를 인자로 UpdateCategory에 표시(카테고리 long click 시 호출)
+    fun setCategoryData(category: Category) {
+        selectedCategoryId = category.id
+        _categoryName.value = category.categoryName
+        _selectedCategoryIcon.value = category.emoji
+    }
+
+    fun updateCategory() {
+        viewModelScope.launch {
+            repository.updateCategoryData(
+                Category(
+                    selectedCategoryId,
+                    categoryName.value ?: "",
+                    selectedCategoryIcon.value ?: nothingEmoji
+                )
+            )
+            loadCategoryList()
+            selectedCategoryReset()
+        }
+    }
+
+    //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
+    fun addAccountBookData() {
+        viewModelScope.launch {
+            repository.addAccountBookData(
+                AccountBook(
+                    moneyType = 1.toByte(),
+                    money = if (money.value != null) money.value!!.toInt() else 0,
+                    category = 13,
+                    address = "",
+                    latitude = 0.0f,
+                    longitude = 0.0f,
+                    content = "",
+                    year = date[0],
+                    month = date[1],
+                    day = date[2]
+                )
+            )
+            //TODO 달력 데이터 갱신
+        }
+    }
 
     fun loadCategoryList() {
         viewModelScope.launch {
@@ -72,5 +148,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 
-    fun getTodayString() = date.joinToString("/")
+    fun afterMoneyTextChanged(e: Editable) {
+        if (e.isEmpty()) money.value = "0"
+    }
 }
