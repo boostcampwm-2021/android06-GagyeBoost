@@ -1,11 +1,16 @@
 package com.example.gagyeboost.ui.home
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.DateAlpha
 import com.example.gagyeboost.model.data.DateColor
 import com.example.gagyeboost.model.data.DateItem
+import com.example.gagyeboost.model.data.AccountBook
+import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.DateDetailItem
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import java.util.*
 
 class HomeViewModel(private val repository: Repository) : ViewModel() {
@@ -23,7 +28,18 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         tempSetDataItemList()
     }
 
+    private val _categoryList = MutableLiveData<List<Category>>()
+    val categoryList: LiveData<List<Category>> = _categoryList
+
     val selectedDate = MutableLiveData<DateItem>()
+
+    val detailItemList = Transformations.switchMap(selectedDate) {
+        getDateDetailItemList(it)
+    }
+
+    val money = MutableLiveData<String>("0")
+
+    private val formatter = DecimalFormat("###,###")
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
@@ -103,4 +119,74 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         it.year.toString() + "/" + it.month + "/" + it.date
     } ?: ""
 
+    fun afterMoneyTextChanged() {
+        if (money.value.isNullOrEmpty()) money.value = "0"
+
+        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "");
+    }
+
+    fun loadCategoryList() {
+        viewModelScope.launch {
+            _categoryList.value = repository.loadCategoryList()
+            Log.d("TAG", _categoryList.value.toString())
+        }
+    }
+
+    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
+
+    fun getDateDetailItemList(date: DateItem): LiveData<MutableList<DateDetailItem>> {
+        val data = MutableLiveData<MutableList<DateDetailItem>>()
+
+        val list = mutableListOf<DateDetailItem>()
+
+        viewModelScope.launch {
+            val categoryList = repository.loadCategoryList()
+
+            repository.loadDayData(date.year, date.month, date.date).forEach { account ->
+                val category = categoryList.find { category ->
+                    category.id == account.category
+                }
+                list.add(
+                    DateDetailItem(
+                        account.id.toString(),
+                        category?.emoji ?: "NO",
+                        category?.categoryName ?: "NO",
+                        account.content,
+                        getFormattedMoneyText(account.money),
+                        account.moneyType == 1.toByte()
+                    )
+                )
+            }
+
+            data.postValue(list)
+        }
+
+        return data
+    }
+
+    //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
+    fun addAccountBookData() {
+
+        val date = selectedDate.value ?: return
+
+        viewModelScope.launch {
+            repository.addAccountBookData(
+                AccountBook(
+                    moneyType = 1.toByte(),
+                    money = if (money.value != null) money.value!!.toInt() else 0,
+                    category = 13,
+                    address = "",
+                    latitude = 0.0f,
+                    longitude = 0.0f,
+                    content = "",
+                    year = date.year,
+                    month = date.month,
+                    day = date.date
+                )
+            )
+            //TODO 달력 데이터 갱신
+
+            tempSetDataItemList()
+        }
+    }
 }

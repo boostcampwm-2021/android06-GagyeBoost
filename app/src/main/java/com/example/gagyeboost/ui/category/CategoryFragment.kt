@@ -14,12 +14,14 @@ import com.example.gagyeboost.databinding.FragmentCategoryBinding
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.ui.MainViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment_category) {
     private lateinit var categoryAdapter: CategoryAdapter
     private val viewModel by sharedViewModel<MainViewModel>()
     private lateinit var navController: NavController
+    private val homeViewModel by sharedViewModel<HomeViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,7 +36,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         viewModel.loadCategoryList()
 
         binding.tvMoney.text =
-            viewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
+            homeViewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
 
         categoryAdapter = CategoryAdapter(
             {

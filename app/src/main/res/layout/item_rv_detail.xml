@@ -8,6 +8,10 @@
         <variable
             name="item"
             type="com.example.gagyeboost.model.data.DateDetailItem" />
+
+        <variable
+            name="category"
+            type="com.example.gagyeboost.model.data.Category" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,15 +32,17 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="10dp" />
 
-        <ImageView
+        <TextView
             android:id="@+id/iv_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="@string/iv_category"
+            android:gravity="center"
+            android:text="@{category.emoji}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/sample" />
+            tools:text="➕" />
 
         <TextView
             android:id="@+id/tv_category"
@@ -71,6 +77,7 @@
             android:layout_height="wrap_content"
             android:text="@{item.money}"
             android:textSize="18sp"
+            android:textColor="@{item.moneyType ? @color/income : @color/expense}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
             app:layout_constraintTop_toTopOf="parent"
