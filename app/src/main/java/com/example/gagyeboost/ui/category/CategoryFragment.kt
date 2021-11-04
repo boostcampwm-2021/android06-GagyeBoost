@@ -76,7 +76,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         }
 
         binding.btnClose.setOnClickListener {
-            findNavController().navigate(R.id.action_categoryFragment_to_homeFragment)
+            findNavController().popBackStack(R.id.homeFragment, false)
         }
     }
 
