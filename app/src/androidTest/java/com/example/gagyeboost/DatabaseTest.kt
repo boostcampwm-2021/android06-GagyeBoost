@@ -1,7 +1,6 @@
 package com.example.gagyeboost
 
 import android.content.Context
-import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -117,7 +116,7 @@ class DatabaseTest {
         //Given
 
         //When
-        val dataList = accountBookDao.getDayData(2021, 11, 1)
+        val dataList = accountBookDao.loadDayData(2021, 11, 1)
 
         //Then
         assertThat(dataList.size, `is`(2))
@@ -128,7 +127,7 @@ class DatabaseTest {
         //Given
 
         //When
-        val dataList = accountBookDao.getDayData(2021, 10, 1)
+        val dataList = accountBookDao.loadDayData(2021, 10, 1)
 
         //Then
         assertThat(dataList.size, `is`(0))
@@ -139,7 +138,7 @@ class DatabaseTest {
         //Given
 
         //When
-        val dataList = accountBookDao.getCategoryAllData()
+        val dataList = accountBookDao.loadCategoryAllData()
 
         //Then
         assertThat(dataList.containsAll(baseCategoryList), `is`(true))
@@ -157,7 +156,7 @@ class DatabaseTest {
         )
 
         //When
-        val size = accountBookDao.getCategoryAllData().size
+        val size = accountBookDao.loadCategoryAllData().size
 
         //Then
         assertThat(size, `is`(4))
@@ -168,7 +167,7 @@ class DatabaseTest {
         //Given
 
         //When
-        val dataList = accountBookDao.getSearchData(categoryList = listOf(1, 2, 3))
+        val dataList = accountBookDao.loadSearchData(categoryList = listOf(1, 2, 3))
 
         //Then
         assertThat(dataList.containsAll(baseAccountBookList), `is`(true))
@@ -179,7 +178,7 @@ class DatabaseTest {
         //Given
 
         //When
-        val income = accountBookDao.getMonthIncome(2021, 10)
+        val income = accountBookDao.loadMonthIncome(2021, 10)
 
         //Then
         assertThat(income, `is`(0))
@@ -190,7 +189,7 @@ class DatabaseTest {
         //Given
 
         //When
-        val expense = accountBookDao.getMonthExpense(2021, 10)
+        val expense = accountBookDao.loadMonthExpense(2021, 10)
 
         //Then
         assertThat(expense, `is`(6000))
@@ -223,7 +222,7 @@ class DatabaseTest {
         //Given
 
         //When
-        val category = accountBookDao.getCategoryData(1)
+        val category = accountBookDao.loadCategoryData(1)
 
         //Then
         assertThat(category == baseCategoryList[0], `is`(true))
@@ -237,7 +236,7 @@ class DatabaseTest {
 
         //When
         accountBookDao.updateAccountBookData(updatedData)
-        val isUpdated = (accountBookDao.getSearchData(
+        val isUpdated = (accountBookDao.loadSearchData(
             startMoney = 100000,
             endMoney = 100000,
             categoryList = listOf(1, 2, 3)
