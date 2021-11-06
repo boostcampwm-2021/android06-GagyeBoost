@@ -28,7 +28,8 @@ class SelectPositionFragment :
             navController.popBackStack(R.id.homeFragment, false)
             viewModel.addAccountBookData()
         }
-        binding.btnSelectPositionBack.setOnClickListener{
+        binding.btnSelectPositionBack.setOnClickListener {
+            viewModel.selectedCategoryReset()
             navController.popBackStack()
         }
     }
