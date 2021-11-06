@@ -7,8 +7,8 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentUpdateCategoryBinding
-import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.home.AddViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class UpdateCategoryFragment :
@@ -24,13 +24,27 @@ class UpdateCategoryFragment :
 
     private fun init() {
         binding.viewModel = viewModel
-        binding.btnUpdateCategoryBack.setOnClickListener {
-            viewModel.selectedCategoryReset()
-            navController.popBackStack()
+        with(binding.appBarUpdateCategory) {
+            setNavigationOnClickListener{
+                viewModel.selectedCategoryReset()
+                navController.popBackStack()
+            }
+
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.delete_category -> {
+                        // TODO: 카테고리 삭제 로직 추가
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
+
         binding.tvIconBody.setOnClickListener {
             navController.navigate(R.id.action_updateCategoryFragment_to_categoryIconListFragment)
         }
+
         binding.btnUpdateCategoryComplete.setOnClickListener {
             if (binding.etNameBody.text.isEmpty()) {
                 Toast.makeText(requireContext(), "이름을 반드시 입력해야 합니다", Toast.LENGTH_SHORT).show()

@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar_selectPosition"
+            android:id="@+id/app_bar_layout_select_position"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -22,22 +22,15 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/app_bar_select_position"
+                style="@style/CategoryControlTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/green">
-
-                <ImageView
-                    android:id="@+id/btn_selectPositionBack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_baseline_keyboard_backspace_24"
-                    android:contentDescription="@string/back_button" />
-
-                <TextView
-                    android:id="@+id/tv_selectPositionTitle"
-                    style="@style/CategoryControlTitle"
-                    android:text="@string/position" />
-            </com.google.android.material.appbar.MaterialToolbar>
+                android:textSize="@dimen/app_bar_title_text_size"
+                app:navigationIcon="@drawable/ic_arrow_left_white"
+                app:title="@string/position"
+                app:titleCentered="true"
+                app:titleTextColor="@color/white" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <TextView

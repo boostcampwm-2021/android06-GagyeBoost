@@ -28,7 +28,7 @@ class SelectPositionFragment :
             viewModel.addAccountBookData()
         }
 
-        binding.btnSelectPositionBack.setOnClickListener {
+        binding.appBarSelectPosition.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }

@@ -36,5 +36,7 @@
     <string name="back_button">back button</string>
     <string name="close_btn">close fragment or activity</string>
     <string name="add_category_btn">add category btn</string>
+    <string name="must_enter_category_name">이름을 반드시 입력해야 합니다</string>
+    <string name="delete">삭제</string>
 
 </resources>
