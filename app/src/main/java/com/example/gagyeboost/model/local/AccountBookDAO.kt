@@ -38,7 +38,7 @@ interface AccountBookDAO {
     fun isExistCategoryName(categoryName: String): Boolean
 
     @Query("SELECT * FROM category WHERE id=:id")
-    fun getCategoryData(id: Int): Category
+    suspend fun getCategoryData(id: Int): Category
 
     @Insert
     suspend fun addAccountBookData(accountBook: AccountBook)

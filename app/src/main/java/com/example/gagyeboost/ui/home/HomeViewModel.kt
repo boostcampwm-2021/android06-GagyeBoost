@@ -138,17 +138,13 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         val list = mutableListOf<DateDetailItem>()
 
         viewModelScope.launch {
-            val categoryList = repository.loadCategoryList(0.toByte())
-
             repository.loadDayData(date.year, date.month, date.date).forEach { account ->
-                val category = categoryList.find { category ->
-                    category.id == account.category
-                }
+                val category = repository.loadCategoryData(account.category)
                 list.add(
                     DateDetailItem(
                         account.id.toString(),
-                        category?.emoji ?: "NO",
-                        category?.categoryName ?: "NO",
+                        category.emoji,
+                        category.categoryName,
                         account.content,
                         getFormattedMoneyText(account.money),
                         account.moneyType == 1.toByte()
