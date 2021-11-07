@@ -35,17 +35,12 @@
 
         <TextView
             android:id="@+id/btn_complete"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@color/green"
-            android:gravity="center"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="5dp"
+            android:layout_marginBottom="20dp"
+            android:theme="@style/GradationButton"
             android:text="@string/complete"
-            android:textColor="@color/white"
-            android:textSize="32sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
