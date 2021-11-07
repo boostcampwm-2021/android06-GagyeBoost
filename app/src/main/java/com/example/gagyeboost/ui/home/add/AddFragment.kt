@@ -3,6 +3,7 @@ package com.example.gagyeboost.ui.home.add
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.IS_EXPENSE_KEY
@@ -12,6 +13,7 @@ import com.example.gagyeboost.model.data.DateItem
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.home.HomeViewModel
+import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
@@ -22,9 +24,9 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewModel = viewModel
-        val dateStr=arguments?.getString(TODAY_STRING_KEY)
+        val dateStr = arguments?.getString(TODAY_STRING_KEY)
         binding.tvDate.text = dateStr
-        viewModel.dateString=dateStr?:""
+        viewModel.dateString = dateStr ?: ""
         initClickListeners()
     }
 
@@ -39,6 +41,12 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
         binding.btnClose.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.etWon.doAfterTextChanged {
+            it?.let {
+                if (it.length == 1) binding.etWon.setSelection(it.length)
+            }
         }
     }
 
