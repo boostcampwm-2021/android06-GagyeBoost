@@ -19,7 +19,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     private lateinit var categoryAdapter: CategoryAdapter
     private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var navController: NavController
-    private val homeViewModel by sharedViewModel<HomeViewModel>()
+   // private val homeViewModel by sharedViewModel<HomeViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,7 +32,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
     private fun initView() {
         binding.tvMoney.text =
-            homeViewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
+           viewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
 
         categoryAdapter = CategoryAdapter(
             {

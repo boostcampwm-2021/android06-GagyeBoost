@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.gagyeboost.ui.home.HomeViewModel" />
+            type="com.example.gagyeboost.ui.home.AddViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,7 +59,7 @@
             android:gravity="end"
             android:hint="@null"
             android:inputType="numberDecimal"
-            android:maxLength="6"
+            android:maxLength="9"
             android:maxLines="1"
             android:text="@={viewModel.money}"
             android:textColor="@color/money_input_color"

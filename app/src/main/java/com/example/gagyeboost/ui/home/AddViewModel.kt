@@ -45,6 +45,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     private var _categoryType = 0.toByte()
     val categoryType get() = _categoryType
+    var dateString = ""
 
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
@@ -98,7 +99,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
     fun addAccountBookData() {
+        if (dateString.isEmpty()) return
         viewModelScope.launch {
+            val splitedStr = dateString.split('/')
             repository.addAccountBookData(
                 AccountBook(
                     moneyType = 1.toByte(),
@@ -108,9 +111,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                     latitude = 0.0f,
                     longitude = 0.0f,
                     content = content.value ?: "",
-                    year = date[0],
-                    month = date[1],
-                    day = date[2]
+                    year = splitedStr[0].toInt(),
+                    month = splitedStr[1].toInt(),
+                    day = splitedStr[2].toInt()
                 )
             )
             //TODO 달력 데이터 갱신
@@ -151,4 +154,12 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
             _result.postValue(result)
         }
     }
+
+    fun afterMoneyTextChanged() {
+        if (money.value.isNullOrEmpty()) money.value = "0"
+
+        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "");
+    }
+
+    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 }
