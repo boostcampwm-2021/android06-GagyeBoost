@@ -158,7 +158,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     fun afterMoneyTextChanged() {
         if (money.value.isNullOrEmpty()) money.value = "0"
 
-        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "");
+        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "")
     }
 
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
