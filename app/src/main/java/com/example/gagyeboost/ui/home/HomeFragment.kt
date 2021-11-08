@@ -36,8 +36,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         setDialog()
         observe()
 
-        viewModel.getMonthIncome()
-        viewModel.getMonthExpense()
+        viewModel.loadMonthIncome()
+        viewModel.loadMonthExpense()
         viewModel.setTotalMoney()
         binding.fabAdd.setOnClickListener {
             val today = homeViewModel.getTodayString()

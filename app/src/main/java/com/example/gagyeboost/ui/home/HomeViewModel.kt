@@ -2,17 +2,8 @@ package com.example.gagyeboost.ui.home
 
 import android.util.Log
 import androidx.lifecycle.*
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.DateAlpha
-import com.example.gagyeboost.model.data.DateColor
-import com.example.gagyeboost.model.data.DateItem
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.DateDetailItem
+import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.util.*
@@ -38,7 +29,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     val selectedDate = MutableLiveData<DateItem>()
 
     val detailItemList = Transformations.switchMap(selectedDate) {
-        getDateDetailItemList(it)
+        loadDateDetailItemList(it)
     }
 
     val money = MutableLiveData<String>("0")
@@ -131,7 +122,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 
-    fun getDateDetailItemList(date: DateItem): LiveData<MutableList<DateDetailItem>> {
+    fun loadDateDetailItemList(date: DateItem): LiveData<MutableList<DateDetailItem>> {
         val data = MutableLiveData<MutableList<DateDetailItem>>()
 
         val list = mutableListOf<DateDetailItem>()

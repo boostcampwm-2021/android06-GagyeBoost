@@ -25,6 +25,17 @@ data class Category(
 
 val nothingEmoji = "❌"
 val emojiList = listOf(
+    "🥰",
+    "🐱",
+    "🐔",
+    "🍎",
+    "🍉",
+    "🛴",
+    "🎠",
+    "🏖",
+    "📱",
+    "💊",
+    "❤️",
     "\uD83C\uDF5A",
     "\uD83C\uDFBE",
     "\uD83D\uDE8C",
@@ -34,7 +45,6 @@ val emojiList = listOf(
     "🏈",
     "⚾",
     "🥎",
-    "🎾",
     "🏐",
     "🏉",
     "🎱",

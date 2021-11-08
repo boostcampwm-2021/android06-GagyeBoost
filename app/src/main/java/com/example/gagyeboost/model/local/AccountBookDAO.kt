@@ -11,18 +11,18 @@ import com.example.gagyeboost.model.data.Category
 interface AccountBookDAO {
     //선택한 일자의 모든 데이터
     @Query("SELECT * FROM account_book WHERE year=:year AND month=:month AND day=:day")
-    suspend fun getDayData(year: Int, month: Int, day: Int): List<AccountBook>
+    suspend fun loadDayData(year: Int, month: Int, day: Int): List<AccountBook>
 
     //선택한 달의 수입 총 합
     @Query("SELECT SUM(money) FROM account_book WHERE year=:year AND month=:month AND money_type=1")
-    suspend fun getMonthIncome(year: Int, month: Int): Int?
+    suspend fun loadMonthIncome(year: Int, month: Int): Int?
 
     //선택한 달의 지출 총 합
     @Query("SELECT SUM(money) FROM account_book WHERE year=:year AND month=:month AND money_type=0")
-    suspend fun getMonthExpense(year: Int, month: Int): Int?
+    suspend fun loadMonthExpense(year: Int, month: Int): Int?
 
     @Query("SELECT * FROM category WHERE money_type=:moneyType")
-    suspend fun getCategoryAllData(moneyType: Byte): List<Category>
+    suspend fun loadCategoryAllData(moneyType: Byte): List<Category>
 
     @Insert
     suspend fun addCategoryData(category: Category)
@@ -38,7 +38,7 @@ interface AccountBookDAO {
     fun isExistCategoryName(categoryName: String): Boolean
 
     @Query("SELECT * FROM category WHERE id=:id")
-    suspend fun getCategoryData(id: Int): Category
+    suspend fun loadCategoryData(id: Int): Category
 
     @Insert
     suspend fun addAccountBookData(accountBook: AccountBook)
@@ -51,7 +51,7 @@ interface AccountBookDAO {
 
     //선택한 월의 모든 데이터
     @Query("SELECT * FROM account_book WHERE year=:year AND month=:month")
-    fun getMonthData(year: Int, month: Int): List<AccountBook>
+    fun loadMonthData(year: Int, month: Int): List<AccountBook>
 
     //검색 및 지도필터 결과(키워드?)
     @Query(
@@ -62,7 +62,7 @@ interface AccountBookDAO {
          category IN(:categoryList) AND
          (money BETWEEN :startMoney AND :endMoney)"""
     )
-    fun getSearchData(
+    fun loadSearchData(
         startYear: Int = 1900,
         startMonth: Int = 1,
         startDay: Int = 1,

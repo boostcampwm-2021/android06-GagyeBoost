@@ -32,7 +32,7 @@
             android:paddingBottom="10dp"
             android:text="@{homeViewModel.yearAndMonth}"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="@dimen/app_bar_title_text_size"
             android:textStyle="bold"
             app:layout_constraintBaseline_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
