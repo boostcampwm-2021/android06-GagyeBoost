@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.DateAlpha
 import com.example.gagyeboost.model.data.DateColor
@@ -77,6 +80,10 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         return alpha
     }
 
+    fun setSelectedDate(dateItem: DateItem) {
+        _selectedDate.value = dateItem
+    }
+
     fun loadAllDayDataInMonth() {
         viewModelScope.launch {
             val dateItems = mutableListOf<DateItem>()
@@ -84,6 +91,15 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
             var monthExpense = 0
 
             calendar.datesInMonth.forEachIndexed { index, date ->
+                // prev month date
+                if (date < 0) {
+                    dateItems.add(
+                        DateItem(
+                            null, null, date, 0, 0, setDateColor(index), setDateAlpha(index)
+                        )
+                    )
+                    return@forEachIndexed
+                }
                 val accountDataList =
                     repository.loadDayData(
                         _yearMonthPair.value?.first ?: 0,
@@ -96,8 +112,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
                 accountDataList.forEach { record ->
                     when (record.moneyType) {
-                        0.toByte() -> totalExpense += record.money
-                        1.toByte() -> totalIncome += record.money
+                        EXPENSE -> totalExpense += record.money
+                        INCOME -> totalIncome += record.money
                     }
                 }
 
@@ -123,7 +139,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun getTodayString() = selectedDate.value?.let {
+    fun getTodayString() = _selectedDate.value?.let {
         it.year.toString() + "/" + it.month + "/" + it.date
     } ?: ""
 
@@ -142,16 +158,13 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                             category.categoryName,
                             account.content,
                             formatter.format(account.money) + "원",
-                            account.moneyType == 1.toByte()
+                            account.moneyType == INCOME
                         )
                     )
                 }
                 _detailItemList.postValue(list)
             }
         }
-    }
 
-    fun setSelectedDate(dateItem: DateItem) {
-        _selectedDate.value = dateItem
     }
 }

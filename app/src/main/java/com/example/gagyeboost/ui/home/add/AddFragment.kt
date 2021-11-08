@@ -33,12 +33,10 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
     private fun initClickListeners() {
         binding.btnIncome.setOnClickListener {
-            viewModel.moneyType = INCOME
             goToCategoryFragment(true)
         }
 
         binding.btnExpense.setOnClickListener {
-            viewModel.moneyType = EXPENSE
             goToCategoryFragment(false)
         }
 

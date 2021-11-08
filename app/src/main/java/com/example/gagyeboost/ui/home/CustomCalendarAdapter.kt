@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -39,15 +40,21 @@ class CustomCalendarAdapter(
 
         init {
             itemView.setOnClickListener {
-                selectedDatePosition = adapterPosition
-                viewModel.setSelectedDate(getItem(adapterPosition))
-                notifyDataSetChanged()
+                if (getItem(adapterPosition).date > 0) {
+                    selectedDatePosition = adapterPosition
+                    viewModel.setSelectedDate(getItem(adapterPosition))
+                    notifyDataSetChanged()
+                }
             }
         }
 
         fun bind(dateItem: DateItem) {
             binding.item = dateItem
             binding.viewModel = viewModel
+            binding.tvDate.isVisible = true
+            if (dateItem.date < 0) {
+                binding.tvDate.isGone = true
+            }
             binding.executePendingBindings()
 
             setMoney(binding.tvIncome, dateItem.income)

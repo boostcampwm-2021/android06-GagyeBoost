@@ -29,7 +29,7 @@ class SelectPositionFragment :
         }
 
         binding.appBarSelectPosition.setNavigationOnClickListener {
-            viewModel.selectedCategoryReset()
+            viewModel.resetSelectedCategory()
             findNavController().popBackStack()
         }
     }
