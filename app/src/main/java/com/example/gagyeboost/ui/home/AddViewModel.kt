@@ -21,15 +21,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     private var selectedCategoryId = -1
 
-    private val _income = MutableLiveData<String>()
-    val income: LiveData<String> get() = _income
-
-    private val _expense = MutableLiveData<String>()
-    val expense: LiveData<String> get() = _expense
-
-    private val _result = MutableLiveData<String>()
-    val result: LiveData<String> get() = _result
-
     val money = MutableLiveData("0")
 
     private val formatter = DecimalFormat("###,###")
@@ -123,35 +114,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     fun loadCategoryList() {
         viewModelScope.launch {
             _categoryList.value = repository.loadCategoryList(categoryType)
-        }
-    }
-
-    fun loadMonthIncome() {
-        viewModelScope.launch {
-            repository.loadMonthIncome(date[0], date[1])?.let {
-                _income.postValue(formatter.format(it) + "원")
-            } ?: _income.postValue("0")
-        }
-    }
-
-    fun loadMonthExpense() {
-        viewModelScope.launch {
-            repository.loadMonthExpense(date[0], date[1])?.let {
-                _expense.postValue(formatter.format(it) + "원")
-            } ?: _expense.postValue("0원")
-        }
-    }
-
-    fun setTotalMoney() {
-        viewModelScope.launch {
-            val income = repository.loadMonthIncome(date[0], date[1])
-            val expense = repository.loadMonthExpense(date[0], date[1])
-
-            val result = expense?.let {
-                formatter.format(income?.minus(it) ?: 0) + "원"
-            } ?: formatter.format(income ?: 0) + "원"
-
-            _result.postValue(result)
         }
     }
 
