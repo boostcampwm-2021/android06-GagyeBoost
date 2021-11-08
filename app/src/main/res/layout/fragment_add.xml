@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.gagyeboost.ui.home.HomeViewModel" />
+            type="com.example.gagyeboost.ui.home.AddViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:textSize="20sp"
+            android:textSize="@dimen/app_bar_title_text_size"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -59,7 +59,7 @@
             android:gravity="end"
             android:hint="@null"
             android:inputType="numberDecimal"
-            android:maxLength="6"
+            android:maxLength="9"
             android:maxLines="1"
             android:text="@={viewModel.money}"
             android:textColor="@color/money_input_color"
@@ -70,33 +70,28 @@
             app:layout_constraintStart_toEndOf="@id/tv_won_title"
             app:layout_constraintTop_toTopOf="@id/tv_won_title" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_income"
+            style="@style/GradationButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/income"
-            android:paddingVertical="15dp"
             android:text="@string/earnings"
-            android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/btn_expense"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_won_title" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_expense"
+            style="@style/GradationButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="60dp"
             android:backgroundTint="@color/expense"
-            android:paddingVertical="15dp"
             android:text="@string/expense"
-            android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btn_income"
             app:layout_constraintTop_toTopOf="@id/btn_income" />

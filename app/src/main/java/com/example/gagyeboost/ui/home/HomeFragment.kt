@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.core.os.bundleOf
@@ -21,6 +22,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var dialog: NumberPickerDialog
     private val detailAdapter: DateDetailAdapter by inject()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
+            homeViewModel.selectedDate.value = it
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
@@ -28,8 +36,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         setDialog()
         observe()
 
-        viewModel.getMonthIncome()
-        viewModel.getMonthExpense()
+        viewModel.loadMonthIncome()
+        viewModel.loadMonthExpense()
         viewModel.setTotalMoney()
         binding.fabAdd.setOnClickListener {
             val today = homeViewModel.getTodayString()
@@ -43,9 +51,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun initView() {
         binding.homeViewModel = homeViewModel
         dialog = NumberPickerDialog(binding.root.context)
-        customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
-            homeViewModel.selectedDate.value = it
-        }
 
         binding.rvCalendar.adapter = customCalendarAdapter
 
