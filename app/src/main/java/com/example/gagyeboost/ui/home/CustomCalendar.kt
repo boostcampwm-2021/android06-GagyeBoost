@@ -28,8 +28,6 @@ class CustomCalendar {
 
         makePrevMonthTail(calendar.clone() as Calendar)
         makeCurrentMonth(calendar)
-        makeNextMonthHead()
-
     }
 
     private fun makePrevMonthTail(calendar: Calendar) {
@@ -38,7 +36,7 @@ class CustomCalendar {
         var maxOffsetDate = maxDate - prevMonthTailOffset
 
         repeat(prevMonthTailOffset) {
-            _datesInMonth.add(++maxOffsetDate)
+            _datesInMonth.add(-1)
         }
     }
 
@@ -48,18 +46,7 @@ class CustomCalendar {
         }
     }
 
-    private fun makeNextMonthHead() {
-        nextMonthHeadOffset =
-            LOW_OF_CALENDAR * DAYS_OF_WEEK - (prevMonthTailOffset + currentMonthMaxDate)
-        var date = 1
-
-        repeat(nextMonthHeadOffset) {
-            _datesInMonth.add(date++)
-        }
-    }
-
     companion object {
         const val DAYS_OF_WEEK = 7
-        const val LOW_OF_CALENDAR = 6
     }
 }

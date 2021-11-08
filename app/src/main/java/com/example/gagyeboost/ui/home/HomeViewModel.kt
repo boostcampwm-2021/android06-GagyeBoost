@@ -27,9 +27,10 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     private val _categoryList = MutableLiveData<List<Category>>()
     val categoryList: LiveData<List<Category>> = _categoryList
 
-    val selectedDate = MutableLiveData<DateItem>()
+    private val _selectedDate = MutableLiveData<DateItem>()
+    val selectedDate: LiveData<DateItem> = _selectedDate
 
-    val detailItemList = Transformations.switchMap(selectedDate) {
+    val detailItemList = Transformations.switchMap(_selectedDate) {
         loadDateDetailItemList(it)
     }
 
@@ -68,10 +69,23 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         return alpha
     }
 
+    fun setSelectedDate(dateItem: DateItem) {
+        _selectedDate.value = dateItem
+    }
+
     fun loadAllDayDataInMonth() {
         viewModelScope.launch {
             val dateItems = mutableListOf<DateItem>()
             calendar.datesInMonth.forEachIndexed { index, date ->
+                // prev month date
+                if (date < 0) {
+                    dateItems.add(
+                        DateItem(
+                            null, null, date, 0, 0, setDateColor(index), setDateAlpha(index)
+                        )
+                    )
+                    return@forEachIndexed
+                }
                 val accountDataList =
                     repository.loadDayData(
                         _yearMonthPair.value?.first ?: 0,
@@ -105,14 +119,14 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun getTodayString() = selectedDate.value?.let {
+    fun getTodayString() = _selectedDate.value?.let {
         it.year.toString() + "/" + it.month + "/" + it.date
     } ?: ""
 
     fun afterMoneyTextChanged() {
         if (money.value.isNullOrEmpty()) money.value = "0"
 
-        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "");
+        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "")
     }
 
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"

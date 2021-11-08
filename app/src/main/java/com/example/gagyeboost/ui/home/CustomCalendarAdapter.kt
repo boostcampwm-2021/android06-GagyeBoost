@@ -1,12 +1,12 @@
 package com.example.gagyeboost.ui.home
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -54,6 +54,10 @@ class CustomCalendarAdapter(
         fun bind(dateItem: DateItem) {
             binding.item = dateItem
             binding.viewModel = viewModel
+            binding.tvDate.isVisible = true
+            if (dateItem.date < 0) {
+                binding.tvDate.isGone = true
+            }
             binding.executePendingBindings()
             setClickedDate(dateItem)
             setToday(dateItem)
