@@ -23,7 +23,9 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewModel = viewModel
+        binding.viewModel = viewModel.apply {
+            money.value = "0"
+        }
         val dateStr = arguments?.getString(TODAY_STRING_KEY)
         binding.tvDate.text = dateStr
         viewModel.dateString = dateStr ?: ""

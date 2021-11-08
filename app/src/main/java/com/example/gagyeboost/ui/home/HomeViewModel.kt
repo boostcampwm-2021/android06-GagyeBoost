@@ -45,7 +45,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     private val formatter = DecimalFormat("###,###")
 
-
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
         loadAllDayDataInMonth()
