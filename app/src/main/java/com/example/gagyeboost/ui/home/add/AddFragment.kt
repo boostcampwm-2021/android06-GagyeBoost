@@ -6,6 +6,8 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.IS_EXPENSE_KEY
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentAddBinding
@@ -31,10 +33,12 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
     private fun initClickListeners() {
         binding.btnIncome.setOnClickListener {
+            viewModel.moneyType = INCOME
             goToCategoryFragment(true)
         }
 
         binding.btnExpense.setOnClickListener {
+            viewModel.moneyType = EXPENSE
             goToCategoryFragment(false)
         }
 

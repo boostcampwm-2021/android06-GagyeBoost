@@ -10,8 +10,6 @@ import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.nothingEmoji
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
-import java.util.*
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedCategoryIcon = MutableLiveData("🍚")
@@ -25,10 +23,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     private val formatter = DecimalFormat("###,###")
 
-    private val dateFormatter = SimpleDateFormat("yyyy MM dd", Locale.getDefault())
-    private val date =
-        dateFormatter.format(Date(System.currentTimeMillis())).split(" ").map { it.toInt() }
-
     private val _categoryList = MutableLiveData<List<Category>>()
     val categoryList: LiveData<List<Category>> = _categoryList
 
@@ -36,7 +30,10 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     private var _categoryType = 0.toByte()
     val categoryType get() = _categoryType
+
     var dateString = ""
+
+    var moneyType: Byte = 0.toByte()
 
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
@@ -95,7 +92,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
             val splitedStr = dateString.split('/')
             repository.addAccountBookData(
                 AccountBook(
-                    moneyType = 1.toByte(),
+                    moneyType = moneyType,
                     money = if (money.value != null) money.value!!.toInt() else 0,
                     category = selectedCategoryId,
                     address = "",
@@ -123,5 +120,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "")
     }
 
-    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
+    fun getFormattedMoneyText(): String {
+        return formatter.format(money.value?.toIntOrNull() ?: 0) + "원"
+    }
 }

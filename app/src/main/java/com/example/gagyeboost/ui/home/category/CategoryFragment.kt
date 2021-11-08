@@ -29,8 +29,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     }
 
     private fun initView() {
-        binding.tvMoney.text =
-           viewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
+        binding.tvMoney.text = viewModel.getFormattedMoneyText()
 
         categoryAdapter = CategoryAdapter(
             {
