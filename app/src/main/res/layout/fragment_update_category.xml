@@ -16,7 +16,7 @@
         tools:context=".ui.home.categoryControl.UpdateCategoryFragment">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar_updateCategory"
+            android:id="@+id/app_bar_layout_update_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,30 +24,16 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/app_bar_update_category"
+                style="@style/CategoryControlTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/green">
-
-                <ImageView
-                    android:id="@+id/btn_updateCategoryBack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_baseline_keyboard_backspace_24"
-                    android:contentDescription="@string/back_button" />
-
-                <TextView
-                    android:id="@+id/tv_updateCategoryTitle"
-                    style="@style/CategoryControlTitle"
-                    android:text="@string/update" />
-
-                <TextView
-                    android:id="@+id/btn_deleteCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/ic_baseline_delete_24" />
-            </com.google.android.material.appbar.MaterialToolbar>
+                android:textSize="@dimen/app_bar_title_text_size"
+                app:titleTextColor="@color/white"
+                app:navigationIcon="@drawable/ic_arrow_left_white"
+                app:title="@string/update"
+                app:titleCentered="true"
+                app:menu="@menu/category_update_menu"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -61,7 +47,7 @@
             android:textColor="@color/gray3"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/app_bar_updateCategory" />
+            app:layout_constraintTop_toBottomOf="@id/app_bar_layout_update_category" />
 
         <EditText
             android:id="@+id/et_name_body"

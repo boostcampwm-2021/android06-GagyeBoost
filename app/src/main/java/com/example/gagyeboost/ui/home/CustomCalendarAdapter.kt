@@ -1,13 +1,16 @@
 package com.example.gagyeboost.ui.home
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemDateBinding
 import com.example.gagyeboost.model.data.DateItem
 import java.text.DecimalFormat
@@ -33,7 +36,6 @@ class CustomCalendarAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         val dec = DecimalFormat("#,###")
-        private var currentItem: DateItem? = null
         private val cal = Calendar.getInstance()
         private val currentYear = cal.get(Calendar.YEAR)
         private val currentMonth = cal.get(Calendar.MONTH) + 1
@@ -41,19 +43,19 @@ class CustomCalendarAdapter(
 
         init {
             itemView.setOnClickListener {
-                currentItem?.let { item -> itemClickListener.invoke(item) }
-
                 notifyItemChanged(adapterPosition)
+                itemClickListener(getItem(adapterPosition))
                 selectedDatePosition?.let { notifyItemChanged(it) }
                 selectedDatePosition = adapterPosition
+
             }
         }
 
         fun bind(dateItem: DateItem) {
-            currentItem = dateItem
             binding.item = dateItem
             binding.viewModel = viewModel
             binding.executePendingBindings()
+            setClickedDate(dateItem)
             setToday(dateItem)
             setMoney(binding.tvIncome, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
@@ -69,11 +71,46 @@ class CustomCalendarAdapter(
 
         private fun setToday(dateItem: DateItem) {
             with(binding) {
-                if (currentYear == dateItem.year && currentMonth == dateItem.month && currentDate == dateItem.date) {
+                if (currentYear == dateItem.year &&
+                    currentMonth == dateItem.month &&
+                    currentDate == dateItem.date &&
+                    viewModel!!.selectedDate.value != getItem(adapterPosition)
+                ) {
                     tvDate.setTextColor(Color.RED)
                     itemView.setBackgroundColor(Color.parseColor("#e6e6e6"))
                 }
             }
+        }
+
+        private fun setClickedDate(dateItem: DateItem) {
+            binding.root.background =
+                ContextCompat.getDrawable(
+                    binding.root.context, if (viewModel.selectedDate.value == dateItem) {
+                        R.color.light_green
+                    } else {
+                        R.color.white
+                    }
+                )
+
+            binding.tvIncome.setTextColor(
+                ContextCompat.getColor(
+                    binding.tvIncome.context, if (viewModel.selectedDate.value == dateItem) {
+                        R.color.white
+                    } else {
+                        R.color.income
+                    }
+                )
+            )
+
+            binding.tvExpense.setTextColor(
+                ContextCompat.getColor(
+                    binding.tvIncome.context, if (viewModel.selectedDate.value == dateItem) {
+                        R.color.white
+                    } else {
+                        R.color.expense
+                    }
+                )
+            )
         }
     }
 

@@ -25,8 +25,10 @@
     <string name="won">₩</string>
     <string name="history">내역</string>
     <string name="add">추가</string>
+    <string name="add_category">카테고리 추가</string>
     <string name="icon_select">아이콘 선택</string>
     <string name="update">수정</string>
+    <string name="update_category">카테고리 수정</string>
     <string name="name">이름</string>
     <string name="icon">아이콘</string>
     <string name="add_category_name_hint">추가할 카테고리 이름</string>
@@ -36,5 +38,7 @@
     <string name="back_button">back button</string>
     <string name="close_btn">close fragment or activity</string>
     <string name="add_category_btn">add category btn</string>
+    <string name="must_enter_category_name">이름을 반드시 입력해야 합니다</string>
+    <string name="delete">삭제</string>
 
 </resources>
