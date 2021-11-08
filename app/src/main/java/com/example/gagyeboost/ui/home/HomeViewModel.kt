@@ -1,6 +1,5 @@
 package com.example.gagyeboost.ui.home
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.*
@@ -36,6 +35,15 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     private val formatter = DecimalFormat("###,###")
 
+    private val _totalMonthIncome = MutableLiveData<String>()
+    val totalMonthIncome: LiveData<String> = _totalMonthIncome
+
+    private val _totalMonthExpense = MutableLiveData<String>()
+    val totalMonthExpense: LiveData<String> = _totalMonthExpense
+
+    private val _totalMonthBalance = MutableLiveData<String>()
+    val totalMonthBalance: LiveData<String> = _totalMonthBalance
+
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
         loadAllDayDataInMonth()
@@ -70,6 +78,9 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     fun loadAllDayDataInMonth() {
         viewModelScope.launch {
             val dateItems = mutableListOf<DateItem>()
+            var monthIncome = 0
+            var monthExpense = 0
+
             calendar.datesInMonth.forEachIndexed { index, date ->
                 val accountDataList =
                     repository.loadDayData(
@@ -99,28 +110,20 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                         setDateAlpha(index)
                     )
                 )
+
+                monthIncome += totalIncome
+                monthExpense += totalExpense
             }
             _dateItemList.postValue(dateItems)
+            _totalMonthIncome.postValue(formatter.format(monthIncome) + "원")
+            _totalMonthExpense.postValue(formatter.format(monthExpense) + "원")
+            _totalMonthBalance.postValue(formatter.format(monthIncome - monthExpense) + "원")
         }
     }
 
     fun getTodayString() = selectedDate.value?.let {
         it.year.toString() + "/" + it.month + "/" + it.date
     } ?: ""
-
-    fun afterMoneyTextChanged() {
-        if (money.value.isNullOrEmpty()) money.value = "0"
-
-        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "");
-    }
-
-    fun loadCategoryList() {
-        viewModelScope.launch {
-            _categoryList.value = repository.loadCategoryList(0.toByte())
-        }
-    }
-
-    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 
     fun loadDateDetailItemList(date: DateItem): LiveData<MutableList<DateDetailItem>> {
         val data = MutableLiveData<MutableList<DateDetailItem>>()
@@ -136,7 +139,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                         category.emoji,
                         category.categoryName,
                         account.content,
-                        getFormattedMoneyText(account.money),
+                        formatter.format(account.money) + "원",
                         account.moneyType == 1.toByte()
                     )
                 )

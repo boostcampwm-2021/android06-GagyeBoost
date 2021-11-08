@@ -1,7 +1,6 @@
 package com.example.gagyeboost.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.core.os.bundleOf
@@ -11,13 +10,11 @@ import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentHomeBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by viewModel()
-    private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var customCalendarAdapter: CustomCalendarAdapter
     private lateinit var dialog: NumberPickerDialog
     private val detailAdapter: DateDetailAdapter by inject()
@@ -27,18 +24,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
             homeViewModel.selectedDate.value = it
         }
+        initView()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = viewModel
-        initView()
         setDialog()
         observe()
 
-        viewModel.loadMonthIncome()
-        viewModel.loadMonthExpense()
-        viewModel.setTotalMoney()
         binding.fabAdd.setOnClickListener {
             val today = homeViewModel.getTodayString()
             findNavController().navigate(
