@@ -1,10 +1,10 @@
 package com.example.gagyeboost.ui.home.selectPosition
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
 import com.example.gagyeboost.ui.base.BaseFragment
@@ -28,9 +28,10 @@ class SelectPositionFragment :
             navController.popBackStack(R.id.homeFragment, false)
             viewModel.addAccountBookData()
         }
-        binding.btnSelectPositionBack.setOnClickListener {
+
+        binding.appBarSelectPosition.setNavigationOnClickListener {
             viewModel.selectedCategoryReset()
-            navController.popBackStack()
+            findNavController().popBackStack()
         }
     }
 }

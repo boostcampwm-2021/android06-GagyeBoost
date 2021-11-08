@@ -16,7 +16,7 @@
         tools:context=".ui.home.categoryControl.AddCategoryFragment">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar_addCategory"
+            android:id="@+id/app_bar_layout_add_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,22 +24,15 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/app_bar_add_category"
+                style="@style/CategoryControlTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/green">
-
-                <ImageView
-                    android:id="@+id/btn_addCategoryBack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_baseline_keyboard_backspace_24"
-                    android:contentDescription="@string/back_button" />
-
-                <TextView
-                    android:id="@+id/tv_addCategoryTitle"
-                    style="@style/CategoryControlTitle"
-                    android:text="@string/add" />
-            </com.google.android.material.appbar.MaterialToolbar>
+                android:textSize="@dimen/app_bar_title_text_size"
+                app:titleTextColor="@color/white"
+                app:navigationIcon="@drawable/ic_arrow_left_white"
+                app:title="@string/add_category"
+                app:titleCentered="true" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -53,7 +46,7 @@
             android:textColor="@color/gray3"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/app_bar_addCategory" />
+            app:layout_constraintTop_toBottomOf="@id/app_bar_layout_add_category" />
 
         <EditText
             android:id="@+id/et_name_body"
@@ -90,6 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:text="@{viewModel.selectedCategoryIcon.isEmpty()? @string/emoji_meal:viewModel.selectedCategoryIcon}"
+            android:textColor="@color/black"
             android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_icon_title"
             app:layout_constraintStart_toEndOf="@id/tv_icon_title"
@@ -101,7 +95,7 @@
             android:layout_width="0dp"
             android:layout_height="3dp"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="40dp"
             android:background="@color/gray2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -114,10 +108,10 @@
             android:layout_marginBottom="40dp"
             android:background="@drawable/ic_baseline_add_circle_24"
             android:backgroundTint="@color/green"
+            android:contentDescription="@string/add_category_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:contentDescription="@string/add_category_btn" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
