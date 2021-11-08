@@ -22,6 +22,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var dialog: NumberPickerDialog
     private val detailAdapter: DateDetailAdapter by inject()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
+            homeViewModel.selectedDate.value = it
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
@@ -44,9 +51,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun initView() {
         binding.homeViewModel = homeViewModel
         dialog = NumberPickerDialog(binding.root.context)
-        customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
-            homeViewModel.selectedDate.value = it
-        }
 
         binding.rvCalendar.adapter = customCalendarAdapter
 
