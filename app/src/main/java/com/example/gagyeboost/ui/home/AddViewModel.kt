@@ -62,7 +62,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 )
             )
             loadCategoryList()
-            selectedCategoryReset()
+            resetSelectedCategory()
         }
     }
 
@@ -70,7 +70,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         _categoryType = type
     }
 
-    fun selectedCategoryReset() {
+    fun resetSelectedCategory() {
         categoryName.value = ""
         _selectedCategoryIcon.value = "\uD83C\uDF5A"
         selectedCategoryId = -1
@@ -94,7 +94,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 )
             )
             loadCategoryList()
-            selectedCategoryReset()
+            resetSelectedCategory()
         }
     }
 
