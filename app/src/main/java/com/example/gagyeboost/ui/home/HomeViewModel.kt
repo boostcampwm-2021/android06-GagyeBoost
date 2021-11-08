@@ -1,7 +1,8 @@
 package com.example.gagyeboost.ui.home
 
-import android.util.Log
 import androidx.lifecycle.*
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
@@ -83,8 +84,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
                 accountDataList.forEach { record ->
                     when (record.moneyType) {
-                        0.toByte() -> totalExpense += record.money
-                        1.toByte() -> totalIncome += record.money
+                        EXPENSE -> totalExpense += record.money
+                        INCOME -> totalIncome += record.money
                     }
                 }
 
@@ -114,12 +115,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "");
     }
 
-    fun loadCategoryList() {
-        viewModelScope.launch {
-            _categoryList.value = repository.loadCategoryList(0.toByte())
-        }
-    }
-
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 
     fun loadDateDetailItemList(date: DateItem): LiveData<MutableList<DateDetailItem>> {
@@ -137,7 +132,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                         category.categoryName,
                         account.content,
                         getFormattedMoneyText(account.money),
-                        account.moneyType == 1.toByte()
+                        account.moneyType == INCOME
                     )
                 )
             }
