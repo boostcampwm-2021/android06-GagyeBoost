@@ -9,11 +9,8 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.common.IS_EXPENSE_KEY
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentAddBinding
-import com.example.gagyeboost.model.data.DateItem
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import com.example.gagyeboost.ui.home.HomeViewModel
-import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
