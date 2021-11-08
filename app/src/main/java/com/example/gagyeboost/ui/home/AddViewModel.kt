@@ -1,5 +1,7 @@
 package com.example.gagyeboost.ui.home
 
+import android.location.Address
+import android.location.Geocoder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -46,6 +48,8 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     private var _categoryType = 0.toByte()
     val categoryType get() = _categoryType
     var dateString = ""
+
+    val searchAddress = MutableLiveData<String>()
 
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
@@ -162,4 +166,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
+
+    fun getAddress(geocoder: Geocoder): List<Address> = geocoder.getFromLocationName(searchAddress.value, 1)
+
 }
