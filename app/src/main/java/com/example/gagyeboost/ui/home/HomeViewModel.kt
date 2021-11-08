@@ -2,7 +2,10 @@ package com.example.gagyeboost.ui.home
 
 import androidx.lifecycle.*
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.*
+import com.example.gagyeboost.model.data.DateAlpha
+import com.example.gagyeboost.model.data.DateColor
+import com.example.gagyeboost.model.data.DateDetailItem
+import com.example.gagyeboost.model.data.DateItem
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.util.*
@@ -22,16 +25,12 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     private val calendar = CustomCalendar()
 
-    private val _categoryList = MutableLiveData<List<Category>>()
-    val categoryList: LiveData<List<Category>> = _categoryList
+    private val _selectedDate = MutableLiveData<DateItem>()
+    val selectedDate: LiveData<DateItem> = _selectedDate
 
-    val selectedDate = MutableLiveData<DateItem>()
-
-    val detailItemList = Transformations.switchMap(selectedDate) {
+    val detailItemList = Transformations.switchMap(_selectedDate) {
         loadDateDetailItemList(it)
     }
-
-    val money = MutableLiveData<String>("0")
 
     private val formatter = DecimalFormat("###,###")
 
@@ -127,7 +126,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     fun loadDateDetailItemList(date: DateItem): LiveData<MutableList<DateDetailItem>> {
         val data = MutableLiveData<MutableList<DateDetailItem>>()
-
         val list = mutableListOf<DateDetailItem>()
 
         viewModelScope.launch {
@@ -144,10 +142,13 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                     )
                 )
             }
-
             data.postValue(list)
         }
 
         return data
+    }
+
+    fun setSelectedDate(dateItem: DateItem) {
+        _selectedDate.value = dateItem
     }
 }

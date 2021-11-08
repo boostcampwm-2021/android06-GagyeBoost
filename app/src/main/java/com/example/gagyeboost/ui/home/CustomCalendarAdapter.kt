@@ -1,24 +1,20 @@
 package com.example.gagyeboost.ui.home
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemDateBinding
 import com.example.gagyeboost.model.data.DateItem
 import java.text.DecimalFormat
 import java.util.*
 
 class CustomCalendarAdapter(
-    val viewModel: HomeViewModel,
-    private val itemClickListener: (DateItem) -> Unit
+    val viewModel: HomeViewModel
 ) : ListAdapter<DateItem, CustomCalendarAdapter.DateViewHolder>(diffUtil) {
 
     private var selectedDatePosition: Int? = null
@@ -43,11 +39,9 @@ class CustomCalendarAdapter(
 
         init {
             itemView.setOnClickListener {
-                notifyItemChanged(adapterPosition)
-                itemClickListener(getItem(adapterPosition))
-                selectedDatePosition?.let { notifyItemChanged(it) }
                 selectedDatePosition = adapterPosition
-
+                viewModel.setSelectedDate(getItem(adapterPosition))
+                notifyDataSetChanged()
             }
         }
 
@@ -55,10 +49,11 @@ class CustomCalendarAdapter(
             binding.item = dateItem
             binding.viewModel = viewModel
             binding.executePendingBindings()
-            setClickedDate(dateItem)
-            setToday(dateItem)
+
             setMoney(binding.tvIncome, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
+//            setClickedDate()
+            setToday(dateItem)
         }
 
         private fun setMoney(textView: TextView, money: Int?) {
@@ -74,7 +69,7 @@ class CustomCalendarAdapter(
                 if (currentYear == dateItem.year &&
                     currentMonth == dateItem.month &&
                     currentDate == dateItem.date &&
-                    viewModel!!.selectedDate.value != getItem(adapterPosition)
+                    selectedDatePosition != adapterPosition
                 ) {
                     tvDate.setTextColor(Color.RED)
                     itemView.setBackgroundColor(Color.parseColor("#e6e6e6"))
@@ -82,36 +77,19 @@ class CustomCalendarAdapter(
             }
         }
 
-        private fun setClickedDate(dateItem: DateItem) {
-            binding.root.background =
-                ContextCompat.getDrawable(
-                    binding.root.context, if (viewModel.selectedDate.value == dateItem) {
-                        R.color.light_green
-                    } else {
-                        R.color.white
-                    }
-                )
-
-            binding.tvIncome.setTextColor(
-                ContextCompat.getColor(
-                    binding.tvIncome.context, if (viewModel.selectedDate.value == dateItem) {
-                        R.color.white
-                    } else {
-                        R.color.income
-                    }
-                )
-            )
-
-            binding.tvExpense.setTextColor(
-                ContextCompat.getColor(
-                    binding.tvIncome.context, if (viewModel.selectedDate.value == dateItem) {
-                        R.color.white
-                    } else {
-                        R.color.expense
-                    }
-                )
-            )
-        }
+//        private fun setClickedDate() {
+//            val context = binding.root.context
+//            if (selectedDatePosition == adapterPosition) {
+//                binding.root.setBackgroundColor(ContextCompat.getColor(context, R.color.light_green))
+////                binding.tvIncome.setTextColor(ContextCompat.getColor(context, R.color.white))
+////                binding.tvExpense.setTextColor(ContextCompat.getColor(context, R.color.white))
+//            } else {
+//                binding.root.background =
+//                    ContextCompat.getDrawable(context, (R.color.white))
+////                binding.tvIncome.setTextColor(ContextCompat.getColor(context, R.color.income))
+////                binding.tvExpense.setTextColor(ContextCompat.getColor(context, R.color.expense))
+//            }
+//        }
     }
 
     companion object {

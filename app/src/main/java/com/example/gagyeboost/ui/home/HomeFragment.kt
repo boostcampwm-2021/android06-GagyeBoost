@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.core.os.bundleOf
@@ -21,16 +22,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
-            homeViewModel.selectedDate.value = it
-        }
-        initView()
+        customCalendarAdapter = CustomCalendarAdapter(homeViewModel)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         setDialog()
         observe()
+        Log.e("home fragment", "on onViewCreated")
 
         binding.fabAdd.setOnClickListener {
             val today = homeViewModel.getTodayString()
@@ -46,7 +46,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         dialog = NumberPickerDialog(binding.root.context)
 
         binding.rvCalendar.adapter = customCalendarAdapter
-
         binding.rvDetail.adapter = detailAdapter
     }
 
