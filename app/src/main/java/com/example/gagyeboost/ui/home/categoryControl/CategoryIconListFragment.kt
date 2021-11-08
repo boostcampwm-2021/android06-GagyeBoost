@@ -7,8 +7,8 @@ import androidx.navigation.Navigation
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentCategoryIconListBinding
 import com.example.gagyeboost.model.data.emojiList
-import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.home.AddViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class CategoryIconListFragment :
@@ -28,8 +28,10 @@ class CategoryIconListFragment :
 
     private fun init() {
         binding.rvIconList.adapter = categoryIconAdapter
+
         categoryIconAdapter.submitList(emojiList)
-        binding.btnCategoryIconListBack.setOnClickListener {
+
+        binding.appBarCategoryIconList.setNavigationOnClickListener{
             navController.popBackStack()
         }
     }

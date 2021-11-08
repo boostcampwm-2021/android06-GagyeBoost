@@ -7,8 +7,8 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentAddCategoryBinding
-import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.home.AddViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class AddCategoryFragment :
@@ -24,16 +24,23 @@ class AddCategoryFragment :
 
     private fun init() {
         binding.viewModel = viewModel
-        binding.btnAddCategoryBack.setOnClickListener {
+
+        binding.appBarAddCategory.setNavigationOnClickListener {
             viewModel.selectedCategoryReset()
             navController.popBackStack()
         }
+
         binding.tvIconBody.setOnClickListener {
             navController.navigate(R.id.action_addCategoryFragment_to_categoryIconListFragment)
         }
+
         binding.btnAddCategoryComplete.setOnClickListener {
             if (binding.etNameBody.text.isEmpty()) {
-                Toast.makeText(requireContext(), "이름을 반드시 입력해야 합니다", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.must_enter_category_name),
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 viewModel.addCategory()
                 navController.popBackStack()
