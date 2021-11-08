@@ -30,7 +30,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         initView()
         setDialog()
         observe()
-        Log.e("home fragment", "on onViewCreated")
 
         binding.fabAdd.setOnClickListener {
             val today = homeViewModel.getTodayString()
@@ -76,6 +75,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun observe() {
         homeViewModel.yearMonthPair.observe(viewLifecycleOwner) {
             homeViewModel.loadAllDayDataInMonth()
+        }
+
+        homeViewModel.selectedDate.observe(viewLifecycleOwner){
+            homeViewModel.loadDateDetailItemList(it)
         }
 
         homeViewModel.dateItemList.observe(viewLifecycleOwner) {

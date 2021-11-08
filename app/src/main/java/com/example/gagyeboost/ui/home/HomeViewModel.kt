@@ -1,6 +1,9 @@
 package com.example.gagyeboost.ui.home
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.DateAlpha
 import com.example.gagyeboost.model.data.DateColor
@@ -28,13 +31,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedDate = MutableLiveData<DateItem?>()
     val selectedDate: LiveData<DateItem?> = _selectedDate
 
-    val detailItemList = Transformations.switchMap(_selectedDate) {
-        if (it == null) {
-            MutableLiveData(mutableListOf())
-        } else {
-            loadDateDetailItemList(it)
-        }
-    }
+    private val _detailItemList = MutableLiveData<MutableList<DateDetailItem>>()
+    val detailItemList: LiveData<MutableList<DateDetailItem>> = _detailItemList
 
     private val formatter = DecimalFormat("###,###")
 
@@ -129,26 +127,28 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         it.year.toString() + "/" + it.month + "/" + it.date
     } ?: ""
 
-    fun loadDateDetailItemList(date: DateItem): LiveData<MutableList<DateDetailItem>> {
-        val data = MutableLiveData<MutableList<DateDetailItem>>()
+    fun loadDateDetailItemList(date: DateItem?) {
         val list = mutableListOf<DateDetailItem>()
-        viewModelScope.launch {
-            repository.loadDayData(date.year, date.month, date.date).forEach { account ->
-                val category = repository.loadCategoryData(account.category)
-                list.add(
-                    DateDetailItem(
-                        account.id.toString(),
-                        category.emoji,
-                        category.categoryName,
-                        account.content,
-                        formatter.format(account.money) + "원",
-                        account.moneyType == 1.toByte()
+        if (date == null) {
+            _detailItemList.value = mutableListOf()
+        } else {
+            viewModelScope.launch {
+                repository.loadDayData(date.year, date.month, date.date).forEach { account ->
+                    val category = repository.loadCategoryData(account.category)
+                    list.add(
+                        DateDetailItem(
+                            account.id.toString(),
+                            category.emoji,
+                            category.categoryName,
+                            account.content,
+                            formatter.format(account.money) + "원",
+                            account.moneyType == 1.toByte()
+                        )
                     )
-                )
+                }
+                _detailItemList.postValue(list)
             }
-            data.postValue(list)
         }
-        return data
     }
 
     fun setSelectedDate(dateItem: DateItem) {
