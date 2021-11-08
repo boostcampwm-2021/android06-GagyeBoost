@@ -7,12 +7,13 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.IS_EXPENSE_KEY
 import com.example.gagyeboost.databinding.FragmentCategoryBinding
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import com.example.gagyeboost.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment_category) {
@@ -60,7 +61,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
                         R.color.income
                     )
                 )
-                viewModel.setCategoryType(1.toByte())
+                viewModel.setCategoryType(INCOME)
             } else {
                 binding.tvMoney.setTextColor(
                     ContextCompat.getColor(
@@ -68,7 +69,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
                         R.color.expense
                     )
                 )
-                viewModel.setCategoryType(0.toByte())
+                viewModel.setCategoryType(EXPENSE)
             }
         }
 

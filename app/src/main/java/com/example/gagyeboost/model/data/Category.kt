@@ -3,6 +3,7 @@ package com.example.gagyeboost.model.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.gagyeboost.common.EXPENSE
 
 @Entity(tableName = "category")
 data class Category(
@@ -20,7 +21,7 @@ data class Category(
     var moneyType: Byte
 
 ) {
-    constructor() : this(0, "", "", 0.toByte())
+    constructor() : this(0, "", "", EXPENSE)
 }
 
 val nothingEmoji = "❌"

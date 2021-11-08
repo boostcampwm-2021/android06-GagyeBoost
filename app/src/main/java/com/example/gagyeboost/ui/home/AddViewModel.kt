@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
@@ -43,7 +44,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     val content = MutableLiveData("")
 
-    private var _categoryType = 0.toByte()
+    private var _categoryType = EXPENSE
     val categoryType get() = _categoryType
     var dateString = ""
 
@@ -61,7 +62,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 )
             )
             loadCategoryList()
-            selectedCategoryReset()
+            resetSelectedCategory()
         }
     }
 
@@ -69,7 +70,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         _categoryType = type
     }
 
-    fun selectedCategoryReset() {
+    fun resetSelectedCategory() {
         categoryName.value = ""
         _selectedCategoryIcon.value = "\uD83C\uDF5A"
         selectedCategoryId = -1
@@ -93,7 +94,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 )
             )
             loadCategoryList()
-            selectedCategoryReset()
+            resetSelectedCategory()
         }
     }
 
@@ -104,7 +105,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
             val splitedStr = dateString.split('/')
             repository.addAccountBookData(
                 AccountBook(
-                    moneyType = 1.toByte(),
+                    moneyType = _categoryType,
                     money = if (money.value != null) money.value!!.toInt() else 0,
                     category = selectedCategoryId,
                     address = "",

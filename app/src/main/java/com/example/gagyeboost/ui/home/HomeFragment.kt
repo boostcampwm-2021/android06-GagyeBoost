@@ -1,7 +1,6 @@
 package com.example.gagyeboost.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.core.os.bundleOf
@@ -25,7 +24,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
-            homeViewModel.selectedDate.value = it
+            if (it.date > 0) homeViewModel.setSelectedDate(it)
         }
     }
 
