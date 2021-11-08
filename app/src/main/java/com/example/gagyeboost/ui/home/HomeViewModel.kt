@@ -25,11 +25,15 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     private val calendar = CustomCalendar()
 
-    private val _selectedDate = MutableLiveData<DateItem>()
-    val selectedDate: LiveData<DateItem> = _selectedDate
+    private val _selectedDate = MutableLiveData<DateItem?>()
+    val selectedDate: LiveData<DateItem?> = _selectedDate
 
     val detailItemList = Transformations.switchMap(_selectedDate) {
-        loadDateDetailItemList(it)
+        if (it == null) {
+            MutableLiveData(mutableListOf())
+        } else {
+            loadDateDetailItemList(it)
+        }
     }
 
     private val formatter = DecimalFormat("###,###")
@@ -54,6 +58,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         calendar.setYearAndMonth(year, month)
         _yearAndMonth.value = stringDate
         _yearMonthPair.value = Pair(year, month)
+        _selectedDate.value = null
     }
 
     private fun setDateColor(position: Int): String =
@@ -127,7 +132,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     fun loadDateDetailItemList(date: DateItem): LiveData<MutableList<DateDetailItem>> {
         val data = MutableLiveData<MutableList<DateDetailItem>>()
         val list = mutableListOf<DateDetailItem>()
-
         viewModelScope.launch {
             repository.loadDayData(date.year, date.month, date.date).forEach { account ->
                 val category = repository.loadCategoryData(account.category)
@@ -144,7 +148,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
             }
             data.postValue(list)
         }
-
         return data
     }
 
