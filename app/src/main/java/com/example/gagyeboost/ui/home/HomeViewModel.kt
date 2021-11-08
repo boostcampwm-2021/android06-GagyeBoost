@@ -1,10 +1,17 @@
 package com.example.gagyeboost.ui.home
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.*
+import com.example.gagyeboost.model.data.DateAlpha
+import com.example.gagyeboost.model.data.DateColor
+import com.example.gagyeboost.model.data.DateDetailItem
+import com.example.gagyeboost.model.data.DateItem
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.util.*
@@ -24,19 +31,22 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     private val calendar = CustomCalendar()
 
-    private val _categoryList = MutableLiveData<List<Category>>()
-    val categoryList: LiveData<List<Category>> = _categoryList
+    private val _selectedDate = MutableLiveData<DateItem?>()
+    val selectedDate: LiveData<DateItem?> = _selectedDate
 
-    private val _selectedDate = MutableLiveData<DateItem>()
-    val selectedDate: LiveData<DateItem> = _selectedDate
-
-    val detailItemList = Transformations.switchMap(_selectedDate) {
-        loadDateDetailItemList(it)
-    }
-
-    val money = MutableLiveData<String>("0")
+    private val _detailItemList = MutableLiveData<MutableList<DateDetailItem>>()
+    val detailItemList: LiveData<MutableList<DateDetailItem>> = _detailItemList
 
     private val formatter = DecimalFormat("###,###")
+
+    private val _totalMonthIncome = MutableLiveData<String>()
+    val totalMonthIncome: LiveData<String> = _totalMonthIncome
+
+    private val _totalMonthExpense = MutableLiveData<String>()
+    val totalMonthExpense: LiveData<String> = _totalMonthExpense
+
+    private val _totalMonthBalance = MutableLiveData<String>()
+    val totalMonthBalance: LiveData<String> = _totalMonthBalance
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
@@ -49,6 +59,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         calendar.setYearAndMonth(year, month)
         _yearAndMonth.value = stringDate
         _yearMonthPair.value = Pair(year, month)
+        _selectedDate.value = null
     }
 
     private fun setDateColor(position: Int): String =
@@ -76,6 +87,9 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     fun loadAllDayDataInMonth() {
         viewModelScope.launch {
             val dateItems = mutableListOf<DateItem>()
+            var monthIncome = 0
+            var monthExpense = 0
+
             calendar.datesInMonth.forEachIndexed { index, date ->
                 // prev month date
                 if (date < 0) {
@@ -114,8 +128,14 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                         setDateAlpha(index)
                     )
                 )
+
+                monthIncome += totalIncome
+                monthExpense += totalExpense
             }
             _dateItemList.postValue(dateItems)
+            _totalMonthIncome.postValue(formatter.format(monthIncome) + "원")
+            _totalMonthExpense.postValue(formatter.format(monthExpense) + "원")
+            _totalMonthBalance.postValue(formatter.format(monthIncome - monthExpense) + "원")
         }
     }
 
@@ -123,37 +143,28 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         it.year.toString() + "/" + it.month + "/" + it.date
     } ?: ""
 
-    fun afterMoneyTextChanged() {
-        if (money.value.isNullOrEmpty()) money.value = "0"
-
-        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "")
-    }
-
-    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
-
-    fun loadDateDetailItemList(date: DateItem): LiveData<MutableList<DateDetailItem>> {
-        val data = MutableLiveData<MutableList<DateDetailItem>>()
-
+    fun loadDateDetailItemList(date: DateItem?) {
         val list = mutableListOf<DateDetailItem>()
-
-        viewModelScope.launch {
-            repository.loadDayData(date.year, date.month, date.date).forEach { account ->
-                val category = repository.loadCategoryData(account.category)
-                list.add(
-                    DateDetailItem(
-                        account.id.toString(),
-                        category.emoji,
-                        category.categoryName,
-                        account.content,
-                        getFormattedMoneyText(account.money),
-                        account.moneyType == INCOME
+        if (date == null) {
+            _detailItemList.value = mutableListOf()
+        } else {
+            viewModelScope.launch {
+                repository.loadDayData(date.year, date.month, date.date).forEach { account ->
+                    val category = repository.loadCategoryData(account.category)
+                    list.add(
+                        DateDetailItem(
+                            account.id.toString(),
+                            category.emoji,
+                            category.categoryName,
+                            account.content,
+                            formatter.format(account.money) + "원",
+                            account.moneyType == INCOME
+                        )
                     )
-                )
+                }
+                _detailItemList.postValue(list)
             }
-
-            data.postValue(list)
         }
 
-        return data
     }
 }

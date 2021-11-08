@@ -7,11 +7,10 @@ class CustomCalendar {
     private val calendar = Calendar.getInstance()
 
     var prevMonthTailOffset = 0
-    private var nextMonthHeadOffset = 0
     var currentMonthMaxDate = 0
 
     private val _datesInMonth = mutableListOf<Int>()
-    val datesInMonth get() = _datesInMonth
+    val datesInMonth: List<Int> = _datesInMonth
 
     fun setYearAndMonth(year: Int, month: Int) {
         calendar.set(Calendar.YEAR, year)
@@ -32,8 +31,6 @@ class CustomCalendar {
 
     private fun makePrevMonthTail(calendar: Calendar) {
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1)
-        val maxDate = calendar.getActualMaximum(Calendar.DATE)
-        var maxOffsetDate = maxDate - prevMonthTailOffset
 
         repeat(prevMonthTailOffset) {
             _datesInMonth.add(-1)

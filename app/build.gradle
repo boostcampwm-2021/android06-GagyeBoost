@@ -6,6 +6,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\android_key\\android06')
+            storePassword 'android06'
+            keyAlias 'gagyeBoost'
+            keyPassword 'android06'
+        }
+    }
     compileSdk 30
 
     defaultConfig {
@@ -20,6 +28,7 @@ android {
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

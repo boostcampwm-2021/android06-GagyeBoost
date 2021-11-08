@@ -20,7 +20,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     private lateinit var categoryAdapter: CategoryAdapter
     private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var navController: NavController
-   // private val homeViewModel by sharedViewModel<HomeViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,23 +31,9 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     }
 
     private fun initView() {
-        binding.tvMoney.text =
-           viewModel.getFormattedMoneyText(viewModel.money.value?.toIntOrNull() ?: 0)
-
         categoryAdapter = CategoryAdapter(
-            {
-                if (it.id < 0) {
-                    navController.navigate(R.id.action_categoryFragment_to_addCategoryFragment)
-                } else {
-                    viewModel.setCategoryData(it)
-                    navController.navigate(R.id.action_categoryFragment_to_selectPositionFragment)
-                }
-                return@CategoryAdapter true
-            }, {
-                viewModel.setCategoryData(it)
-                navController.navigate(R.id.action_categoryFragment_to_updateCategoryFragment)
-                return@CategoryAdapter true
-            })
+            { category -> categoryOnClick(category) },
+            { category -> categoryLongClick(category) })
 
         binding.viewModel = viewModel
         binding.rvCategory.adapter = categoryAdapter
@@ -74,6 +59,22 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         }
 
         viewModel.loadCategoryList()
+    }
+
+    private fun categoryOnClick(category: Category): Boolean {
+        if (category.id < 0) {
+            navController.navigate(R.id.action_categoryFragment_to_addCategoryFragment)
+        } else {
+            viewModel.setCategoryData(category)
+            navController.navigate(R.id.action_categoryFragment_to_selectPositionFragment)
+        }
+        return true
+    }
+
+    private fun categoryLongClick(category: Category): Boolean {
+        viewModel.setCategoryData(category)
+        navController.navigate(R.id.action_categoryFragment_to_updateCategoryFragment)
+        return true
     }
 
     private fun initClickListeners() {
