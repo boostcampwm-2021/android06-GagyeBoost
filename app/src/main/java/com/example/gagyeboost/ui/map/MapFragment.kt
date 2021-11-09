@@ -80,103 +80,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 class TempViewModel() {
 
     // HashMap<좌표, 좌표에 해당하는 내역 list>
-    private var _dataMap = MutableLiveData<HashMap<Pair<Float, Float>, ArrayList<AccountBook>>>()
-    val dataMap: LiveData<HashMap<Pair<Float, Float>, ArrayList<AccountBook>>> = _dataMap
+    private var _dataMap = MutableLiveData<HashMap<Pair<Float, Float>, List<AccountBook>>>()
+    val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> = _dataMap
 
-    private val testData = listOf(
-        AccountBook(
-            1,
-            1,
-            4240,
-            11,
-            37.57017517089844f,
-            126.98320007324219f,
-            "대한민국 서울특별시 종로1가 종각",
-            "1",
-            2021,
-            11,
-            7
-        ),
-        AccountBook(
-            2,
-            0,
-            1330,
-            1,
-            37.57086181640625f,
-            126.9828109741211f,
-            "대한민국 서울특별시 종로구 공평동 100-5",
-            "12",
-            2021,
-            11,
-            7
-        ),
-        AccountBook(
-            3,
-            0,
-            33330,
-            1,
-            37.57017517089844f,
-            126.98320007324219f,
-            "대한민국 서울특별시 종로1가 종각",
-            "12",
-            2021,
-            11,
-            6
-        ),
-        AccountBook(4, 0, 334550, 1, 0.0f, 0.0f, "", "12", 2021, 11, 5),
-        AccountBook(
-            5,
-            0,
-            1330,
-            2,
-            37.565704345703125f,
-            126.97686004638672f,
-            "대한민국 서울특별시 중구 지하 101 시청",
-            "12",
-            2021,
-            11,
-            5
-        ),
-        AccountBook(
-            6,
-            1,
-            2550,
-            13,
-            37.565704345703125f,
-            126.97686004638672f,
-            "대한민국 서울특별시 중구 지하 101 시청",
-            "12",
-            2021,
-            11,
-            5
-        ),
-        AccountBook(
-            7,
-            0,
-            660,
-            2,
-            37.5704345703125f,
-            126.99214935302734f,
-            "대한민국 서울특별시 종로3가 종로3가",
-            "12",
-            2021,
-            11,
-            4
-        ),
-        AccountBook(
-            8,
-            0,
-            131110,
-            3,
-            37.57961654663086f,
-            126.97704315185547f,
-            "대한민국 서울특별시 종로구 종로1.2.3.4가동 사직로 161",
-            "12",
-            2021,
-            11,
-            10
-        )
-    )
+    private var _selectedPosition = MutableLiveData<List<AccountBook>>()
+    val selectedPosition: LiveData<List<AccountBook>> = _selectedPosition
 
     fun initMarkerData() {
         setMarkerList(testData)
@@ -187,16 +95,20 @@ class TempViewModel() {
         _dataMap.value = listToHashMap(dataList)
     }
 
-    private fun listToHashMap(dataList: List<AccountBook>): HashMap<Pair<Float, Float>, ArrayList<AccountBook>> {
-        val nowMap = HashMap<Pair<Float, Float>, ArrayList<AccountBook>>()
+    private fun listToHashMap(dataList: List<AccountBook>): HashMap<Pair<Float, Float>, List<AccountBook>> {
+        val nowMap = HashMap<Pair<Float, Float>, MutableList<AccountBook>>()
         dataList.forEach {
             val latLng = Pair(it.latitude, it.longitude)
-            nowMap.getOrPut(latLng) { ArrayList() }.add(it)
+            nowMap.getOrPut(latLng) { mutableListOf() }.add(it)
         }
-        return nowMap
+        val retMap=HashMap<Pair<Float,Float>,List<AccountBook>>()
+        nowMap.forEach{
+            retMap[it.key]=it.value
+        }
+        return retMap
     }
 
-    fun hashMapToMarkerMap(dataMap: HashMap<Pair<Float, Float>, ArrayList<AccountBook>>): HashMap<Pair<Float, Float>, Pair<String, String>> {
+    fun hashMapToMarkerMap(dataMap: HashMap<Pair<Float, Float>, List<AccountBook>>): HashMap<Pair<Float, Float>, Pair<String, String>> {
         val markerMap = HashMap<Pair<Float, Float>, Pair<String, String>>()
         dataMap.forEach {
             markerMap[it.key] = Pair(
@@ -207,3 +119,98 @@ class TempViewModel() {
         return markerMap
     }
 }
+
+private val testData = listOf(
+    AccountBook(
+        1,
+        1,
+        4240,
+        11,
+        37.57017517089844f,
+        126.98320007324219f,
+        "대한민국 서울특별시 종로1가 종각",
+        "1",
+        2021,
+        11,
+        7
+    ),
+    AccountBook(
+        2,
+        0,
+        1330,
+        1,
+        37.57086181640625f,
+        126.9828109741211f,
+        "대한민국 서울특별시 종로구 공평동 100-5",
+        "12",
+        2021,
+        11,
+        7
+    ),
+    AccountBook(
+        3,
+        0,
+        33330,
+        1,
+        37.57017517089844f,
+        126.98320007324219f,
+        "대한민국 서울특별시 종로1가 종각",
+        "12",
+        2021,
+        11,
+        6
+    ),
+    AccountBook(4, 0, 334550, 1, 0.0f, 0.0f, "", "12", 2021, 11, 5),
+    AccountBook(
+        5,
+        0,
+        1330,
+        2,
+        37.565704345703125f,
+        126.97686004638672f,
+        "대한민국 서울특별시 중구 지하 101 시청",
+        "12",
+        2021,
+        11,
+        5
+    ),
+    AccountBook(
+        6,
+        1,
+        2550,
+        13,
+        37.565704345703125f,
+        126.97686004638672f,
+        "대한민국 서울특별시 중구 지하 101 시청",
+        "12",
+        2021,
+        11,
+        5
+    ),
+    AccountBook(
+        7,
+        0,
+        660,
+        2,
+        37.5704345703125f,
+        126.99214935302734f,
+        "대한민국 서울특별시 종로3가 종로3가",
+        "12",
+        2021,
+        11,
+        4
+    ),
+    AccountBook(
+        8,
+        0,
+        131110,
+        3,
+        37.57961654663086f,
+        126.97704315185547f,
+        "대한민국 서울특별시 종로구 종로1.2.3.4가동 사직로 161",
+        "12",
+        2021,
+        11,
+        10
+    )
+)
