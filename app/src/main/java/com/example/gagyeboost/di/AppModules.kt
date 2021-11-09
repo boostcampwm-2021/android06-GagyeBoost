@@ -8,6 +8,7 @@ import com.example.gagyeboost.model.local.AccountBookDatabase
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.home.DateDetailAdapter
 import com.example.gagyeboost.ui.home.HomeViewModel
+import com.example.gagyeboost.ui.map.MapViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -55,4 +56,5 @@ val appModule = module {
 val viewModelModule = module {
     viewModel { AddViewModel(get()) }
     viewModel { HomeViewModel(get()) }
+    viewModel { MapViewModel(get()) }
 }
