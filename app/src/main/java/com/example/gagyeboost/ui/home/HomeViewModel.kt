@@ -1,9 +1,5 @@
 package com.example.gagyeboost.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
@@ -158,7 +154,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                             category.categoryName,
                             account.content,
                             formatter.format(account.money) + "원",
-                            account.moneyType == INCOME
+                            account.moneyType == INCOME,
+                            account.address
                         )
                     )
                 }
