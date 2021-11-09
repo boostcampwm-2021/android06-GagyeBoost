@@ -10,34 +10,27 @@ import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentHomeBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by viewModel()
-    private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var customCalendarAdapter: CustomCalendarAdapter
     private lateinit var dialog: NumberPickerDialog
     private val detailAdapter: DateDetailAdapter by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        customCalendarAdapter = CustomCalendarAdapter(homeViewModel) {
-            homeViewModel.selectedDate.value = it
-        }
+        customCalendarAdapter = CustomCalendarAdapter(homeViewModel)
+        customCalendarAdapter = CustomCalendarAdapter(homeViewModel)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = viewModel
         initView()
         setDialog()
         observe()
 
-        viewModel.loadMonthIncome()
-        viewModel.loadMonthExpense()
-        viewModel.setTotalMoney()
         binding.fabAdd.setOnClickListener {
             val today = homeViewModel.getTodayString()
             findNavController().navigate(
@@ -52,7 +45,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         dialog = NumberPickerDialog(binding.root.context)
 
         binding.rvCalendar.adapter = customCalendarAdapter
-
         binding.rvDetail.adapter = detailAdapter
     }
 
@@ -83,6 +75,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun observe() {
         homeViewModel.yearMonthPair.observe(viewLifecycleOwner) {
             homeViewModel.loadAllDayDataInMonth()
+        }
+
+        homeViewModel.selectedDate.observe(viewLifecycleOwner){
+            homeViewModel.loadDateDetailItemList(it)
         }
 
         homeViewModel.dateItemList.observe(viewLifecycleOwner) {

@@ -4,8 +4,25 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
 }
+/*
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+ */
 
 android {
+    /*
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+     */
     compileSdk 30
 
     defaultConfig {
@@ -20,6 +37,7 @@ android {
 
     buildTypes {
         release {
+            //signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
