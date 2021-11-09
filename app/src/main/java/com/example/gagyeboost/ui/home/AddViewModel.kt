@@ -128,6 +128,5 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     }
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
 
-    fun getAddress(geocoder: Geocoder): List<Address> = geocoder.getFromLocationName(searchAddress.value, 1)
-
+    fun getAddress(geocoder: Geocoder): List<Address> = geocoder.getFromLocationName(searchAddress.value, 20)
 }

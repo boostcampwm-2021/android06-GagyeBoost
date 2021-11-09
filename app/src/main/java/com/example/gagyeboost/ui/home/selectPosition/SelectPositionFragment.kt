@@ -1,22 +1,24 @@
 package com.example.gagyeboost.ui.home.selectPosition
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.location.Geocoder
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.GPSUtils
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SelectPositionFragment :
@@ -25,6 +27,13 @@ class SelectPositionFragment :
     private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var navController: NavController
     private lateinit var googleMap: GoogleMap
+    private val gpsUtils: GPSUtils by lazy { GPSUtils(requireContext()) }
+    private val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
+    private val requestLocation = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        moveCameraToUser()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,6 +42,7 @@ class SelectPositionFragment :
 
         init()
         initMap()
+        requestLocation.launch(permissions)
     }
 
     private fun init() {
@@ -51,22 +61,37 @@ class SelectPositionFragment :
                 val address = viewModel.getAddress(Geocoder(requireContext()))
 
                 if (address.isNotEmpty()) {
-                    val latLng = LatLng(address[0].latitude, address[0].longitude)
-                    googleMap.addMarker(
-                        MarkerOptions().position(latLng).title(address[0].getAddressLine(0))
-                    )
-
-                    googleMap.animateCamera(newLatLng(latLng))
+//                    val latLng = LatLng(address[0].latitude, address[0].longitude)
+//                    googleMap.addMarker(
+//                        MarkerOptions().position(latLng).title(address[0].getAddressLine(0))
+//                    )
+//
+//                    googleMap.animateCamera(newLatLng(latLng))
+                    val bottom = AddressResultFragment(address)
+                    bottom.show(childFragmentManager, bottom.tag)
                 }
             }
 
             true
         }
+
+        binding.btnGps.setOnClickListener {
+            moveCameraToUser()
+        }
+
+        viewModel.searchAddress.value = ""
     }
 
     private fun initMap() {
         binding.map.getMapAsync(this)
         binding.map.onCreate(null)
+    }
+
+    private fun moveCameraToUser() {
+        val userLocation = gpsUtils.getUserLocation()
+        val latLng = LatLng(userLocation.latitude, userLocation.longitude)
+
+        googleMap.animateCamera(newLatLngZoom(latLng, 15f))
     }
 
     override fun onStart() {
@@ -87,9 +112,10 @@ class SelectPositionFragment :
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
 
-        val seoul = LatLng(37.5642135, 127.0016985)
+        val userLocation = gpsUtils.getUserLocation()
+        val latLng = LatLng(userLocation.latitude, userLocation.longitude)
 
-        googleMap.moveCamera(newLatLngZoom(seoul, 15f))
+        googleMap.moveCamera(newLatLngZoom(latLng, 15f))
     }
 
 }
