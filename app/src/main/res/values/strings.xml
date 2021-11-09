@@ -41,5 +41,6 @@
     <string name="must_enter_category_name">이름을 반드시 입력해야 합니다</string>
     <string name="delete">삭제</string>
     <string name="search_address">주소 검색</string>
+    <string name="search_result">검색 결과</string>
 
 </resources>
