@@ -5,6 +5,10 @@
 
     <data>
 
+        <import type="kotlin.jvm.functions.Function1" />
+        <import type="kotlin.Unit" />
+        <import type="com.example.gagyeboost.model.data.DateDetailItem" />
+
         <variable
             name="item"
             type="com.example.gagyeboost.model.data.DateDetailItem" />
@@ -12,11 +16,16 @@
         <variable
             name="category"
             type="com.example.gagyeboost.model.data.Category" />
+
+        <variable
+            name="listener"
+            type="Function1&lt;DateDetailItem, Boolean>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onLongClick="@{ _ -> listener.invoke(item) }">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/gl_start_vertical"

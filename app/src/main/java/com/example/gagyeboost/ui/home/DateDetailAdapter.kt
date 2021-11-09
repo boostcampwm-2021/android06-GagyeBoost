@@ -8,17 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.databinding.ItemRvDetailBinding
 import com.example.gagyeboost.model.data.DateDetailItem
 
-class DateDetailAdapter :
+class DateDetailAdapter(private val itemLongClickListener: (DateDetailItem) -> Boolean) :
     ListAdapter<DateDetailItem, DateDetailAdapter.DetailViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailViewHolder {
-        return DetailViewHolder(
-            ItemRvDetailBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+        val binding =
+            ItemRvDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding.listener = itemLongClickListener
+
+        return DetailViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {

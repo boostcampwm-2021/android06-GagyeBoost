@@ -1,15 +1,16 @@
 package com.example.gagyeboost.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.DATE_DETAIL_ITEM_KEY
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentHomeBinding
 import com.example.gagyeboost.ui.base.BaseFragment
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -17,11 +18,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val homeViewModel: HomeViewModel by viewModel()
     private lateinit var customCalendarAdapter: CustomCalendarAdapter
     private lateinit var dialog: NumberPickerDialog
-    private val detailAdapter: DateDetailAdapter by inject()
+    private lateinit var detailAdapter: DateDetailAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        customCalendarAdapter = CustomCalendarAdapter(homeViewModel)
         customCalendarAdapter = CustomCalendarAdapter(homeViewModel)
     }
 
@@ -42,10 +42,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun initView() {
         binding.homeViewModel = homeViewModel
-        dialog = NumberPickerDialog(binding.root.context)
+        detailAdapter = DateDetailAdapter {
+            val intent = Intent(activity, RecordDetailActivity::class.java)
+            intent.putExtra(DATE_DETAIL_ITEM_KEY, it)
+            startActivity(intent)
+            return@DateDetailAdapter true
+        }
 
-        binding.rvCalendar.adapter = customCalendarAdapter
-        binding.rvDetail.adapter = detailAdapter
+        with(binding) {
+            dialog = NumberPickerDialog(root.context)
+
+            rvCalendar.adapter = customCalendarAdapter
+            rvDetail.adapter = detailAdapter
+        }
     }
 
     private fun setDialog() {
