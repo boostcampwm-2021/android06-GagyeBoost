@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="250dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_start_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3" />
+
+        <TextView
+            android:id="@+id/tv_period_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/period"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_category_title"
+            app:layout_constraintEnd_toStartOf="@+id/gl_start_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_period_start_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_category_body"
+            app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="10월 1일" />
+
+        <TextView
+            android:id="@+id/tv_dash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/dash"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_category_body"
+            app:layout_constraintEnd_toStartOf="@id/tv_period_end_body"
+            app:layout_constraintStart_toEndOf="@id/tv_period_start_body"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_period_end_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_category_body"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_dash"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="10월 31일" />
+
+        <TextView
+            android:id="@+id/tv_category_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/category"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_money_title"
+            app:layout_constraintEnd_toStartOf="@+id/gl_start_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_period_title" />
+
+        <TextView
+            android:id="@+id/tv_category_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_dash_money"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/gl_start_vertical"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dash"
+            tools:text="모두" />
+
+        <TextView
+            android:id="@+id/tv_money_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/money"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/gl_start_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_category_title" />
+
+        <TextView
+            android:id="@+id/tv_money_start_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+            app:layout_constraintTop_toBottomOf="@+id/tv_category_body"
+            tools:text="5000원" />
+
+        <TextView
+            android:id="@+id/tv_dash_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/dash"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_period_end_body"
+            app:layout_constraintStart_toEndOf="@+id/tv_money_start_body"
+            app:layout_constraintTop_toBottomOf="@+id/tv_category_body" />
+
+        <TextView
+            android:id="@+id/tv_money_end_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_dash_money"
+            app:layout_constraintTop_toBottomOf="@+id/tv_category_body"
+            tools:text="13,000원" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
