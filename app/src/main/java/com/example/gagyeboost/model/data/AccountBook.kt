@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
+import com.example.gagyeboost.common.EXPENSE
 
 @Entity(
     tableName = "account_book",
@@ -52,5 +53,5 @@ data class AccountBook(
     @ColumnInfo(name = "day")
     var day: Int
 ) {
-    constructor() : this(0, 0.toByte(), 0, 0, 0f, 0f, "", "", 0, 0, 0)
+    constructor() : this(0, EXPENSE, 0, 0, 0f, 0f, "", "", 0, 0, 0)
 }
