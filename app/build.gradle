@@ -8,7 +8,7 @@ plugins {
 android {
     signingConfigs {
         release {
-            storeFile file('C:\\android_key\\android06')
+            storeFile file('file://C:/android_key/android06')
             storePassword 'android06'
             keyAlias 'gagyeBoost'
             keyPassword 'android06'
