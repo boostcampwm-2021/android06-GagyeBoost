@@ -28,7 +28,7 @@ class NumberPickerDialog(context: Context) : AlertDialog(context) {
     private fun setNumberPicker() {
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
-        val currentMonth = calendar.get(Calendar.MONTH)
+        val currentMonth = calendar.get(Calendar.MONTH) + 1
 
         with(binding.npYear) {
             wrapSelectorWheel = false

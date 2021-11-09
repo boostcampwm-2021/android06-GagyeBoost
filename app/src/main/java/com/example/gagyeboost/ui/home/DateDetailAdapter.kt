@@ -25,7 +25,7 @@ class DateDetailAdapter :
         holder.bind(getItem(position))
     }
 
-    inner class DetailViewHolder(private val binding: ItemRvDetailBinding) :
+    class DetailViewHolder(private val binding: ItemRvDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DateDetailItem) {
