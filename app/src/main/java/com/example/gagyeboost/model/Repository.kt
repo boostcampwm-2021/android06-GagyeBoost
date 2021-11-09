@@ -27,4 +27,6 @@ class Repository(private val accountBookDao: AccountBookDAO) {
     }
 
     suspend fun loadCategoryData(id: Int) = accountBookDao.loadCategoryData(id)
+
+    suspend fun loadAccountBookData(id: Int) = accountBookDao.loadAccountBookData(id)
 }

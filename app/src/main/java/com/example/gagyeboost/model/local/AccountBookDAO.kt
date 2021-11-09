@@ -40,6 +40,9 @@ interface AccountBookDAO {
     @Query("SELECT * FROM category WHERE id=:id")
     suspend fun loadCategoryData(id: Int): Category
 
+    @Query("SELECT * FROM account_book WHERE id=:id")
+    suspend fun loadAccountBookData(id: Int): AccountBook
+
     @Insert
     suspend fun addAccountBookData(accountBook: AccountBook)
 
