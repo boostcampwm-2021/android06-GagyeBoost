@@ -7,7 +7,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.DATE_DETAIL_ITEM_KEY
+import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentHomeBinding
 import com.example.gagyeboost.ui.base.BaseFragment
@@ -44,7 +44,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.homeViewModel = homeViewModel
         detailAdapter = DateDetailAdapter {
             val intent = Intent(activity, RecordDetailActivity::class.java)
-            intent.putExtra(DATE_DETAIL_ITEM_KEY, it)
+            intent.putExtra(DATE_DETAIL_ITEM_ID_KEY, it)
             startActivity(intent)
             return@DateDetailAdapter true
         }
