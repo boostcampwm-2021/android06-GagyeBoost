@@ -1,12 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.home.RecordDetailActivity">
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.home.RecordDetailActivity">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar_layout_update_record"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/app_bar_update_record"
+                    style="@style/CategoryControlTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/app_bar_title_text_size"
+                    app:menu="@menu/update_menu"
+                    app:navigationIcon="@drawable/ic_arrow_left_white"
+                    app:title="@string/update_record"
+                    app:titleCentered="true"
+                    app:titleTextColor="@color/white" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_10percent_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintGuide_percent="0.1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_90percent_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintGuide_percent="0.9"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/money_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
+                app:layout_constraintTop_toBottomOf="@id/app_bar_layout_update_record" />
+
+            <TextView
+                android:id="@+id/tv_category_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginStart="5dp"
+                app:layout_constraintTop_toTopOf="@id/money_type"
+                app:layout_constraintBottom_toBottomOf="@id/money_type"
+                app:layout_constraintStart_toEndOf="@id/money_type" />
+
+            <TextView
+                android:id="@+id/tv_category_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category"
+                style="@style/RecordDetailTitleTheme"
+                app:layout_constraintStart_toStartOf="@id/money_type"
+                app:layout_constraintTop_toTopOf="@id/et_category_body"
+                app:layout_constraintBottom_toBottomOf="@id/et_category_body" />
+
+            <EditText
+                android:id="@+id/et_category_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/RecordDetailEditTheme"
+                android:background="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintTop_toBottomOf="@id/money_type" />
+
+            <TextView
+                android:id="@+id/tv_money_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/money_amount"
+                style="@style/RecordDetailTitleTheme"
+                app:layout_constraintStart_toStartOf="@id/money_type"
+                app:layout_constraintTop_toTopOf="@id/et_money_body"
+                app:layout_constraintBottom_toBottomOf="@id/et_money_body"/>
+
+            <EditText
+                android:id="@+id/et_money_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/RecordDetailEditTheme"
+                android:background="@android:color/transparent"
+                android:maxLength="9"
+                android:maxLines="1"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintTop_toBottomOf="@id/et_category_body" />
+
+            <TextView
+                android:id="@+id/tv_date_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date"
+                style="@style/RecordDetailTitleTheme"
+                app:layout_constraintStart_toStartOf="@id/money_type"
+                app:layout_constraintTop_toTopOf="@id/et_date_body"
+                app:layout_constraintBottom_toBottomOf="@id/et_date_body"/>
+
+            <EditText
+                android:id="@+id/et_date_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/RecordDetailEditTheme"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintTop_toBottomOf="@id/et_money_body" />
+
+            <TextView
+                android:id="@+id/tv_content_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/content"
+                style="@style/RecordDetailTitleTheme"
+                app:layout_constraintStart_toStartOf="@id/money_type"
+                app:layout_constraintTop_toTopOf="@id/et_content_body"
+                app:layout_constraintBottom_toBottomOf="@id/et_content_body"/>
+
+            <EditText
+                android:id="@+id/et_content_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/RecordDetailEditTheme"
+                android:background="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintTop_toBottomOf="@id/et_date_body" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/address"
+                style="@style/RecordDetailTitleTheme"
+                android:layout_marginTop="50dp"
+                app:layout_constraintStart_toStartOf="@id/money_type"
+                app:layout_constraintTop_toBottomOf="@id/tv_content_title" />
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
+                app:layout_constraintTop_toBottomOf="@id/tv_address" />
+
+            <TextView
+                android:id="@+id/btn_complete"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:theme="@style/GradationButton"
+                android:text="@string/complete"
+                android:textSize="18sp"
+                android:layout_marginVertical="20dp"
+                app:layout_constraintTop_toBottomOf="@id/map"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 </layout>
