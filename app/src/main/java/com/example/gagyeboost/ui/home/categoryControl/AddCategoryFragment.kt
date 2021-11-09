@@ -26,7 +26,7 @@ class AddCategoryFragment :
         binding.viewModel = viewModel
 
         binding.appBarAddCategory.setNavigationOnClickListener {
-            viewModel.selectedCategoryReset()
+            viewModel.resetSelectedCategory()
             navController.popBackStack()
         }
 
