@@ -41,11 +41,13 @@
     <string name="must_enter_category_name">이름을 반드시 입력해야 합니다</string>
     <string name="delete">삭제</string>
     <string name="search_address">주소 검색</string>
+    <string name="search_result">검색 결과</string>
     <string name="period">기간</string>
     <string name="money">금액</string>
     <string name="category">카테고리</string>
     <string name="dash">-</string>
     <string name="money_type">수입/지출</string>
     <string name="apply">적용하기</string>
+    <string name="find_my_location">find my location</string>
 
 </resources>

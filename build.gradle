@@ -20,6 +20,8 @@ buildscript {
         koin_version = "3.0.2"
         navigation_version = "2.3.5"
         google_map_version = "18.0.0"
+        retrofit_version = "2.9.0"
+        logging_interceptor_version = "4.2.1"
     }
 }
 

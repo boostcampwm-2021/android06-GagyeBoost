@@ -4,10 +4,12 @@ import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.Filter
 import com.example.gagyeboost.model.local.AccountBookDAO
+import com.example.gagyeboost.model.remote.GooglePlaceClient
 
-class Repository(private val accountBookDao: AccountBookDAO) {
-
-    suspend fun loadMonthIncome(year: Int, month: Int) = accountBookDao.loadMonthIncome(year, month)
+class Repository(
+    private val accountBookDao: AccountBookDAO,
+    private val client: GooglePlaceClient
+) {
 
     suspend fun addAccountBookData(accountBook: AccountBook) {
         accountBookDao.addAccountBookData(accountBook)
@@ -16,9 +18,6 @@ class Repository(private val accountBookDao: AccountBookDAO) {
     suspend fun addCategoryData(category: Category) {
         accountBookDao.addCategoryData(category)
     }
-
-    suspend fun loadMonthExpense(year: Int, month: Int) =
-        accountBookDao.loadMonthExpense(year, month)
 
     suspend fun loadCategoryList(moneyType: Byte) = accountBookDao.loadCategoryAllData(moneyType)
 
@@ -48,5 +47,7 @@ class Repository(private val accountBookDao: AccountBookDAO) {
             filter.endLatitude,
             filter.endLongitude
         )
-}
 
+    suspend fun getPlaceListFromKeyword(input: String) =
+        client.getGooglePlayService().getPlaceListFromKeyword(input)
+}
