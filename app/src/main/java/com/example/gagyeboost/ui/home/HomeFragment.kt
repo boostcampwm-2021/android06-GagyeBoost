@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
@@ -19,6 +21,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var customCalendarAdapter: CustomCalendarAdapter
     private lateinit var dialog: NumberPickerDialog
     private lateinit var detailAdapter: DateDetailAdapter
+    private val filterActivityLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            refreshCalendarData()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +51,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         detailAdapter = DateDetailAdapter {
             val intent = Intent(activity, RecordDetailActivity::class.java)
             intent.putExtra(DATE_DETAIL_ITEM_ID_KEY, it)
-            startActivity(intent)
+            filterActivityLauncher.launch(intent)
             return@DateDetailAdapter true
         }
 
@@ -97,6 +103,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         homeViewModel.detailItemList.observe(viewLifecycleOwner) {
             detailAdapter.submitList(it)
         }
+    }
+
+    private fun refreshCalendarData() {
+        homeViewModel.loadAllDayDataInMonth()
     }
 
     override fun onStop() {

@@ -4,20 +4,57 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
+import com.example.gagyeboost.model.data.DateDetailItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 class RecordDetailViewModel(private val repository: Repository, private val accountBookId: Int) :
     ViewModel() {
 
-    private val _accountBookInfo = MutableLiveData<AccountBook>()
-    val accountBookInfo: LiveData<AccountBook> = _accountBookInfo
+    private val _accountBookData = MutableLiveData<DateDetailItem>()
+    val accountBookData: LiveData<DateDetailItem> = _accountBookData
 
-    fun setAccountBookInfo() {
+    private val _date = MutableLiveData<String>()
+    val date: LiveData<String> = _date
+
+    private val formatter = DecimalFormat("###,###")
+
+    init {
+        setAccountBookData()
+    }
+
+    private fun setAccountBookData() {
         viewModelScope.launch {
-            _accountBookInfo.value = repository.loadAccountBookData(accountBookId)
+            val accountBookData = repository.loadAccountBookData(accountBookId)
+            val categoryId = accountBookData.category
+            val category = repository.loadCategoryData(categoryId)
+
+            _accountBookData.value = DateDetailItem(
+                accountBookId,
+                category.emoji,
+                category.categoryName,
+                accountBookData.content,
+                formatter.format(accountBookData.money) + "원",
+                accountBookData.moneyType == INCOME,
+            )
+
+            _date.value =
+                "" + accountBookData.year + "." + accountBookData.month + "." + accountBookData.day
         }
     }
 
+    fun deleteAccountBookData(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAccountBookData(id)
+        }
+    }
+
+    fun updateAccountBookData() {
+        viewModelScope.launch(Dispatchers.IO) {
+
+        }
+    }
 }

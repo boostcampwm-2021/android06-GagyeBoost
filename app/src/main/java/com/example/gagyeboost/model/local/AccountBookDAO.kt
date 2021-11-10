@@ -47,10 +47,10 @@ interface AccountBookDAO {
     suspend fun addAccountBookData(accountBook: AccountBook)
 
     @Update
-    fun updateAccountBookData(accountBook: AccountBook)
+    suspend fun updateAccountBookData(accountBook: AccountBook)
 
     @Query("DELETE FROM account_book WHERE id=:id")
-    fun deleteAccountBookData(id: Int)
+    suspend fun deleteAccountBookData(id: Int)
 
     //선택한 월의 모든 데이터
     @Query("SELECT * FROM account_book WHERE year=:year AND month=:month")
