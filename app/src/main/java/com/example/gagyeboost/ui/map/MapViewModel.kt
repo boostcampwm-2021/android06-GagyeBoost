@@ -1,6 +1,5 @@
 package com.example.gagyeboost.ui.map
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.formatter
@@ -22,10 +21,8 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val intEndMoney = MutableLiveData(300000)
     val endMoney: LiveData<String> = Transformations.map(intEndMoney) {
         if (it == Int.MAX_VALUE) {
-            Log.e("viewmodel", it.toString())
             formatter.format(it) + "원 이상"
         } else {
-            Log.e("viewmodel", it.toString())
             formatter.format(it) + "원"
         }
     }
@@ -43,6 +40,40 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endLongitude: Float = 127.213158F
 
     val filterData = MutableLiveData<List<AccountBook>>()
+
+    // HashMap<좌표, 좌표에 해당하는 내역 list>
+    private val _dataMap = MutableLiveData<HashMap<Pair<Float, Float>, List<AccountBook>>>()
+    val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> =
+        Transformations.map(filterData) {
+            listToHashMap(it)
+        }
+
+    private val _selectedPosition = MutableLiveData<List<AccountBook>>()
+    val selectedPosition: LiveData<List<AccountBook>> = _selectedPosition
+
+    private fun listToHashMap(dataList: List<AccountBook>): HashMap<Pair<Float, Float>, List<AccountBook>> {
+        val nowMap = HashMap<Pair<Float, Float>, MutableList<AccountBook>>()
+        dataList.forEach {
+            val latLng = Pair(it.latitude, it.longitude)
+            nowMap.getOrPut(latLng) { mutableListOf() }.add(it)
+        }
+        val retMap = HashMap<Pair<Float, Float>, List<AccountBook>>()
+        nowMap.forEach {
+            retMap[it.key] = it.value
+        }
+        return retMap
+    }
+
+    fun hashMapToMarkerMap(dataMap: HashMap<Pair<Float, Float>, List<AccountBook>>): HashMap<Pair<Float, Float>, Pair<String, String>> {
+        val markerMap = HashMap<Pair<Float, Float>, Pair<String, String>>()
+        dataMap.forEach {
+            markerMap[it.key] = Pair(
+                it.value[0].address,
+                "${it.value.sumOf { accountBook -> accountBook.money }}원"
+            )
+        }
+        return markerMap
+    }
 
     //viewModel 공유하면 다시 map화면 돌아왔을때 init
     fun setInitData() {
@@ -63,7 +94,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endLongitude = 0.0f
     }
 
-    fun loadAllCategoryID() {
+    private fun loadAllCategoryID() {
         viewModelScope.launch {
             categoryList.postValue(repository.loadAllCategoryID())
         }
@@ -74,11 +105,9 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         intEndMoney.value = end
     }
 
-
     fun loadFilterData() {
         viewModelScope.launch {
             val data = setFilter()
-            Log.e("viewModel filter data", data.toString())
             val filter = repository.loadFilterData(data)
             filterData.postValue(filter)
         }
