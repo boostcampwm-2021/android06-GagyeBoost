@@ -1,30 +1,25 @@
 package com.example.gagyeboost.ui.map
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.INCOME
-import com.example.gagyeboost.databinding.DialogMapBottomDetailBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.ui.base.BaseFragment
-import com.example.gagyeboost.ui.home.DateDetailAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import org.koin.android.ext.android.inject
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
     private val tempViewModel = TempViewModel()
-    private val detailAdapter: DateDetailAdapter by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,7 +39,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                             markerData.key.second.toDouble()
                         )
                     ).title(markerData.value.first).snippet(markerData.value.second)
-                )?.showInfoWindow()
+                )
             }
         })
     }
