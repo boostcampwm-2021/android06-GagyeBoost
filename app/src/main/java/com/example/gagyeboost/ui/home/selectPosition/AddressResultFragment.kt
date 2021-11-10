@@ -1,15 +1,18 @@
 package com.example.gagyeboost.ui.home.selectPosition
 
-import android.location.Address
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.gagyeboost.databinding.DialogBottomAddressResultBinding
+import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class AddressResultFragment(private val list: List<Address>, private val viewModel: AddViewModel) :
+class AddressResultFragment(
+    private val list: List<PlaceDetail>,
+    private val viewModel: AddViewModel
+) :
     BottomSheetDialogFragment() {
 
     private var _binding: DialogBottomAddressResultBinding? = null
