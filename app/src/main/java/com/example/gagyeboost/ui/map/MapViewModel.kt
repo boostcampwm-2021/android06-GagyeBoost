@@ -3,7 +3,6 @@ package com.example.gagyeboost.ui.map
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
@@ -13,8 +12,8 @@ import java.util.*
 
 class MapViewModel(private val repository: Repository) : ViewModel() {
 
-    // 양방향 데이터 바인딩
-    private var filterMoneyType: Byte = EXPENSE
+    val byteMoneyType = MutableLiveData(EXPENSE)
+    val intMoneyType: LiveData<Int> = Transformations.map(byteMoneyType) { it.toInt() }
 
     val intStartMoney = MutableLiveData(0)
     val startMoney: LiveData<String> =
@@ -45,21 +44,10 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
 
     val filterData = MutableLiveData<List<AccountBook>>()
 
-    val test = MutableLiveData<String>()
-
-    // 데이터 바인딩
-    fun expenseBtnOnClick() {
-        filterMoneyType = EXPENSE
-    }
-
-    fun incomeBtnOnClick() {
-        filterMoneyType = INCOME
-    }
-
     //viewModel 공유하면 다시 map화면 돌아왔을때 init
     fun setInitData() {
         loadAllCategoryID()
-        filterMoneyType = EXPENSE
+        byteMoneyType.value = EXPENSE
         intStartMoney.value = 0
         intEndMoney.value = 300000
         startYear = Calendar.getInstance().get(Calendar.YEAR)
@@ -96,7 +84,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     }
 
     private fun setFilter() = Filter(
-        filterMoneyType,
+        byteMoneyType.value ?: EXPENSE,
         startYear,
         startMonth,
         startDay,
@@ -111,6 +99,5 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         intEndMoney.value ?: 300000,
         categoryList.value ?: listOf()
     )
-
 
 }

@@ -1,32 +1,29 @@
 package com.example.gagyeboost.ui.map.filter
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.widget.DatePicker
 import androidx.databinding.DataBindingUtil
 import com.example.gagyeboost.R
-import com.example.gagyeboost.databinding.DialogPeriodBinding
+import com.example.gagyeboost.databinding.DialogFilterPeriodBinding
 import com.example.gagyeboost.ui.map.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import java.util.*
 
 class FilterMoneyDialog(context: Context, val viewModel: MapViewModel) :
-    BottomSheetDialog(context), DatePickerDialog.OnDateSetListener {
+    BottomSheetDialog(context) {
 
-    lateinit var binding: DialogPeriodBinding
+    lateinit var binding: DialogFilterPeriodBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.dialog_period,
+            R.layout.dialog_filter_period,
             null,
             false
         )
         setContentView(binding.root)
+        binding.viewModel = viewModel
 
         var left = binding.rsMoney.valueFrom.toInt()
         var right = binding.rsMoney.valueTo.toInt()
@@ -39,7 +36,6 @@ class FilterMoneyDialog(context: Context, val viewModel: MapViewModel) :
                 viewModel.intEndMoney.value?.toFloat() ?: 300000f
             }
 
-            Log.e("values", "$start $end")
             values = listOf(start, end)
             addOnChangeListener { _, value, _ ->
                 when (focusedThumbIndex) {
@@ -58,10 +54,5 @@ class FilterMoneyDialog(context: Context, val viewModel: MapViewModel) :
             viewModel.loadFilterData()
             dismiss()
         }
-    }
-
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        val date = "${year}/${month}/${dayOfMonth}"
-        viewModel.startYear = year
     }
 }

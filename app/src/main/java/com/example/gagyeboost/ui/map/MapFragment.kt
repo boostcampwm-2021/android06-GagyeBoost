@@ -10,6 +10,7 @@ import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
+import com.example.gagyeboost.ui.map.filter.FilterMoneyTypeDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -22,7 +23,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private lateinit var googleMap: GoogleMap
     private val tempViewModel = TempViewModel()
     private val viewModel: MapViewModel by viewModel()
-    private lateinit var dialog: FilterMoneyDialog
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,9 +64,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun setDialog(){
         binding.btnMoney.setOnClickListener {
-            dialog = FilterMoneyDialog(binding.root.context, viewModel)
+            val dialog = FilterMoneyDialog(binding.root.context, viewModel)
             dialog.show()
 //            dialog.isShowing
+        }
+        binding.btnMoneyType.setOnClickListener {
+            val dialog = FilterMoneyTypeDialog(binding.root.context, viewModel)
+            dialog.show()
         }
     }
 
