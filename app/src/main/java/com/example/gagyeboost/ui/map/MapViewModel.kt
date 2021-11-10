@@ -34,19 +34,16 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endYear: Int = 2500
     var endMonth: Int = 12
     var endDay: Int = 31
-    var startLatitude: Float = 37.566029F
-    var startLongitude: Float = 126.897156F
-    var endLatitude: Float = 37.481645F
-    var endLongitude: Float = 127.213158F
+    var startLatitude: Float = 0.0F
+    var startLongitude: Float = 00.0F
+    var endLatitude: Float = 200.0F
+    var endLongitude: Float = 200.0F
 
     val filterData = MutableLiveData<List<AccountBook>>()
 
     // HashMap<좌표, 좌표에 해당하는 내역 list>
-    private val _dataMap = MutableLiveData<HashMap<Pair<Float, Float>, List<AccountBook>>>()
     val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> =
-        Transformations.map(filterData) {
-            listToHashMap(it)
-        }
+        Transformations.map(filterData) { listToHashMap(it) }
 
     private val _selectedPosition = MutableLiveData<List<AccountBook>>()
     val selectedPosition: LiveData<List<AccountBook>> = _selectedPosition
@@ -90,8 +87,8 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         // 화면에 보이는 위도/경도로 설정 해야함
         startLatitude = 0.0f
         startLongitude = 0.0f
-        endLatitude = 0.0f
-        endLongitude = 0.0f
+        endLatitude = 200.0f
+        endLongitude = 200.0f
     }
 
     private fun loadAllCategoryID() {
