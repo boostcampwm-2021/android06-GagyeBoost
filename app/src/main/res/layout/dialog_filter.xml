@@ -13,9 +13,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:behavior_draggable="true"
-        app:behavior_hideable="false"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        android:background="@drawable/bottom_sheet_background">
+
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/gl_start_vertical"

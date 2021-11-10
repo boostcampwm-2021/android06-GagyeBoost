@@ -12,8 +12,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.util.*
 
 
-class FilterDialog(context: Context, val viewModel: MapViewModel) : BottomSheetDialog(context),
-    DatePickerDialog.OnDateSetListener {
+class FilterDialog(context: Context, val viewModel: MapViewModel) :
+    BottomSheetDialog(context), DatePickerDialog.OnDateSetListener {
 
     lateinit var binding: DialogFilterBinding
 

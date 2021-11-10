@@ -14,13 +14,13 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
     private val tempViewModel = TempViewModel()
-    private val viewModel: MapViewModel by sharedViewModel()
+    private val viewModel: MapViewModel by viewModel()
     private lateinit var dialog: FilterDialog
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,9 +35,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
         Log.e("map fragment", "onViewCreated")
 
-        binding.btnTest.setOnClickListener {
-            dialog.show()
-        }
     }
 
     private fun initObserver() {
