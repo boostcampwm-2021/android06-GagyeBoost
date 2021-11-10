@@ -16,7 +16,10 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.datepicker.MaterialDatePicker
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
+import kotlin.collections.HashMap
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
@@ -71,6 +74,24 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.btnMoneyType.setOnClickListener {
             val dialog = FilterMoneyTypeDialog(binding.root.context, viewModel)
             dialog.show()
+        }
+
+        binding.btnPeriod.setOnClickListener {
+//            val dialog = FilterPeriodDialog(binding.root.context, viewModel)
+//            dialog.show()
+            showDateRangePicker()
+        }
+    }
+
+    private fun showDateRangePicker(){
+        val dateRangePicker = MaterialDatePicker.Builder
+            .dateRangePicker()
+            .setTitleText("Select Date").build()
+
+        dateRangePicker.show(parentFragmentManager, "date_range_picker")
+
+        dateRangePicker.addOnPositiveButtonClickListener { date->
+            viewModel.setPeriod(Date(date.first), Date(date.second))
         }
     }
 

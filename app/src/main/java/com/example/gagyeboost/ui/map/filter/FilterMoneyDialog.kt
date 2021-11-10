@@ -5,20 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.databinding.DataBindingUtil
 import com.example.gagyeboost.R
-import com.example.gagyeboost.databinding.DialogFilterPeriodBinding
+import com.example.gagyeboost.databinding.DialogFilterMoneyBinding
 import com.example.gagyeboost.ui.map.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class FilterMoneyDialog(context: Context, val viewModel: MapViewModel) :
     BottomSheetDialog(context) {
 
-    lateinit var binding: DialogFilterPeriodBinding
+    lateinit var binding: DialogFilterMoneyBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.dialog_filter_period,
+            R.layout.dialog_filter_money,
             null,
             false
         )

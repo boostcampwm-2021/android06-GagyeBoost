@@ -78,6 +78,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     fun loadFilterData() {
         viewModelScope.launch {
             val data = setFilter()
+            Log.e("viewModel filter data", data.toString())
             val filter = repository.loadFilterData(data)
             filterData.postValue(filter)
         }
@@ -100,4 +101,17 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         categoryList.value ?: listOf()
     )
 
+    fun setPeriod(startDate: Date, endDate: Date) {
+        val calendar = Calendar.getInstance()
+        calendar.time = startDate
+        startYear = calendar.get(Calendar.YEAR)
+        startMonth = calendar.get(Calendar.MONTH) + 1
+        startDay = calendar.get(Calendar.DAY_OF_MONTH)
+        calendar.time = endDate
+        endYear = calendar.get(Calendar.YEAR)
+        endMonth = calendar.get(Calendar.MONTH) + 1
+        endDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+        loadFilterData()
+    }
 }
