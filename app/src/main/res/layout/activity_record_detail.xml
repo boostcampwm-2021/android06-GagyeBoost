@@ -70,7 +70,7 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="@{viewModel.accountBookData.moneyType ? @string/earnings : @string/expense}"
+                android:text="@{viewModel.dateDetailItem.moneyType ? @string/earnings : @string/expense}"
                 app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
                 app:layout_constraintTop_toBottomOf="@id/app_bar_layout_update_record" />
 
@@ -81,7 +81,7 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:layout_marginStart="5dp"
-                android:text="@{viewModel.accountBookData.emoji}"
+                android:text="@{viewModel.dateDetailItem.emoji}"
                 app:layout_constraintTop_toTopOf="@id/money_type"
                 app:layout_constraintBottom_toBottomOf="@id/money_type"
                 app:layout_constraintStart_toEndOf="@id/money_type" />
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 style="@style/RecordDetailEditTheme"
                 android:maxLines="1"
-                android:text="@{viewModel.accountBookData.category}"
+                android:text="@={viewModel.dateDetailItem.category}"
                 android:background="@android:color/transparent"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
                 app:layout_constraintTop_toBottomOf="@id/money_type" />
@@ -125,7 +125,7 @@
                 android:background="@android:color/transparent"
                 android:maxLength="9"
                 android:maxLines="1"
-                android:text="@{viewModel.accountBookData.money}"
+                android:text="@={viewModel.dateDetailItem.money}"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
                 app:layout_constraintTop_toBottomOf="@id/et_category_body" />
 
@@ -166,7 +166,7 @@
                 android:layout_height="wrap_content"
                 style="@style/RecordDetailEditTheme"
                 android:background="@android:color/transparent"
-                android:text="@{viewModel.accountBookData.content}"
+                android:text="@={viewModel.dateDetailItem.content}"
                 android:maxLines="2"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
                 app:layout_constraintTop_toBottomOf="@id/tv_date_body" />

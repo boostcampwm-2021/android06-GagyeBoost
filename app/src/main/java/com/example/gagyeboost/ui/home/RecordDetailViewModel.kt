@@ -14,8 +14,7 @@ import java.text.DecimalFormat
 class RecordDetailViewModel(private val repository: Repository, private val accountBookId: Int) :
     ViewModel() {
 
-    private val _accountBookData = MutableLiveData<DateDetailItem>()
-    val accountBookData: LiveData<DateDetailItem> = _accountBookData
+    val dateDetailItem = MutableLiveData<DateDetailItem>()
 
     private val _date = MutableLiveData<String>()
     val date: LiveData<String> = _date
@@ -32,7 +31,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
             val categoryId = accountBookData.category
             val category = repository.loadCategoryData(categoryId)
 
-            _accountBookData.value = DateDetailItem(
+            dateDetailItem.value = DateDetailItem(
                 accountBookId,
                 category.emoji,
                 category.categoryName,
