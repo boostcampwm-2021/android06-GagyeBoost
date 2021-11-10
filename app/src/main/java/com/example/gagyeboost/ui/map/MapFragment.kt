@@ -6,19 +6,25 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.databinding.DialogMapBottomDetailBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.AccountBook
+import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.home.DateDetailAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import org.koin.android.ext.android.inject
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
     private val tempViewModel = TempViewModel()
+    private val detailAdapter: DateDetailAdapter by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,6 +54,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.mvMap.onCreate(null)
     }
 
+
     override fun onStart() {
         super.onStart()
         binding.mvMap.onStart()
@@ -68,6 +75,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         val seoul = LatLng(37.5642135, 127.0016985)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15f))
         googleMap.setOnInfoWindowClickListener {
+            val detailItemList = tempViewModel.getDetailDataUsingPosition(
+                it.position.latitude.toFloat(),
+                it.position.longitude.toFloat()
+            )
+            val bottomSheet = MapDetailFragment(it.title?:"",detailItemList, tempViewModel)
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
             //TODO Marker 위에 Info 클릭 시 해당 좌표에 대한 내역 띄워주기
             Log.i("MapFragment", it.position.toString())
         }
@@ -82,9 +95,6 @@ class TempViewModel() {
     // HashMap<좌표, 좌표에 해당하는 내역 list>
     private var _dataMap = MutableLiveData<HashMap<Pair<Float, Float>, List<AccountBook>>>()
     val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> = _dataMap
-
-    private var _selectedPosition = MutableLiveData<List<AccountBook>>()
-    val selectedPosition: LiveData<List<AccountBook>> = _selectedPosition
 
     fun initMarkerData() {
         setMarkerList(testData)
@@ -101,9 +111,9 @@ class TempViewModel() {
             val latLng = Pair(it.latitude, it.longitude)
             nowMap.getOrPut(latLng) { mutableListOf() }.add(it)
         }
-        val retMap=HashMap<Pair<Float,Float>,List<AccountBook>>()
-        nowMap.forEach{
-            retMap[it.key]=it.value
+        val retMap = HashMap<Pair<Float, Float>, List<AccountBook>>()
+        nowMap.forEach {
+            retMap[it.key] = it.value
         }
         return retMap
     }
@@ -117,6 +127,20 @@ class TempViewModel() {
             )
         }
         return markerMap
+    }
+
+    fun getDetailDataUsingPosition(latitude: Float, longitude: Float): List<DateDetailItem> {
+        val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
+        return (dataList ?: listOf()).map {
+            DateDetailItem(
+                it.id.toString(),
+                "X",
+                "XX",
+                it.content,
+                it.money.toString(),
+                it.moneyType == INCOME
+            )
+        }
     }
 }
 
