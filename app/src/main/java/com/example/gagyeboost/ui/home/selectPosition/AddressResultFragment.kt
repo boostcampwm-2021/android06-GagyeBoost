@@ -6,14 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.gagyeboost.databinding.DialogBottomAddressResultBinding
+import com.example.gagyeboost.ui.home.AddViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class AddressResultFragment(private val list: List<Address>) : BottomSheetDialogFragment() {
+class AddressResultFragment(private val list: List<Address>, private val viewModel: AddViewModel) :
+    BottomSheetDialogFragment() {
 
     private var _binding: DialogBottomAddressResultBinding? = null
     private val binding get() = _binding!!
     private val adapter: AddressAdapter by lazy {
-        AddressAdapter().apply {
+        AddressAdapter(viewModel) {
+            dismiss()
+        }.apply {
             submitList(list)
         }
     }

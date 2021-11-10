@@ -15,10 +15,12 @@ import com.example.gagyeboost.common.GPSUtils
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
+import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SelectPositionFragment :
@@ -61,13 +63,7 @@ class SelectPositionFragment :
                 val address = viewModel.getAddress(Geocoder(requireContext()))
 
                 if (address.isNotEmpty()) {
-//                    val latLng = LatLng(address[0].latitude, address[0].longitude)
-//                    googleMap.addMarker(
-//                        MarkerOptions().position(latLng).title(address[0].getAddressLine(0))
-//                    )
-//
-//                    googleMap.animateCamera(newLatLng(latLng))
-                    val bottom = AddressResultFragment(address)
+                    val bottom = AddressResultFragment(address, viewModel)
                     bottom.show(childFragmentManager, bottom.tag)
                 }
             }
@@ -80,6 +76,15 @@ class SelectPositionFragment :
         }
 
         viewModel.searchAddress.value = ""
+
+        viewModel.selectedAddress.observe(viewLifecycleOwner) {
+            val latLng = LatLng(it.latitude, it.longitude)
+            googleMap.addMarker(
+                MarkerOptions().position(latLng).title(it.getAddressLine(0))
+            )
+
+            googleMap.animateCamera(newLatLng(latLng))
+        }
     }
 
     private fun initMap() {

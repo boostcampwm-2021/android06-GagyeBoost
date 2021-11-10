@@ -38,6 +38,8 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     val searchAddress = MutableLiveData<String>()
 
+    val selectedAddress = MutableLiveData<Address>()
+
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
     }
@@ -98,9 +100,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                     moneyType = _categoryType,
                     money = if (money.value != null) money.value!!.toInt() else 0,
                     category = selectedCategoryId,
-                    address = "",
-                    latitude = 0.0f,
-                    longitude = 0.0f,
+                    address = selectedAddress.value?.getAddressLine(0) ?: "",
+                    latitude = selectedAddress.value?.latitude?.toFloat() ?: 0.0f,
+                    longitude = selectedAddress.value?.longitude?.toFloat() ?: 0.0f,
                     content = content.value ?: "",
                     year = splitedStr[0].toInt(),
                     month = splitedStr[1].toInt(),
