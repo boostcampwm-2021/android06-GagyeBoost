@@ -36,9 +36,8 @@ jobs:
           storeFile: ${{ secrets.STORE_FILE }}
         run:
           echo -e storePassword="$storePassword"\n
-               keyPassword="$keyPassword"\n
-               keyAlias="$keyAlias"\n
-               storeFile="$storeFile" > ./keystore.properties
+          keyPassword="$keyPassword"\n
+          keyAlias="$keyAlias" > ./keystore.properties
 
       - name: Build with Gradle
         run: ./gradlew assembleDebug --stacktrace
