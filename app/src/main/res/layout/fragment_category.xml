@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
+            android:text="@{viewModel.getFormattedMoneyText()}"
             android:textSize="@dimen/app_bar_title_text_size"
             app:layout_constraintEnd_toStartOf="@id/btn_close"
             app:layout_constraintStart_toEndOf="@id/btn_back"
@@ -60,7 +61,8 @@
             android:theme="@style/EditTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_money" />
+            app:layout_constraintTop_toBottomOf="@id/tv_money"
+            android:autofillHints="@null" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_category"

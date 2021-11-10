@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.databinding.ItemCategoryIconBinding
-import com.example.gagyeboost.model.data.Category
 
 class CategoryIconAdapter(
     private val onClickListener: (String) -> Unit

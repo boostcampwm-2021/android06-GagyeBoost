@@ -25,4 +25,8 @@ class Repository(private val accountBookDao: AccountBookDAO) {
     suspend fun loadDayData(year: Int, month: Int, day: Int): List<AccountBook> {
         return accountBookDao.loadDayData(year, month, day)
     }
+
+    suspend fun loadCategoryData(id: Int) = accountBookDao.loadCategoryData(id)
+
+    suspend fun loadAccountBookData(id: Int) = accountBookDao.loadAccountBookData(id)
 }
