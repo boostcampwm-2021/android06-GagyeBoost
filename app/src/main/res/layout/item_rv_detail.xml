@@ -39,6 +39,7 @@
             android:contentDescription="@string/iv_category"
             android:gravity="center"
             android:text="@{item.emoji}"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
             app:layout_constraintTop_toTopOf="parent"
