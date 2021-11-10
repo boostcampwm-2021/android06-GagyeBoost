@@ -20,9 +20,7 @@ class GooglePlaceClient(
             val client = OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
-                .addInterceptor(httpLoggingInterceptor.apply {
-                    level = HttpLoggingInterceptor.Level.BASIC
-                })
+                .addInterceptor(httpLoggingInterceptor)
                 .addInterceptor(headerInterceptor)
                 .build()
 
