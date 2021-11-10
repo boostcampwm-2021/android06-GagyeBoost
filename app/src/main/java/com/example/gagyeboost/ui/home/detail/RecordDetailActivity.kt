@@ -1,8 +1,7 @@
-package com.example.gagyeboost.ui.home
+package com.example.gagyeboost.ui.home.detail
 
 import android.os.Bundle
 import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
 import com.example.gagyeboost.databinding.ActivityRecordDetailBinding
@@ -18,12 +17,15 @@ class RecordDetailActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
+        setListeners()
     }
 
     private fun initView() {
         accountBookId = intent.getIntExtra(DATE_DETAIL_ITEM_ID_KEY, 0)
         binding.viewModel = viewModel
+    }
 
+    private fun setListeners() {
         with(binding.appBarUpdateRecord) {
             setNavigationOnClickListener {
                 onBackPressed()
@@ -32,18 +34,31 @@ class RecordDetailActivity :
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.delete -> {
-                        viewModel.deleteAccountBookData(accountBookId)
-                        Toast.makeText(
-                            this@RecordDetailActivity,
-                            context.getString(R.string.record_delete_success),
-                            LENGTH_SHORT
-                        ).show()
-                        finish()
+                        deleteAccountBookData()
                         true
                     }
                     else -> false
                 }
             }
         }
+
+        binding.btnUpdate.setOnClickListener {
+            if (binding.etCategoryBody.text.isEmpty()) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.must_enter_category_name),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                viewModel.updateAccountBookData()
+            }
+        }
+    }
+
+    private fun deleteAccountBookData() {
+        viewModel.deleteAccountBookData(accountBookId)
+        Toast.makeText(this, getString(R.string.record_delete_success), Toast.LENGTH_SHORT)
+            .show()
+        finish()
     }
 }

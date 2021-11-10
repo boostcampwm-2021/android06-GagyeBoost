@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GagyeBoost">
         <activity
-            android:name=".ui.home.RecordDetailActivity"
+            android:name=".ui.home.detail.RecordDetailActivity"
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"

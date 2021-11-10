@@ -1,4 +1,4 @@
-package com.example.gagyeboost.ui.home
+package com.example.gagyeboost.ui.home.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -53,7 +53,10 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
 
     fun updateAccountBookData() {
         viewModelScope.launch(Dispatchers.IO) {
+            with(dateDetailItem.value) {
+                if (this == null) return@launch
 
+            }
         }
     }
 }
