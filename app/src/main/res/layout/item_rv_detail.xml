@@ -5,6 +5,9 @@
 
     <data>
 
+        <import type="kotlin.jvm.functions.Function1" />
+        <import type="kotlin.Unit" />
+
         <variable
             name="item"
             type="com.example.gagyeboost.model.data.DateDetailItem" />
@@ -12,11 +15,16 @@
         <variable
             name="category"
             type="com.example.gagyeboost.model.data.Category" />
+
+        <variable
+            name="listener"
+            type="Function1&lt;Integer, Boolean>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onLongClick="@{ _ -> listener.invoke(item.id) }">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/gl_start_vertical"
@@ -39,6 +47,7 @@
             android:contentDescription="@string/iv_category"
             android:gravity="center"
             android:text="@{item.emoji}"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
             app:layout_constraintTop_toTopOf="parent"

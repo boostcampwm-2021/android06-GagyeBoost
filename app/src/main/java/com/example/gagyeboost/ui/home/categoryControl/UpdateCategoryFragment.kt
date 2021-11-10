@@ -26,13 +26,13 @@ class UpdateCategoryFragment :
         binding.viewModel = viewModel
         with(binding.appBarUpdateCategory) {
             setNavigationOnClickListener{
-                viewModel.selectedCategoryReset()
+                viewModel.resetSelectedCategory()
                 navController.popBackStack()
             }
 
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    R.id.delete_category -> {
+                    R.id.delete -> {
                         // TODO: 카테고리 삭제 로직 추가
                         true
                     }

@@ -9,7 +9,6 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import com.example.gagyeboost.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SelectPositionFragment :
@@ -30,7 +29,7 @@ class SelectPositionFragment :
         }
 
         binding.appBarSelectPosition.setNavigationOnClickListener {
-            viewModel.selectedCategoryReset()
+            viewModel.resetSelectedCategory()
             findNavController().popBackStack()
         }
     }
