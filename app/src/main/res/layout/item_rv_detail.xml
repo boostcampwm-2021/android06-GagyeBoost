@@ -13,10 +13,6 @@
             type="com.example.gagyeboost.model.data.DateDetailItem" />
 
         <variable
-            name="category"
-            type="com.example.gagyeboost.model.data.Category" />
-
-        <variable
             name="listener"
             type="Function1&lt;Integer, Boolean>" />
     </data>
