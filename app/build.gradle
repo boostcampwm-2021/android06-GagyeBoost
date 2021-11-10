@@ -23,7 +23,8 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
+            //storeFile file(keystoreProperties['storeFile'])
+            storeFile file("../keystore/android06")
             storePassword keystoreProperties['storePassword']
         }
     }
