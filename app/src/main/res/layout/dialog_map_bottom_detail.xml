@@ -11,7 +11,7 @@
             android:id="@+id/tv_detail_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/gradation_background"
+            android:background="@color/green"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
