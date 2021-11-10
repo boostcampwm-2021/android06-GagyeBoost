@@ -75,14 +75,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         val seoul = LatLng(37.5642135, 127.0016985)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15f))
         googleMap.setOnInfoWindowClickListener {
-            val detailItemList = tempViewModel.getDetailDataUsingPosition(
+            tempViewModel.setSelectedDetail(
                 it.position.latitude.toFloat(),
                 it.position.longitude.toFloat()
             )
-            val bottomSheet = MapDetailFragment(it.title?:"",detailItemList, tempViewModel)
+            val bottomSheet =
+                MapDetailFragment(it.title ?: "", tempViewModel.selectedDetailList, tempViewModel)
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
-            //TODO Marker 위에 Info 클릭 시 해당 좌표에 대한 내역 띄워주기
-            Log.i("MapFragment", it.position.toString())
         }
         tempViewModel.initMarkerData()
     }
@@ -95,6 +94,9 @@ class TempViewModel() {
     // HashMap<좌표, 좌표에 해당하는 내역 list>
     private var _dataMap = MutableLiveData<HashMap<Pair<Float, Float>, List<AccountBook>>>()
     val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> = _dataMap
+
+    private var _selectedDetailList = MutableLiveData<List<DateDetailItem>>()
+    val selectedDetailList: LiveData<List<DateDetailItem>> = _selectedDetailList
 
     fun initMarkerData() {
         setMarkerList(testData)
@@ -129,9 +131,9 @@ class TempViewModel() {
         return markerMap
     }
 
-    fun getDetailDataUsingPosition(latitude: Float, longitude: Float): List<DateDetailItem> {
+    fun setSelectedDetail(latitude: Float, longitude: Float) {
         val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
-        return (dataList ?: listOf()).map {
+        _selectedDetailList.value = (dataList ?: listOf()).map {
             DateDetailItem(
                 it.id.toString(),
                 "X",
