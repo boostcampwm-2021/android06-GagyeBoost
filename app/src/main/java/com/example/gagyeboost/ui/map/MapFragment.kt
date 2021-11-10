@@ -131,8 +131,8 @@ class TempViewModel() {
         _selectedDetailList.value = (dataList ?: listOf()).map {
             DateDetailItem(
                 it.id.toString(),
-                "X",
-                "XX",
+                "\uD83E\uDD70",
+                "밥",
                 it.content,
                 it.money.toString(),
                 it.moneyType == INCOME
