@@ -7,34 +7,34 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.google.android.gms.maps.GoogleMap
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
 
     private lateinit var googleMap: GoogleMap
-    val viewModel: MapViewModel by viewModel()
+    private val viewModel: MapViewModel by sharedViewModel()
+    private lateinit var dialog: FilterDialog
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
 
-        viewModel.test.observe(viewLifecycleOwner) {
-            Log.e("test", it)
-        }
-
-        viewModel.filterData.observe(viewLifecycleOwner) {
-            Log.e("filterData", it.toString())
-        }
         viewModel.categoryList.observe(viewLifecycleOwner) {
             viewModel.loadFilterData()
         }
 
         Log.e("map fragment", "onViewCreated")
+
+        binding.btnTest.setOnClickListener {
+            dialog.show()
+        }
     }
 
     private fun initView() {
         binding.viewModel = viewModel
         viewModel.setInitData()
-    }
+        dialog = FilterDialog(binding.root.context, viewModel)
 
+        dialog.isShowing
+    }
 }
