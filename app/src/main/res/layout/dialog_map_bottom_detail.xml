@@ -5,7 +5,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_detail_address"
@@ -24,11 +24,12 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_detail_list"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="300dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_detail_address"
-            tools:listitem="@layout/item_rv_detail"/>
+            tools:listitem="@layout/item_rv_detail" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
