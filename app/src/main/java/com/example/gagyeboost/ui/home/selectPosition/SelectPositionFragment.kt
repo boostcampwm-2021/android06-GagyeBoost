@@ -2,11 +2,12 @@ package com.example.gagyeboost.ui.home.selectPosition
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.location.Geocoder
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -26,6 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class SelectPositionFragment :
     BaseFragment<FragmentSelectPositionBinding>(R.layout.fragment_select_position),
     OnMapReadyCallback {
+
     private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var navController: NavController
     private lateinit var googleMap: GoogleMap
@@ -58,13 +60,21 @@ class SelectPositionFragment :
             findNavController().popBackStack()
         }
 
-        binding.etAddress.setOnEditorActionListener { _, actionId, _ ->
+        binding.etAddress.setOnEditorActionListener { view, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val address = viewModel.getAddress(Geocoder(requireContext()))
+                if (viewModel.searchAddress.value!!.isNotEmpty()) {
+                    binding.pbLoading.isVisible = true
 
-                if (address.isNotEmpty()) {
-                    val bottom = AddressResultFragment(address, viewModel)
-                    bottom.show(childFragmentManager, bottom.tag)
+                    viewModel.getPlaceListData(view.text.toString()).observe(viewLifecycleOwner) {
+                        it.getOrNull()?.let { list ->
+                            val bottom = AddressResultFragment(list, viewModel)
+                            bottom.show(childFragmentManager, bottom.tag)
+                        } ?: run {
+                            Toast.makeText(requireContext(), "결과가 없습니다.", Toast.LENGTH_LONG).show()
+                        }
+
+                        binding.pbLoading.isVisible = false
+                    }
                 }
             }
 
@@ -78,9 +88,9 @@ class SelectPositionFragment :
         viewModel.searchAddress.value = ""
 
         viewModel.selectedAddress.observe(viewLifecycleOwner) {
-            val latLng = LatLng(it.latitude, it.longitude)
+            val latLng = LatLng(it.geometry.location.lat, it.geometry.location.lng)
             googleMap.addMarker(
-                MarkerOptions().position(latLng).title(it.getAddressLine(0))
+                MarkerOptions().position(latLng).title(it.formattedAddress)
             )
 
             googleMap.animateCamera(newLatLng(latLng))
@@ -95,6 +105,8 @@ class SelectPositionFragment :
     private fun moveCameraToUser() {
         val userLocation = gpsUtils.getUserLocation()
         val latLng = LatLng(userLocation.latitude, userLocation.longitude)
+
+        viewModel.userLocation = userLocation
 
         googleMap.animateCamera(newLatLngZoom(latLng, 15f))
     }

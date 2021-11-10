@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="item"
+            type="com.example.gagyeboost.model.data.PlaceDetail" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -13,6 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
+            android:text="@{item.formattedAddress + ' ' + item.name }"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"

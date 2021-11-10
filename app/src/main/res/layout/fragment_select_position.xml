@@ -40,10 +40,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginEnd="20dp"
-                    android:padding="10dp"
+                    android:padding="5dp"
                     android:text="@string/complete"
-                    android:textSize="15sp"
-                    android:theme="@style/GradationButton" />
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -87,6 +88,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/app_bar_layout_select_position" />
 
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
