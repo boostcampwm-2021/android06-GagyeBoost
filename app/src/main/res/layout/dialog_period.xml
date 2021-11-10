@@ -3,9 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.map.MapViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_background">
 
         <TextView
@@ -35,8 +42,9 @@
             android:id="@+id/tv_money_start_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:padding="10dp"
+            android:text="@{viewModel.startMoney}"
             android:textColor="@color/gray1"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -50,7 +58,7 @@
             android:id="@+id/tv_dash_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:padding="10dp"
             android:text="@string/dash"
             android:textColor="@color/gray1"
@@ -64,8 +72,9 @@
             android:id="@+id/tv_money_end_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:padding="10dp"
+            android:text="@{viewModel.endMoney}"
             android:textColor="@color/gray1"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -75,18 +84,32 @@
             tools:text="13,000원" />
 
         <com.google.android.material.slider.RangeSlider
-            android:id="@+id/rg_money"
+            android:id="@+id/rs_money"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="20dp"
             android:stepSize="1000"
             android:valueFrom="0"
-            android:layout_marginTop="20dp"
             android:valueTo="1000000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_dash_money"
-            app:values="@array/initial_slider_values" />
+            app:layout_constraintTop_toBottomOf="@id/tv_dash_money" />
+
+        <TextView
+            android:id="@+id/btn_filter_apply"
+            style="@style/GradationButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="30dp"
+            android:text="@string/apply"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rs_money" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

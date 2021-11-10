@@ -1,11 +1,10 @@
 package com.example.gagyeboost.ui.map
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Filter
@@ -16,8 +15,22 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
 
     // 양방향 데이터 바인딩
     private var filterMoneyType: Byte = EXPENSE
-    var startMoney: Int = 0
-    var endMoney: Int = Int.MAX_VALUE
+
+    val intStartMoney = MutableLiveData(0)
+    val startMoney: LiveData<String> =
+        Transformations.map(intStartMoney) { formatter.format(it) + "원" }
+
+    val intEndMoney = MutableLiveData(300000)
+    val endMoney: LiveData<String> = Transformations.map(intEndMoney) {
+        if (it == Int.MAX_VALUE) {
+            Log.e("viewmodel", it.toString())
+            formatter.format(it) + "원 이상"
+        } else {
+            Log.e("viewmodel", it.toString())
+            formatter.format(it) + "원"
+        }
+    }
+
     val categoryList = MutableLiveData<List<Int>>()
     var startYear: Int = 1900
     var startMonth: Int = 1
@@ -37,20 +50,18 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     // 데이터 바인딩
     fun expenseBtnOnClick() {
         filterMoneyType = EXPENSE
-        loadFilterData()
     }
 
     fun incomeBtnOnClick() {
         filterMoneyType = INCOME
-        loadFilterData()
     }
 
     //viewModel 공유하면 다시 map화면 돌아왔을때 init
     fun setInitData() {
         loadAllCategoryID()
         filterMoneyType = EXPENSE
-        startMoney = 0
-        endMoney = Int.MAX_VALUE
+        intStartMoney.value = 0
+        intEndMoney.value = 300000
         startYear = Calendar.getInstance().get(Calendar.YEAR)
         startMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
         startDay = 1
@@ -70,19 +81,22 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
+    fun setMoney(start: Int, end: Int) {
+        intStartMoney.value = start
+        intEndMoney.value = end
+    }
+
 
     fun loadFilterData() {
         viewModelScope.launch {
             val data = setFilter()
-            Log.e("data", data.toString())
             val filter = repository.loadFilterData(data)
-            Log.e("filterData-viewModel", filter.toString())
             filterData.postValue(filter)
         }
     }
 
     private fun setFilter() = Filter(
-        INCOME,
+        filterMoneyType,
         startYear,
         startMonth,
         startDay,
@@ -93,8 +107,8 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         startLongitude,
         endLatitude,
         endLongitude,
-        startMoney,
-        endMoney,
+        intStartMoney.value ?: 0,
+        intEndMoney.value ?: 300000,
         categoryList.value ?: listOf()
     )
 

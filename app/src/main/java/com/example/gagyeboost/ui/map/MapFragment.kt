@@ -9,6 +9,7 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -21,20 +22,14 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private lateinit var googleMap: GoogleMap
     private val tempViewModel = TempViewModel()
     private val viewModel: MapViewModel by viewModel()
-    private lateinit var dialog: FilterDialog
+    private lateinit var dialog: FilterMoneyDialog
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObserver()
         initMap()
         initView()
-
-        viewModel.categoryList.observe(viewLifecycleOwner) {
-            viewModel.loadFilterData()
-        }
-
-        Log.e("map fragment", "onViewCreated")
-
+        setDialog()
     }
 
     private fun initObserver() {
@@ -52,14 +47,27 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                 )?.showInfoWindow()
             }
         })
+
+        viewModel.categoryList.observe(viewLifecycleOwner) {
+            viewModel.loadFilterData()
+        }
+
+        viewModel.filterData.observe(viewLifecycleOwner){
+            Log.e("filterData",it.toString())
+        }
     }
 
     private fun initView() {
         binding.viewModel = viewModel
         viewModel.setInitData()
-        dialog = FilterDialog(binding.root.context, viewModel)
+    }
 
-        dialog.isShowing
+    private fun setDialog(){
+        binding.btnMoney.setOnClickListener {
+            dialog = FilterMoneyDialog(binding.root.context, viewModel)
+            dialog.show()
+//            dialog.isShowing
+        }
     }
 
     private fun initMap() {

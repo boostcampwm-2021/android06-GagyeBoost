@@ -46,5 +46,6 @@
     <string name="category">카테고리</string>
     <string name="dash">-</string>
     <string name="money_type">수입/지출</string>
+    <string name="apply">적용하기</string>
 
 </resources>
