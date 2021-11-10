@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:textColor="@color/black"
+                android:textColor="@{viewModel.dateDetailItem.moneyType ? @color/income : @color/expense}"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:text="@{viewModel.dateDetailItem.moneyType ? @string/earnings : @string/expense}"
@@ -93,11 +93,11 @@
                 android:text="@string/category"
                 style="@style/RecordDetailTitleTheme"
                 app:layout_constraintStart_toStartOf="@id/money_type"
-                app:layout_constraintTop_toTopOf="@id/et_category_body"
-                app:layout_constraintBottom_toBottomOf="@id/et_category_body" />
+                app:layout_constraintTop_toTopOf="@id/tv_category_body"
+                app:layout_constraintBottom_toBottomOf="@id/tv_category_body" />
 
-            <EditText
-                android:id="@+id/et_category_body"
+            <TextView
+                android:id="@+id/tv_category_body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/RecordDetailEditTheme"
@@ -127,7 +127,7 @@
                 android:maxLines="1"
                 android:text="@={viewModel.dateDetailItem.money}"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintTop_toBottomOf="@id/et_category_body" />
+                app:layout_constraintTop_toBottomOf="@id/tv_category_body" />
 
             <TextView
                 android:id="@+id/tv_date_title"

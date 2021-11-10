@@ -20,7 +20,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onLongClick="@{ _ -> listener.invoke(item.id) }">
+        android:onClick="@{ _ -> listener.invoke(item.id) }">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/gl_start_vertical"

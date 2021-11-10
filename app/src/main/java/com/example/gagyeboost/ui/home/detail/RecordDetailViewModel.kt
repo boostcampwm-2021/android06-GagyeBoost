@@ -40,8 +40,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                 accountBookData.moneyType == INCOME,
             )
 
-            _date.value =
-                "" + accountBookData.year + "." + accountBookData.month + "." + accountBookData.day
+            setDate(accountBookData.year, accountBookData.month, accountBookData.day)
         }
     }
 
@@ -56,7 +55,18 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
             with(dateDetailItem.value) {
                 if (this == null) return@launch
 
+                /*val updatedAccountBookData = AccountBook(
+                    accountBookId,
+                    if (moneyType) INCOME else EXPENSE,
+                    money.toIntOrNull() ?: 0,
+                    category,
+
+                    )*/
             }
         }
+    }
+
+    fun setDate(year: Int, month: Int, day: Int) {
+        _date.value = "$year.$month.$day"
     }
 }
