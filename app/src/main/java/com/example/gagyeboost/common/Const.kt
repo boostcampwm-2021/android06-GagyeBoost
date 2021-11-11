@@ -1,5 +1,7 @@
 package com.example.gagyeboost.common
 
+import java.text.DecimalFormat
+
 // AddFragment, CategoryFragment
 const val IS_EXPENSE_KEY = "isExpense"
 const val TODAY_STRING_KEY = "today"
@@ -10,3 +12,6 @@ const val EXPENSE = 0.toByte()
 
 // HomeFragment, RecordDetailActivity
 const val DATE_DETAIL_ITEM_ID_KEY = "dateDetailItem"
+
+// monney format to won
+val formatter = DecimalFormat("###,###")
