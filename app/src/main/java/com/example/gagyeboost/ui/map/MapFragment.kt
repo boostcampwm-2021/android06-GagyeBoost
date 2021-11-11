@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.databinding.FragmentMapBinding
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
 import com.example.gagyeboost.ui.map.filter.FilterMoneyTypeDialog
