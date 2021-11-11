@@ -56,5 +56,6 @@
     <string name="address">주소</string>
     <string name="record_delete_success">내역이 삭제되었습니다</string>
     <string name="none">(없음)</string>
+    <string name="monetary_unit">원</string>
 
 </resources>
