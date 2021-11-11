@@ -50,7 +50,6 @@ class SelectPositionFragment :
     ) {
         moveCameraToUser()
     }
-    private var marker: MarkerOptions? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -99,6 +98,7 @@ class SelectPositionFragment :
         }
 
         viewModel.searchAddress.value = ""
+        viewModel.selectedLocation = null
     }
 
     private fun initMap() {
@@ -128,11 +128,6 @@ class SelectPositionFragment :
     override fun onStop() {
         super.onStop()
         binding.map.onStop()
-    }
-
-    override fun onDestroyView() {
-        viewModel.selectedLocation = null
-        super.onDestroyView()
     }
 
     override fun onMapReady(map: GoogleMap) {
