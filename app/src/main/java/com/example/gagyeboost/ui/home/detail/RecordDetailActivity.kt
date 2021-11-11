@@ -1,8 +1,10 @@
 package com.example.gagyeboost.ui.home.detail
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.Toast
+import com.example.gagyeboost.R
 import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
 import com.example.gagyeboost.databinding.ActivityRecordDetailBinding
 import com.example.gagyeboost.databinding.BottomSheetCategoryBinding
@@ -43,8 +45,8 @@ class RecordDetailActivity :
 
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    com.example.gagyeboost.R.id.delete -> {
-                        deleteAccountBookData()
+                    R.id.delete -> {
+                        showDeleteDialog()
                         true
                     }
                     else -> false
@@ -66,6 +68,16 @@ class RecordDetailActivity :
         }
 
         setDialogs()
+    }
+
+    private fun showDeleteDialog() {
+        val builder = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.delete_record))
+            .setMessage(getString(R.string.record_delete_dialog_message))
+            .setPositiveButton(getString(R.string.confirm)) { _, _ -> deleteAccountBookData() }
+            .setNegativeButton(R.string.cancel) { _, _ -> }
+
+        builder.show()
     }
 
     private fun deleteAccountBookData() {
