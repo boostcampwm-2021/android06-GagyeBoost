@@ -20,6 +20,9 @@
             android:value="${googleMapKey}" />
 
         <activity
+            android:name=".ui.home.detail.RecordDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>

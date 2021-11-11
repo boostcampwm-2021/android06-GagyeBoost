@@ -10,5 +10,8 @@ const val TODAY_STRING_KEY = "today"
 const val INCOME = 1.toByte()
 const val EXPENSE = 0.toByte()
 
+// HomeFragment, RecordDetailActivity
+const val DATE_DETAIL_ITEM_ID_KEY = "dateDetailItem"
+
 // monney format to won
 val formatter = DecimalFormat("###,###")

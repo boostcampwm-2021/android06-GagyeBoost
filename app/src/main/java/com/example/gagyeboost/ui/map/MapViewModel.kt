@@ -54,7 +54,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
         _selectedDetailList.value = (dataList ?: listOf()).map {
             DateDetailItem(
-                it.id.toString(),
+                it.id,
                 "\uD83E\uDD70",
                 "밥",
                 it.content,

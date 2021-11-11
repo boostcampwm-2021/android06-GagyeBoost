@@ -32,7 +32,7 @@ class UpdateCategoryFragment :
 
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    R.id.delete_category -> {
+                    R.id.delete -> {
                         // TODO: 카테고리 삭제 로직 추가
                         true
                     }

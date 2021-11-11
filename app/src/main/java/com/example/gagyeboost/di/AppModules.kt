@@ -10,10 +10,10 @@ import com.example.gagyeboost.model.local.AccountBookDatabase
 import com.example.gagyeboost.model.remote.GooglePlaceClient
 import com.example.gagyeboost.model.remote.HeaderInterceptor
 import com.example.gagyeboost.ui.home.AddViewModel
-import com.example.gagyeboost.ui.home.DateDetailAdapter
 import com.example.gagyeboost.ui.home.HomeViewModel
 import com.example.gagyeboost.ui.map.MapViewModel
 import okhttp3.logging.HttpLoggingInterceptor
+import com.example.gagyeboost.ui.home.detail.RecordDetailViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -62,14 +62,11 @@ val appModule = module {
     single {
         GooglePlaceClient(get(), get())
     }
-
-    factory {
-        DateDetailAdapter()
-    }
 }
 
 val viewModelModule = module {
     viewModel { AddViewModel(get()) }
     viewModel { HomeViewModel(get()) }
+    viewModel { (id: Int) -> RecordDetailViewModel(get(), id) }
     viewModel { MapViewModel(get()) }
 }

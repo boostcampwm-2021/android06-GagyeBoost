@@ -59,7 +59,7 @@ class CustomCalendarAdapter(
 
             setMoney(binding.tvIncome, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
-//            setClickedDate()
+            // setClickedDate()
             setToday(dateItem)
         }
 
@@ -102,7 +102,7 @@ class CustomCalendarAdapter(
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<DateItem>() {
             override fun areItemsTheSame(oldItem: DateItem, newItem: DateItem) =
-                oldItem.year == newItem.year && oldItem.month == newItem.month && oldItem.date == newItem.date
+                oldItem.date == newItem.date
 
             override fun areContentsTheSame(oldItem: DateItem, newItem: DateItem) =
                 oldItem == newItem

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import com.example.gagyeboost.databinding.DialogMapBottomDetailBinding
 import com.example.gagyeboost.model.data.DateDetailItem
-import com.example.gagyeboost.ui.home.DateDetailAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class MapDetailFragment(

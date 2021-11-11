@@ -31,9 +31,9 @@
                 android:textSize="@dimen/app_bar_title_text_size"
                 app:titleTextColor="@color/white"
                 app:navigationIcon="@drawable/ic_arrow_left_white"
-                app:title="@string/update"
+                app:title="@string/update_category"
                 app:titleCentered="true"
-                app:menu="@menu/category_update_menu"/>
+                app:menu="@menu/update_menu"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
