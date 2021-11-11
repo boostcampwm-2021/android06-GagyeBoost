@@ -34,21 +34,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     private fun initObserver() {
-        viewModel.dataMap.observe(viewLifecycleOwner) {
-            Log.e("fragment", it.toString())
-            googleMap.clear()
-            val markerMap = viewModel.hashMapToMarkerMap(it)
-            markerMap.forEach { markerData ->
-                googleMap.addMarker(
-                    MarkerOptions().position(
-                        LatLng(
-                            markerData.key.first.toDouble(),
-                            markerData.key.second.toDouble()
-                        )
-                    ).title(markerData.value.first).snippet(markerData.value.second)
-                )
-            }
-        }
+
 
         viewModel.categoryList.observe(viewLifecycleOwner) {
             viewModel.loadFilterData()
@@ -138,6 +124,22 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             val bottomSheet =
                 MapDetailFragment(it.title ?: "", viewModel.selectedDetailList, viewModel)
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
+        }
+
+        viewModel.dataMap.observe(viewLifecycleOwner) {
+            Log.e("fragment", it.toString())
+            googleMap.clear()
+            val markerMap = viewModel.hashMapToMarkerMap(it)
+            markerMap.forEach { markerData ->
+                googleMap.addMarker(
+                    MarkerOptions().position(
+                        LatLng(
+                            markerData.key.first.toDouble(),
+                            markerData.key.second.toDouble()
+                        )
+                    ).title(markerData.value.first).snippet(markerData.value.second)
+                )
+            }
         }
     }
 
