@@ -21,7 +21,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val intEndMoney = MutableLiveData(300000)
     val endMoney: LiveData<String> = Transformations.map(intEndMoney) {
         if (it == Int.MAX_VALUE) {
-            formatter.format(it) + "원 이상"
+            formatter.format(1000000) + "원 이상"
         } else {
             formatter.format(it) + "원"
         }

@@ -59,7 +59,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         with(binding) {
             dialog = NumberPickerDialog(root.context)
-
             rvCalendar.adapter = customCalendarAdapter
             rvDetail.adapter = detailAdapter
         }
@@ -94,7 +93,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             homeViewModel.loadAllDayDataInMonth()
         }
 
-        homeViewModel.selectedDate.observe(viewLifecycleOwner){
+        homeViewModel.selectedDate.observe(viewLifecycleOwner) {
             homeViewModel.loadDateDetailItemList(it)
         }
 

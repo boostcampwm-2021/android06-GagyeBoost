@@ -59,6 +59,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         }
 
         viewModel.loadCategoryList()
+        viewModel.content.value = ""
     }
 
     private fun categoryOnClick(category: Category): Boolean {

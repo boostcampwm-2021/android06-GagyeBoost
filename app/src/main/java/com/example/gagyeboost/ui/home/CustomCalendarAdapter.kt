@@ -57,7 +57,6 @@ class CustomCalendarAdapter(
                 binding.tvDate.isGone = true
             }
             binding.executePendingBindings()
-
             setMoney(binding.tvIncome, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
             // setClickedDate()

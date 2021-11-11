@@ -37,7 +37,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     val searchAddress = MutableLiveData<String>()
 
-    val selectedAddress = MutableLiveData<PlaceDetail>()
+    var selectedLocation: PlaceDetail? = null
 
     lateinit var userLocation: Address
 
@@ -91,28 +91,27 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
     fun addAccountBookData() {
         if (dateString.isEmpty()) return
         viewModelScope.launch {
             val splitedStr = dateString.split('/')
-            repository.addAccountBookData(
-                AccountBook(
-                    moneyType = _categoryType,
-                    money = if (money.value != null) money.value!!.toInt() else 0,
-                    category = selectedCategoryId,
-                    address = "${selectedAddress.value?.formattedAddress} ${selectedAddress.value?.name}",
-                    latitude = selectedAddress.value?.geometry?.location?.lat?.toFloat()
-                        ?: userLocation.latitude.toFloat(),
-                    longitude = selectedAddress.value?.geometry?.location?.lng?.toFloat()
-                        ?: userLocation.longitude.toFloat(),
-                    content = content.value ?: "",
-                    year = splitedStr[0].toInt(),
-                    month = splitedStr[1].toInt(),
-                    day = splitedStr[2].toInt()
-                )
+            val data = AccountBook(
+                moneyType = _categoryType,
+                money = if (money.value != null) money.value!!.toInt() else 0,
+                category = selectedCategoryId,
+                address = "${selectedLocation?.formattedAddress ?: userLocation.getAddressLine(0)} ${selectedLocation?.name ?: ""}",
+                latitude = selectedLocation?.geometry?.location?.lat?.toFloat()
+                    ?: userLocation.latitude.toFloat(),
+                longitude = selectedLocation?.geometry?.location?.lng?.toFloat()
+                    ?: userLocation.longitude.toFloat(),
+                content = content.value ?: "",
+                year = splitedStr[0].toInt(),
+                month = splitedStr[1].toInt(),
+                day = splitedStr[2].toInt()
             )
-            //TODO 달력 데이터 갱신
+            repository.addAccountBookData(
+                data
+            )
         }
     }
 
@@ -131,11 +130,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     fun getFormattedMoneyText(): String {
         return formatter.format(money.value?.toIntOrNull() ?: 0) + "원"
     }
-
-    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
-
-    fun getAddress(geocoder: Geocoder): List<Address> =
-        geocoder.getFromLocationName(searchAddress.value, 20)
 
     fun getPlaceListData(input: String): LiveData<Result<List<PlaceDetail>>> {
         val data = MutableLiveData<Result<List<PlaceDetail>>>()

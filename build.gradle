@@ -21,7 +21,8 @@ buildscript {
         navigation_version = "2.3.5"
         google_map_version = "18.0.0"
         retrofit_version = "2.9.0"
-        logging_interceptor_version = "4.2.1"
+        logging_interceptor_version = "4.8.0"
+        timber_version = "4.7.1"
     }
 }
 

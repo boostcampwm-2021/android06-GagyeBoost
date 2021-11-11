@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gagyeboost.common.DEFAULT_LAT
+import com.example.gagyeboost.common.DEFAULT_LNG
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
@@ -15,6 +17,9 @@ import java.text.DecimalFormat
 
 class RecordDetailViewModel(private val repository: Repository, private val accountBookId: Int) :
     ViewModel() {
+
+    private val _accountBookData = MutableLiveData<AccountBook>()
+    val accountBookData: LiveData<AccountBook> = _accountBookData
 
     val dateDetailItem = MutableLiveData<DateDetailItem>()
 
@@ -70,9 +75,9 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                     if (moneyType) INCOME else EXPENSE,
                     money.replace(",", "").toIntOrNull() ?: 0,
                     _category.value?.id ?: 0,
-                    0.0f,
-                    0.0f,
-                    "",
+                    DEFAULT_LAT.toFloat(),
+                    DEFAULT_LNG.toFloat(),
+                    "부스트캠프",
                     dateDetailItem.value?.content ?: "",
                     strDate.split(".")[0].toInt(),
                     strDate.split(".")[1].toInt(),

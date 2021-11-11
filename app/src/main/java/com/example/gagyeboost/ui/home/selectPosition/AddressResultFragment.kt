@@ -11,7 +11,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class AddressResultFragment(
     private val list: List<PlaceDetail>,
-    private val viewModel: AddViewModel
+    private val viewModel: AddViewModel,
+    private val moveCameraToPlace: (PlaceDetail) -> Unit
 ) :
     BottomSheetDialogFragment() {
 
@@ -20,6 +21,7 @@ class AddressResultFragment(
     private val adapter: AddressAdapter by lazy {
         AddressAdapter(viewModel) {
             dismiss()
+            moveCameraToPlace(it)
         }.apply {
             submitList(list)
         }

@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.GPSUtils
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
+import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
@@ -32,6 +33,17 @@ class SelectPositionFragment :
     private lateinit var navController: NavController
     private lateinit var googleMap: GoogleMap
     private val gpsUtils: GPSUtils by lazy { GPSUtils(requireContext()) }
+    private val moveCameraToPlace: (PlaceDetail) -> Unit = {
+        val latLng = LatLng(it.geometry.location.lat, it.geometry.location.lng)
+
+        googleMap.let { map ->
+            map.clear()
+            map.addMarker(
+                MarkerOptions().position(latLng).title(it.formattedAddress)
+            )
+            map.animateCamera(newLatLng(latLng))
+        }
+    }
     private val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
     private val requestLocation = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -67,7 +79,7 @@ class SelectPositionFragment :
 
                     viewModel.getPlaceListData(view.text.toString()).observe(viewLifecycleOwner) {
                         it.getOrNull()?.let { list ->
-                            val bottom = AddressResultFragment(list, viewModel)
+                            val bottom = AddressResultFragment(list, viewModel, moveCameraToPlace)
                             bottom.show(childFragmentManager, bottom.tag)
                         } ?: run {
                             Toast.makeText(requireContext(), "결과가 없습니다.", Toast.LENGTH_LONG).show()
@@ -86,16 +98,7 @@ class SelectPositionFragment :
         }
 
         viewModel.searchAddress.value = ""
-
-        viewModel.selectedAddress.observe(viewLifecycleOwner) {
-            val latLng = LatLng(it.geometry.location.lat, it.geometry.location.lng)
-            googleMap.clear()
-            googleMap.addMarker(
-                MarkerOptions().position(latLng).title(it.formattedAddress)
-            )
-
-            googleMap.animateCamera(newLatLng(latLng))
-        }
+        viewModel.selectedLocation = null
     }
 
     private fun initMap() {
