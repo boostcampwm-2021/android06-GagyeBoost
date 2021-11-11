@@ -91,7 +91,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
     fun addAccountBookData() {
         if (dateString.isEmpty()) return
         viewModelScope.launch {
@@ -113,7 +112,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
             repository.addAccountBookData(
                 data
             )
-            //TODO 달력 데이터 갱신
         }
     }
 
@@ -132,11 +130,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     fun getFormattedMoneyText(): String {
         return formatter.format(money.value?.toIntOrNull() ?: 0) + "원"
     }
-
-    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
-
-    fun getAddress(geocoder: Geocoder): List<Address> =
-        geocoder.getFromLocationName(searchAddress.value, 20)
 
     fun getPlaceListData(input: String): LiveData<Result<List<PlaceDetail>>> {
         val data = MutableLiveData<Result<List<PlaceDetail>>>()

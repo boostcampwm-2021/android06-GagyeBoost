@@ -4,26 +4,27 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
-import com.example.gagyeboost.ui.map.filter.FilterMoneyTypeDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.*
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
-    private val viewModel: MapViewModel by viewModel()
+    private val viewModel: MapViewModel by sharedViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,22 +34,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     private fun initObserver() {
-        viewModel.dataMap.observe(viewLifecycleOwner) {
-            Log.e("fragment", it.toString())
-            googleMap.clear()
-            val markerMap = viewModel.hashMapToMarkerMap(it)
-            markerMap.forEach { markerData ->
-                googleMap.addMarker(
-                    MarkerOptions().position(
-                        LatLng(
-                            markerData.key.first.toDouble(),
-                            markerData.key.second.toDouble()
-                        )
-                    ).title(markerData.value.first).snippet(markerData.value.second)
-                )
-            }
-        }
-
         viewModel.categoryList.observe(viewLifecycleOwner) {
             viewModel.loadFilterData()
         }
@@ -63,16 +48,37 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun setDialog() {
         binding.btnMoney.setOnClickListener {
-            val dialog = FilterMoneyDialog(binding.root.context, viewModel)
-            dialog.show()
+            val dialog = FilterMoneyDialog()
+            dialog.show(childFragmentManager, dialog.tag)
         }
         binding.btnMoneyType.setOnClickListener {
-            val dialog = FilterMoneyTypeDialog(binding.root.context, viewModel)
-            dialog.show()
+            showMoneyTypeDialog()
         }
 
         binding.btnPeriod.setOnClickListener {
             showDateRangePicker()
+        }
+    }
+
+    private fun showMoneyTypeDialog() {
+        val moneyTypeBinding = DialogFilterMoneyTypeBinding.inflate(layoutInflater)
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(moneyTypeBinding.root)
+
+        dialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        moneyTypeBinding.lifecycleOwner = viewLifecycleOwner
+        moneyTypeBinding.viewModel = viewModel
+        dialog.show()
+
+        moneyTypeBinding.btnIncome.setOnClickListener {
+            viewModel.byteMoneyType.value = INCOME
+            viewModel.loadFilterData()
+            dialog.dismiss()
+        }
+        moneyTypeBinding.btnExpense.setOnClickListener {
+            viewModel.byteMoneyType.value = EXPENSE
+            viewModel.loadFilterData()
+            dialog.dismiss()
         }
     }
 
@@ -87,7 +93,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             viewModel.setPeriod(Date(date.first), Date(date.second))
         }
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -116,6 +121,22 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             val bottomSheet =
                 MapDetailFragment(it.title ?: "", viewModel.selectedDetailList, viewModel)
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
+        }
+
+        viewModel.dataMap.observe(viewLifecycleOwner) {
+            Log.e("fragment", it.toString())
+            googleMap.clear()
+            val markerMap = viewModel.hashMapToMarkerMap(it)
+            markerMap.forEach { markerData ->
+                googleMap.addMarker(
+                    MarkerOptions().position(
+                        LatLng(
+                            markerData.key.first.toDouble(),
+                            markerData.key.second.toDouble()
+                        )
+                    ).title(markerData.value.first).snippet(markerData.value.second)
+                )
+            }
         }
     }
 
