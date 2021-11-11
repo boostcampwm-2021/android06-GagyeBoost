@@ -124,7 +124,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         }
 
         viewModel.dataMap.observe(viewLifecycleOwner) {
-            Log.e("fragment", it.toString())
             googleMap.clear()
             val markerMap = viewModel.hashMapToMarkerMap(it)
             markerMap.forEach { markerData ->
