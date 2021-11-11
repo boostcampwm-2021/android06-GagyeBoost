@@ -72,7 +72,7 @@ class RecordDetailActivity :
             if (binding.tvCategoryBody.text.isEmpty()) {
                 Toast.makeText(
                     this,
-                    getString(com.example.gagyeboost.R.string.must_enter_category_name),
+                    getString(R.string.must_enter_category_name),
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -106,7 +106,7 @@ class RecordDetailActivity :
     private fun deleteAccountBookData() {
         viewModel.deleteAccountBookData(accountBookId)
         Toast.makeText(
-            this, getString(com.example.gagyeboost.R.string.record_delete_success),
+            this, getString(R.string.record_delete_success),
             Toast.LENGTH_SHORT
         ).show()
         finish()

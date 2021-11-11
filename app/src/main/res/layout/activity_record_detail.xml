@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -9,8 +9,7 @@
 
     </data>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -135,10 +134,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/monetary_unit"
-                android:textSize="20sp"
                 android:textColor="@color/black"
-                app:layout_constraintTop_toTopOf="@id/et_money_body"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"/>
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintTop_toTopOf="@id/et_money_body" />
 
             <TextView
                 android:id="@+id/tv_date_title"
@@ -179,8 +178,10 @@
                 android:layout_marginStart="50dp"
                 android:background="@android:color/transparent"
                 android:hint="@string/none"
-                android:maxLines="2"
+                android:importantForAutofill="no"
+                android:inputType="text"
                 android:maxLength="10"
+                android:maxLines="2"
                 android:text="@={viewModel.dateDetailItem.content}"
                 android:textColorHint="@color/gray3"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
@@ -217,6 +218,7 @@
                 android:gravity="center_vertical"
                 android:hint="@string/search_address"
                 android:imeOptions="actionSearch"
+                android:importantForAutofill="no"
                 android:inputType="textPostalAddress"
                 android:maxLines="1"
                 android:padding="10dp"
@@ -232,11 +234,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:background="@drawable/background_gradation_circle"
+                android:contentDescription="@string/find_my_location"
                 android:padding="10dp"
                 android:src="@drawable/ic_gps"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintTop_toBottomOf="@id/et_address"
-                android:contentDescription="@string/find_my_location" />
+                app:layout_constraintTop_toBottomOf="@id/et_address" />
 
             <TextView
                 android:id="@+id/btn_update"
