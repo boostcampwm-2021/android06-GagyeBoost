@@ -68,6 +68,7 @@ class CustomCalendarAdapter(
             if (money == null) {
                 textView.isGone = true
             } else {
+                textView.isGone = false
                 textView.text = dec.format(money)
             }
         }
