@@ -1,5 +1,7 @@
 package com.example.gagyeboost.model
 
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.Filter
@@ -57,4 +59,14 @@ class Repository(
 
     suspend fun getPlaceListFromKeyword(input: String) =
         client.getGooglePlayService().getPlaceListFromKeyword(input)
+
+    suspend fun loadCategoryMap(): HashMap<Int, Category> {
+        val categoryMap = HashMap<Int, Category>()
+        val categoryList =
+            accountBookDao.loadCategoryAllData(EXPENSE) + accountBookDao.loadCategoryAllData(INCOME)
+        categoryList.forEach {
+            categoryMap.put(it.id, it)
+        }
+        return categoryMap
+    }
 }
