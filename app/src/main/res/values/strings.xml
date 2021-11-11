@@ -1,5 +1,64 @@
 <resources>
     <string name="app_name">GagyeBoost</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="earnings">수입</string>
+    <string name="expense">지출</string>
+    <string name="balance">잔액</string>
+    <string name="sunday">일</string>
+    <string name="monday">월</string>
+    <string name="tuesday">화</string>
+    <string name="wednesday">수</string>
+    <string name="thursday">목</string>
+    <string name="friday">금</string>
+    <string name="saturday">토</string>
+    <string name="iv_category">icon image or emoji</string>
+    <string name="btn_add_description">add earnings or expense</string>
+    <string name="home">홈</string>
+    <string name="statistics">통계</string>
+    <string name="map">지도</string>
+    <string name="search">검색</string>
+    <string name="temp_number">00</string>
+    <string name="agree">확인</string>
+    <string name="cancel">취소</string>
+    <string name="won">₩</string>
+    <string name="history">내역</string>
+    <string name="add">추가</string>
+    <string name="add_category">카테고리 추가</string>
+    <string name="icon_select">아이콘 선택</string>
+    <string name="update">수정</string>
+    <string name="update_category">카테고리 수정</string>
+    <string name="update_record">지출/수입 내역 수정</string>
+    <string name="name">이름</string>
+    <string name="icon">아이콘</string>
+    <string name="add_category_name_hint">추가할 카테고리 이름</string>
+    <string name="emoji_meal">🍚</string>
+    <string name="position">위치</string>
+    <string name="complete">완료</string>
+    <string name="back_button">back button</string>
+    <string name="close_btn">close fragment or activity</string>
+    <string name="add_category_btn">add category btn</string>
+    <string name="must_enter_category_name">카테고리명을 반드시 입력해야 합니다</string>
+    <string name="delete">삭제</string>
+    <string name="search_address">주소 검색</string>
+    <string name="search_result">검색 결과</string>
+    <string name="period">기간</string>
+    <string name="money">금액</string>
+    <string name="category">카테고리</string>
+    <string name="dash">-</string>
+    <string name="money_type">수입/지출</string>
+    <string name="apply">적용하기</string>
+    <string name="find_my_location">find my location</string>
+    <string name="money_amount">금액</string>
+    <string name="date">날짜</string>
+    <string name="content">내역</string>
+    <string name="address">주소</string>
+    <string name="record_delete_success">내역이 삭제되었습니다</string>
+    <string name="none">(없음)</string>
+    <string name="monetary_unit">원</string>
+    <string name="delete_record">내역 삭제</string>
+    <string name="confirm">확인</string>
+    <string name="record_delete_dialog_message">내역을 삭제하시겠습니까?</string>
+
 </resources>

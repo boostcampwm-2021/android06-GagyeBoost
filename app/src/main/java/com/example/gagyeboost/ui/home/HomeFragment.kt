@@ -1,60 +1,118 @@
 package com.example.gagyeboost.ui.home
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
+import com.example.gagyeboost.common.TODAY_STRING_KEY
+import com.example.gagyeboost.databinding.FragmentHomeBinding
+import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
+import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val homeViewModel: HomeViewModel by viewModel()
+    private lateinit var customCalendarAdapter: CustomCalendarAdapter
+    private lateinit var dialog: NumberPickerDialog
+    private lateinit var detailAdapter: DateDetailAdapter
+    private val filterActivityLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            refreshCalendarData()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        customCalendarAdapter = CustomCalendarAdapter(homeViewModel)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        setDialog()
+        observe()
+
+        binding.fabAdd.setOnClickListener {
+            val today = homeViewModel.getTodayString()
+            findNavController().navigate(
+                R.id.action_homeFragment_to_addFragment,
+                bundleOf(TODAY_STRING_KEY to today)
+            )
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    private fun initView() {
+        binding.homeViewModel = homeViewModel
+        detailAdapter = DateDetailAdapter {
+            val intent = Intent(activity, RecordDetailActivity::class.java)
+            intent.putExtra(DATE_DETAIL_ITEM_ID_KEY, it)
+            filterActivityLauncher.launch(intent)
+            return@DateDetailAdapter true
+        }
+
+        with(binding) {
+            dialog = NumberPickerDialog(root.context)
+            rvCalendar.adapter = customCalendarAdapter
+            rvDetail.adapter = detailAdapter
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun setDialog() {
+        binding.tvYearAndMonth.setOnClickListener {
+            dialog.window?.setGravity(Gravity.TOP)
+            dialog.show()
+
+            dialog.setOnCancelListener {
+                homeViewModel.setYearAndMonth(
+                    dialog.binding.npYear.value,
+                    dialog.binding.npMonth.value
+                )
             }
+            dialog.binding.tvAgree.setOnClickListener {
+                homeViewModel.setYearAndMonth(
+                    dialog.binding.npYear.value,
+                    dialog.binding.npMonth.value
+                )
+                dialog.dismiss()
+            }
+            dialog.binding.tvCancel.setOnClickListener {
+                dialog.dismiss()
+            }
+        }
+    }
+
+    private fun observe() {
+        homeViewModel.yearMonthPair.observe(viewLifecycleOwner) {
+            homeViewModel.loadAllDayDataInMonth()
+        }
+
+        homeViewModel.selectedDate.observe(viewLifecycleOwner) {
+            homeViewModel.loadDateDetailItemList(it)
+        }
+
+        homeViewModel.dateItemList.observe(viewLifecycleOwner) {
+            customCalendarAdapter.submitList(it)
+        }
+
+        homeViewModel.detailItemList.observe(viewLifecycleOwner) {
+            detailAdapter.submitList(it)
+        }
+    }
+
+    private fun refreshCalendarData() {
+        homeViewModel.loadAllDayDataInMonth()
+        homeViewModel.loadDateDetailItemList(homeViewModel.selectedDate.value)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        dialog.dismiss()
     }
 }

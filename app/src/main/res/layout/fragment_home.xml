@@ -1,14 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <variable
+            name="homeViewModel"
+            type="com.example.gagyeboost.ui.home.HomeViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        tools:ignore="MissingConstraints">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tv_year_and_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/green"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@{homeViewModel.yearAndMonth}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/app_bar_title_text_size"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_50percent_vertical"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_start_vertical"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="10dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_end_vertical"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="10dp" />
+
+        <TextView
+            android:id="@+id/tv_income_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/earnings"
+            android:textColor="@color/gray1"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_income_body"
+            app:layout_constraintRight_toLeftOf="@id/tv_income_body"
+            app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+            app:layout_constraintTop_toTopOf="@+id/tv_income_body" />
+
+        <TextView
+            android:id="@+id/tv_income_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="@{homeViewModel.totalMonthIncome}"
+            android:textColor="@color/income"
+            android:textSize="20sp"
+            app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
+
+        <TextView
+            android:id="@+id/tv_expense_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/expense"
+            android:textColor="@color/gray1"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_expense_body"
+            app:layout_constraintStart_toStartOf="@id/gl_50percent_vertical"
+            app:layout_constraintTop_toTopOf="@+id/tv_expense_body" />
+
+        <TextView
+            android:id="@+id/tv_expense_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{homeViewModel.totalMonthExpense}"
+            android:textColor="@color/expense"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
+
+        <TextView
+            android:id="@+id/tv_balance_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/balance"
+            android:textColor="@color/gray1"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_balance_body"
+            app:layout_constraintRight_toLeftOf="@id/tv_income_body"
+            app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+            app:layout_constraintTop_toTopOf="@+id/tv_balance_body" />
+
+        <TextView
+            android:id="@+id/tv_balance_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@{homeViewModel.totalMonthBalance}"
+            android:textColor="@color/gray3"
+            android:textSize="20sp"
+            app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_income_body" />
+
+        <TextView
+            android:id="@+id/tv_sun"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/sunday" />
+
+        <TextView
+            android:id="@+id/tv_mon"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/monday" />
+
+        <TextView
+            android:id="@+id/tv_tue"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/tuesday" />
+
+        <TextView
+            android:id="@+id/tv_wed"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/wednesday" />
+
+        <TextView
+            android:id="@+id/tv_thu"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/thursday" />
+
+        <TextView
+            android:id="@+id/tv_fri"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/friday" />
+
+        <TextView
+            android:id="@+id/tv_sat"
+            style="@style/CalenderWeekTextStyle"
+            android:text="@string/saturday" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:constraint_referenced_ids="tv_sun, tv_mon, tv_tue, tv_wed, tv_thu, tv_fri, tv_sat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_balance_body" />
+
+        <View
+            android:id="@+id/view_line_1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/gray2"
+            app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+            app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+            app:layout_constraintTop_toBottomOf="@id/flow_day" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_calendar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_line_1"
+            app:spanCount="7"
+            tools:listitem="@layout/item_date" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_detail"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_calendar"
+            tools:listitem="@layout/item_rv_detail" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:backgroundTint="@color/green"
+            android:contentDescription="@string/btn_add_description"
+            android:visibility='@{homeViewModel.selectedDate != null ? View.VISIBLE : View.GONE}'
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_baseline_add_24"
+            app:tint="@color/white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
