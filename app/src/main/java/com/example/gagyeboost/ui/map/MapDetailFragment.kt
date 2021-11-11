@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class MapDetailFragment(
     private val address: String,
     private val liveDetailList: LiveData<List<DateDetailItem>>,
-    private val viewModel: TempViewModel
+    private val viewModel: MapViewModel
 ) : BottomSheetDialogFragment() {
 
     private var _binding: DialogMapBottomDetailBinding? = null
