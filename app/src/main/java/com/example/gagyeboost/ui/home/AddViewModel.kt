@@ -1,16 +1,19 @@
 package com.example.gagyeboost.ui.home
 
+import android.location.Address
+import android.location.Geocoder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.model.data.nothingEmoji
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedCategoryIcon = MutableLiveData("🍚")
@@ -22,8 +25,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     val money = MutableLiveData("0")
 
-    private val formatter = DecimalFormat("###,###")
-
     private val _categoryList = MutableLiveData<List<Category>>()
     val categoryList: LiveData<List<Category>> = _categoryList
 
@@ -33,6 +34,12 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     val categoryType get() = _categoryType
 
     var dateString = ""
+
+    val searchAddress = MutableLiveData<String>()
+
+    val selectedAddress = MutableLiveData<PlaceDetail>()
+
+    lateinit var userLocation: Address
 
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
@@ -94,9 +101,11 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                     moneyType = _categoryType,
                     money = if (money.value != null) money.value!!.toInt() else 0,
                     category = selectedCategoryId,
-                    address = "",
-                    latitude = 0.0f,
-                    longitude = 0.0f,
+                    address = "${selectedAddress.value?.formattedAddress} ${selectedAddress.value?.name}",
+                    latitude = selectedAddress.value?.geometry?.location?.lat?.toFloat()
+                        ?: userLocation.latitude.toFloat(),
+                    longitude = selectedAddress.value?.geometry?.location?.lng?.toFloat()
+                        ?: userLocation.longitude.toFloat(),
                     content = content.value ?: "",
                     year = splitedStr[0].toInt(),
                     month = splitedStr[1].toInt(),
@@ -121,5 +130,33 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     fun getFormattedMoneyText(): String {
         return formatter.format(money.value?.toIntOrNull() ?: 0) + "원"
+    }
+
+    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
+
+    fun getAddress(geocoder: Geocoder): List<Address> =
+        geocoder.getFromLocationName(searchAddress.value, 20)
+
+    fun getPlaceListData(input: String): LiveData<Result<List<PlaceDetail>>> {
+        val data = MutableLiveData<Result<List<PlaceDetail>>>()
+
+        viewModelScope.launch {
+            val response = repository.getPlaceListFromKeyword(input)
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                body?.let {
+                    if (it.status == "OK") {
+                        data.postValue(Result.success(body.results))
+                    } else {
+                        data.postValue(Result.failure(Throwable()))
+                    }
+                }
+            } else {
+                data.postValue(Result.failure(Throwable()))
+            }
+        }
+
+        return data
     }
 }
