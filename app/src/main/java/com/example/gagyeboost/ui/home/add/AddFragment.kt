@@ -29,6 +29,19 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
         binding.tvDate.text = dateStr
         viewModel.dateString = dateStr ?: ""
         initClickListeners()
+        observe()
+    }
+
+    private fun observe() {
+        viewModel.money.observe(viewLifecycleOwner){
+            if(it=="0" || it.isEmpty()){
+                binding.btnExpense.isEnabled = false
+                binding.btnIncome.isEnabled = false
+            }else{
+                binding.btnExpense.isEnabled = true
+                binding.btnIncome.isEnabled = true
+            }
+        }
     }
 
     private fun initClickListeners() {
