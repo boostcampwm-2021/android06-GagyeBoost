@@ -29,12 +29,14 @@ class FilterMoneyDialog : BottomSheetDialogFragment() {
             null,
             false
         )
-        binding.viewModel = viewModel
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
+
         var left = binding.rsMoney.valueFrom.toInt()
         var right = binding.rsMoney.valueTo.toInt()
 
