@@ -8,14 +8,13 @@ import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.local.AccountBookDatabase
 import com.example.gagyeboost.model.remote.GooglePlaceClient
-import com.example.gagyeboost.model.remote.GooglePlaceService
 import com.example.gagyeboost.model.remote.HeaderInterceptor
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.home.DateDetailAdapter
 import com.example.gagyeboost.ui.home.HomeViewModel
+import com.example.gagyeboost.ui.map.MapViewModel
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val appModule = module {
@@ -72,4 +71,5 @@ val appModule = module {
 val viewModelModule = module {
     viewModel { AddViewModel(get()) }
     viewModel { HomeViewModel(get()) }
+    viewModel { MapViewModel(get()) }
 }

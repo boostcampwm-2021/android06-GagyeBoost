@@ -1,0 +1,143 @@
+package com.example.gagyeboost.ui.map
+
+import androidx.lifecycle.*
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.formatter
+import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.AccountBook
+import com.example.gagyeboost.model.data.Filter
+import kotlinx.coroutines.launch
+import java.util.*
+
+class MapViewModel(private val repository: Repository) : ViewModel() {
+
+    val byteMoneyType = MutableLiveData(EXPENSE)
+    val intMoneyType: LiveData<Int> = Transformations.map(byteMoneyType) { it.toInt() }
+
+    val intStartMoney = MutableLiveData(0)
+    val startMoney: LiveData<String> =
+        Transformations.map(intStartMoney) { formatter.format(it) + "원" }
+
+    val intEndMoney = MutableLiveData(300000)
+    val endMoney: LiveData<String> = Transformations.map(intEndMoney) {
+        if (it == Int.MAX_VALUE) {
+            formatter.format(it) + "원 이상"
+        } else {
+            formatter.format(it) + "원"
+        }
+    }
+
+    val categoryList = MutableLiveData<List<Int>>()
+    var startYear: Int = 1900
+    var startMonth: Int = 1
+    var startDay: Int = 1
+    var endYear: Int = 2500
+    var endMonth: Int = 12
+    var endDay: Int = 31
+    var startLatitude: Float = 0.0F
+    var startLongitude: Float = 00.0F
+    var endLatitude: Float = 200.0F
+    var endLongitude: Float = 200.0F
+
+    val filterData = MutableLiveData<List<AccountBook>>()
+
+    // HashMap<좌표, 좌표에 해당하는 내역 list>
+    val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> =
+        Transformations.map(filterData) { listToHashMap(it) }
+
+    private val _selectedPosition = MutableLiveData<List<AccountBook>>()
+    val selectedPosition: LiveData<List<AccountBook>> = _selectedPosition
+
+    private fun listToHashMap(dataList: List<AccountBook>): HashMap<Pair<Float, Float>, List<AccountBook>> {
+        val nowMap = HashMap<Pair<Float, Float>, MutableList<AccountBook>>()
+        dataList.forEach {
+            val latLng = Pair(it.latitude, it.longitude)
+            nowMap.getOrPut(latLng) { mutableListOf() }.add(it)
+        }
+        val retMap = HashMap<Pair<Float, Float>, List<AccountBook>>()
+        nowMap.forEach {
+            retMap[it.key] = it.value
+        }
+        return retMap
+    }
+
+    fun hashMapToMarkerMap(dataMap: HashMap<Pair<Float, Float>, List<AccountBook>>): HashMap<Pair<Float, Float>, Pair<String, String>> {
+        val markerMap = HashMap<Pair<Float, Float>, Pair<String, String>>()
+        dataMap.forEach {
+            markerMap[it.key] = Pair(
+                it.value[0].address,
+                "${it.value.sumOf { accountBook -> accountBook.money }}원"
+            )
+        }
+        return markerMap
+    }
+
+    //viewModel 공유하면 다시 map화면 돌아왔을때 init
+    fun setInitData() {
+        loadAllCategoryID()
+        byteMoneyType.value = EXPENSE
+        intStartMoney.value = 0
+        intEndMoney.value = 300000
+        startYear = Calendar.getInstance().get(Calendar.YEAR)
+        startMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
+        startDay = 1
+        endYear = startYear
+        endMonth = startMonth
+        endDay = Calendar.getInstance().getActualMaximum(Calendar.DATE)
+        // 화면에 보이는 위도/경도로 설정 해야함
+        startLatitude = 0.0f
+        startLongitude = 0.0f
+        endLatitude = 200.0f
+        endLongitude = 200.0f
+    }
+
+    private fun loadAllCategoryID() {
+        viewModelScope.launch {
+            categoryList.postValue(repository.loadAllCategoryID())
+        }
+    }
+
+    fun setMoney(start: Int, end: Int) {
+        intStartMoney.value = start
+        intEndMoney.value = end
+    }
+
+    fun loadFilterData() {
+        viewModelScope.launch {
+            val data = setFilter()
+            val filter = repository.loadFilterData(data)
+            filterData.postValue(filter)
+        }
+    }
+
+    private fun setFilter() = Filter(
+        byteMoneyType.value ?: EXPENSE,
+        startYear,
+        startMonth,
+        startDay,
+        endYear,
+        endMonth,
+        endDay,
+        startLatitude,
+        startLongitude,
+        endLatitude,
+        endLongitude,
+        intStartMoney.value ?: 0,
+        intEndMoney.value ?: 300000,
+        categoryList.value ?: listOf()
+    )
+
+    fun setPeriod(startDate: Date, endDate: Date) {
+        val calendar = Calendar.getInstance()
+        calendar.time = startDate
+        startYear = calendar.get(Calendar.YEAR)
+        startMonth = calendar.get(Calendar.MONTH) + 1
+        startDay = calendar.get(Calendar.DAY_OF_MONTH)
+        calendar.time = endDate
+        endYear = calendar.get(Calendar.YEAR)
+        endMonth = calendar.get(Calendar.MONTH) + 1
+        endDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+        loadFilterData()
+    }
+}

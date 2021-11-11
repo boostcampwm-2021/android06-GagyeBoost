@@ -67,7 +67,8 @@
             android:padding="10dp"
             android:src="@drawable/ic_gps"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_address" />
+            app:layout_constraintTop_toBottomOf="@id/et_address"
+            android:contentDescription="@string/find_my_location" />
 
         <EditText
             android:id="@+id/et_address"

@@ -8,16 +8,13 @@ plugins {
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
-
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def googleMapKey = properties.getProperty('google_map_key')
 
 android {
-
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']

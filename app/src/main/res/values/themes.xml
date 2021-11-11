@@ -13,8 +13,6 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/green</item>
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/sfprotext</item>
-
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
     <style name="CalenderWeekTextStyle">
@@ -47,6 +45,17 @@
         <item name="android:gravity">center</item>
         <item name="android:textStyle">bold</item>
         <item name="android:padding">15dp</item>
+    </style>
+
+    <style name="MapFilterButton">
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:background">@drawable/background_white_radius_20dp</item>
+        <item name="android:textColor">@color/gray1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">

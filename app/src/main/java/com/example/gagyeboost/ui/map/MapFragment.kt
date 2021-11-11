@@ -3,33 +3,38 @@ package com.example.gagyeboost.ui.map
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
+import com.example.gagyeboost.ui.map.filter.FilterMoneyTypeDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.datepicker.MaterialDatePicker
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
-    private val tempViewModel = TempViewModel()
+    private val viewModel: MapViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         initObserver()
-        initMap()
+        setDialog()
     }
 
     private fun initObserver() {
-        tempViewModel.dataMap.observe(viewLifecycleOwner, { it ->
+        viewModel.dataMap.observe(viewLifecycleOwner) {
+            Log.e("fragment", it.toString())
             googleMap.clear()
-            val markerMap = tempViewModel.hashMapToMarkerMap(it)
+            val markerMap = viewModel.hashMapToMarkerMap(it)
             markerMap.forEach { markerData ->
                 googleMap.addMarker(
                     MarkerOptions().position(
@@ -40,12 +45,45 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                     ).title(markerData.value.first).snippet(markerData.value.second)
                 )?.showInfoWindow()
             }
-        })
+        }
+
+        viewModel.categoryList.observe(viewLifecycleOwner) {
+            viewModel.loadFilterData()
+        }
     }
 
-    private fun initMap() {
+    private fun initView() {
+        binding.viewModel = viewModel
+        viewModel.setInitData()
         binding.mvMap.getMapAsync(this)
         binding.mvMap.onCreate(null)
+    }
+
+    private fun setDialog() {
+        binding.btnMoney.setOnClickListener {
+            val dialog = FilterMoneyDialog(binding.root.context, viewModel)
+            dialog.show()
+        }
+        binding.btnMoneyType.setOnClickListener {
+            val dialog = FilterMoneyTypeDialog(binding.root.context, viewModel)
+            dialog.show()
+        }
+
+        binding.btnPeriod.setOnClickListener {
+            showDateRangePicker()
+        }
+    }
+
+    private fun showDateRangePicker() {
+        val dateRangePicker = MaterialDatePicker.Builder
+            .dateRangePicker()
+            .setTitleText("Select Date").build()
+
+        dateRangePicker.show(parentFragmentManager, "date_range_picker")
+
+        dateRangePicker.addOnPositiveButtonClickListener { date ->
+            viewModel.setPeriod(Date(date.first), Date(date.second))
+        }
     }
 
     override fun onStart() {
@@ -71,53 +109,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             //TODO Marker 위에 Info 클릭 시 해당 좌표에 대한 내역 띄워주기
             Log.i("MapFragment", it.position.toString())
         }
-        tempViewModel.initMarkerData()
     }
 
-}
-
-//TODO test용 viewmodel 지우기
-class TempViewModel() {
-
-    // HashMap<좌표, 좌표에 해당하는 내역 list>
-    private var _dataMap = MutableLiveData<HashMap<Pair<Float, Float>, List<AccountBook>>>()
-    val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> = _dataMap
-
-    private var _selectedPosition = MutableLiveData<List<AccountBook>>()
-    val selectedPosition: LiveData<List<AccountBook>> = _selectedPosition
-
-    fun initMarkerData() {
-        setMarkerList(testData)
-    }
-
-    //dataList에 따라 마커 재생성
-    fun setMarkerList(dataList: List<AccountBook>) {
-        _dataMap.value = listToHashMap(dataList)
-    }
-
-    private fun listToHashMap(dataList: List<AccountBook>): HashMap<Pair<Float, Float>, List<AccountBook>> {
-        val nowMap = HashMap<Pair<Float, Float>, MutableList<AccountBook>>()
-        dataList.forEach {
-            val latLng = Pair(it.latitude, it.longitude)
-            nowMap.getOrPut(latLng) { mutableListOf() }.add(it)
-        }
-        val retMap=HashMap<Pair<Float,Float>,List<AccountBook>>()
-        nowMap.forEach{
-            retMap[it.key]=it.value
-        }
-        return retMap
-    }
-
-    fun hashMapToMarkerMap(dataMap: HashMap<Pair<Float, Float>, List<AccountBook>>): HashMap<Pair<Float, Float>, Pair<String, String>> {
-        val markerMap = HashMap<Pair<Float, Float>, Pair<String, String>>()
-        dataMap.forEach {
-            markerMap[it.key] = Pair(
-                it.value[0].address,
-                "${it.value.sumOf { accountBook -> accountBook.money }}원"
-            )
-        }
-        return markerMap
-    }
 }
 
 private val testData = listOf(
