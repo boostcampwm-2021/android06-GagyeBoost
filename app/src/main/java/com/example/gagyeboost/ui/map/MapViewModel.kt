@@ -5,9 +5,7 @@ import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.DateDetailItem
-import com.example.gagyeboost.model.data.Filter
+import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -51,16 +49,25 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val selectedDetailList: LiveData<List<DateDetailItem>> = _selectedDetailList
 
     fun setSelectedDetail(latitude: Float, longitude: Float) {
-        val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
-        _selectedDetailList.value = (dataList ?: listOf()).map {
-            DateDetailItem(
-                it.id,
-                "\uD83E\uDD70",
-                "밥",
-                it.content,
-                it.money.toString(),
-                it.moneyType == INCOME
-            )
+        viewModelScope.launch {
+            val categoryMap = repository.loadCategoryMap()
+            val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
+            _selectedDetailList.value = (dataList ?: listOf()).map {
+                val category = categoryMap[it.category] ?: Category(
+                    it.category,
+                    categoryName = "NULL",
+                    emoji = nothingEmoji,
+                    it.moneyType
+                )
+                DateDetailItem(
+                    it.id,
+                    category.emoji,
+                    category.categoryName,
+                    it.content,
+                    it.money.toString(),
+                    it.moneyType == INCOME
+                )
+            }
         }
     }
 
