@@ -11,7 +11,7 @@ import com.example.gagyeboost.ui.home.AddViewModel
 
 class AddressAdapter(
     private val viewModel: AddViewModel,
-    private val itemClickListener: () -> Unit
+    private val itemClickListener: (PlaceDetail) -> Unit
 ) : ListAdapter<PlaceDetail, AddressAdapter.AddressViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder {
@@ -28,8 +28,8 @@ class AddressAdapter(
 
         init {
             itemView.setOnClickListener {
-                itemClickListener()
-                viewModel.selectedAddress.value = getItem(adapterPosition)
+                itemClickListener(getItem(adapterPosition))
+                viewModel.selectedLocation = getItem(adapterPosition)
             }
         }
 
