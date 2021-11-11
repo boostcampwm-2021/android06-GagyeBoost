@@ -113,38 +113,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/money_amount"
-                app:layout_constraintBottom_toBottomOf="@id/layout_money_body"
+                app:layout_constraintBottom_toBottomOf="@id/et_money_body"
                 app:layout_constraintStart_toStartOf="@id/money_type"
-                app:layout_constraintTop_toTopOf="@id/layout_money_body" />
+                app:layout_constraintTop_toTopOf="@id/et_money_body" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_money_body"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_money_body"
+                style="@style/RecordDetailEditTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
                 android:layout_marginTop="20dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                android:paddingStart="0dp"
-                android:paddingEnd="-15dp"
-                android:paddingVertical="-20dp"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintTop_toBottomOf="@id/tv_category_body"
-                app:suffixText="원"
-                app:suffixTextColor="@color/black">
+                android:background="@android:color/transparent"
+                android:maxLength="9"
+                android:maxLines="1"
+                android:text="@={viewModel.dateDetailItem.money}"
+                app:layout_constraintEnd_toStartOf="@id/tv_monetary_unit"
+                app:layout_constraintTop_toBottomOf="@id/tv_category_body" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_money_body"
-                    style="@style/RecordDetailEditTheme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:layout_marginTop="0dp"
-                    android:maxLength="9"
-                    android:maxLines="1"
-                    android:text="@={viewModel.dateDetailItem.money}" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/tv_monetary_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/monetary_unit"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toTopOf="@id/et_money_body"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"/>
 
             <TextView
                 android:id="@+id/tv_date_title"
@@ -165,7 +159,7 @@
                 android:background="@android:color/transparent"
                 android:text="@{viewModel.date}"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintTop_toBottomOf="@id/layout_money_body" />
+                app:layout_constraintTop_toBottomOf="@id/et_money_body" />
 
             <TextView
                 android:id="@+id/tv_content_title"
@@ -182,9 +176,13 @@
                 style="@style/RecordDetailEditTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
                 android:background="@android:color/transparent"
+                android:hint="@string/none"
                 android:maxLines="2"
+                android:maxLength="10"
                 android:text="@={viewModel.dateDetailItem.content}"
+                android:textColorHint="@color/gray3"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
                 app:layout_constraintTop_toBottomOf="@id/tv_date_body" />
 
@@ -208,6 +206,37 @@
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
                 app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
                 app:layout_constraintTop_toBottomOf="@id/tv_address" />
+
+            <EditText
+                android:id="@+id/et_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/background_white_radius_5dp"
+                android:gravity="center_vertical"
+                android:hint="@string/search_address"
+                android:imeOptions="actionSearch"
+                android:inputType="textPostalAddress"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:drawableLeftCompat="@drawable/ic_search"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
+                app:layout_constraintTop_toTopOf="@id/map" />
+
+            <ImageView
+                android:id="@+id/btn_gps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/background_gradation_circle"
+                android:padding="10dp"
+                android:src="@drawable/ic_gps"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintTop_toBottomOf="@id/et_address"
+                android:contentDescription="@string/find_my_location" />
 
             <TextView
                 android:id="@+id/btn_update"
