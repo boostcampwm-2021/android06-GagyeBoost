@@ -94,7 +94,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         }
     }
 
-
     override fun onStart() {
         super.onStart()
         binding.mvMap.onStart()

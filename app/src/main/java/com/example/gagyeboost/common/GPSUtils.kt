@@ -20,11 +20,11 @@ class GPSUtils(private val context: Context) : LocationListener {
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
     ) {
-        getAddress(37.49724110935863, 127.02877164249468)
+        getAddress(DEFAULT_LAT, DEFAULT_LNG)
     } else {
         locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)?.let {
             getAddress(it.latitude, it.longitude)
-        } ?: getAddress(37.49724110935863, 127.02877164249468)
+        } ?: getAddress(DEFAULT_LAT, DEFAULT_LNG)
     }
 
 
