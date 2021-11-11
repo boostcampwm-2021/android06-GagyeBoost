@@ -6,7 +6,6 @@ import android.view.View
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
-import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.ui.base.BaseFragment
@@ -81,7 +80,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         val moneyTypeBinding = DialogFilterMoneyTypeBinding.inflate(layoutInflater)
         val dialog = BottomSheetDialog(requireContext())
         dialog.setContentView(moneyTypeBinding.root)
+
         dialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        moneyTypeBinding.lifecycleOwner = viewLifecycleOwner
         moneyTypeBinding.viewModel = viewModel
         dialog.show()
 
