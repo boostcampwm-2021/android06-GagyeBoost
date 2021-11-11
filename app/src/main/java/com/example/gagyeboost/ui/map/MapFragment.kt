@@ -34,8 +34,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     private fun initObserver() {
-
-
         viewModel.categoryList.observe(viewLifecycleOwner) {
             viewModel.loadFilterData()
         }
