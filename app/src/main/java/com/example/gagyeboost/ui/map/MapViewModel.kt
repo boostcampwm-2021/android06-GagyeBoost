@@ -2,9 +2,11 @@ package com.example.gagyeboost.ui.map
 
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
+import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.model.data.Filter
 import kotlinx.coroutines.launch
 import java.util.*
@@ -45,8 +47,22 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> =
         Transformations.map(filterData) { listToHashMap(it) }
 
-    private val _selectedPosition = MutableLiveData<List<AccountBook>>()
-    val selectedPosition: LiveData<List<AccountBook>> = _selectedPosition
+    private var _selectedDetailList = MutableLiveData<List<DateDetailItem>>()
+    val selectedDetailList: LiveData<List<DateDetailItem>> = _selectedDetailList
+
+    fun setSelectedDetail(latitude: Float, longitude: Float) {
+        val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
+        _selectedDetailList.value = (dataList ?: listOf()).map {
+            DateDetailItem(
+                it.id.toString(),
+                "\uD83E\uDD70",
+                "밥",
+                it.content,
+                it.money.toString(),
+                it.moneyType == INCOME
+            )
+        }
+    }
 
     private fun listToHashMap(dataList: List<AccountBook>): HashMap<Pair<Float, Float>, List<AccountBook>> {
         val nowMap = HashMap<Pair<Float, Float>, MutableList<AccountBook>>()

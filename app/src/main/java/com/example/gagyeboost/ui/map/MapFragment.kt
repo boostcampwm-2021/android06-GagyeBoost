@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.AccountBook
+import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
 import com.example.gagyeboost.ui.map.filter.FilterMoneyTypeDialog
@@ -43,7 +45,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                             markerData.key.second.toDouble()
                         )
                     ).title(markerData.value.first).snippet(markerData.value.second)
-                )?.showInfoWindow()
+                )
             }
         }
 
@@ -86,6 +88,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         }
     }
 
+
     override fun onStart() {
         super.onStart()
         binding.mvMap.onStart()
@@ -106,104 +109,14 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         val seoul = LatLng(37.5642135, 127.0016985)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15f))
         googleMap.setOnInfoWindowClickListener {
-            //TODO Marker 위에 Info 클릭 시 해당 좌표에 대한 내역 띄워주기
-            Log.i("MapFragment", it.position.toString())
+            viewModel.setSelectedDetail(
+                it.position.latitude.toFloat(),
+                it.position.longitude.toFloat()
+            )
+            val bottomSheet =
+                MapDetailFragment(it.title ?: "", viewModel.selectedDetailList, viewModel)
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
         }
     }
 
 }
-
-private val testData = listOf(
-    AccountBook(
-        1,
-        1,
-        4240,
-        11,
-        37.57017517089844f,
-        126.98320007324219f,
-        "대한민국 서울특별시 종로1가 종각",
-        "1",
-        2021,
-        11,
-        7
-    ),
-    AccountBook(
-        2,
-        0,
-        1330,
-        1,
-        37.57086181640625f,
-        126.9828109741211f,
-        "대한민국 서울특별시 종로구 공평동 100-5",
-        "12",
-        2021,
-        11,
-        7
-    ),
-    AccountBook(
-        3,
-        0,
-        33330,
-        1,
-        37.57017517089844f,
-        126.98320007324219f,
-        "대한민국 서울특별시 종로1가 종각",
-        "12",
-        2021,
-        11,
-        6
-    ),
-    AccountBook(4, 0, 334550, 1, 0.0f, 0.0f, "", "12", 2021, 11, 5),
-    AccountBook(
-        5,
-        0,
-        1330,
-        2,
-        37.565704345703125f,
-        126.97686004638672f,
-        "대한민국 서울특별시 중구 지하 101 시청",
-        "12",
-        2021,
-        11,
-        5
-    ),
-    AccountBook(
-        6,
-        1,
-        2550,
-        13,
-        37.565704345703125f,
-        126.97686004638672f,
-        "대한민국 서울특별시 중구 지하 101 시청",
-        "12",
-        2021,
-        11,
-        5
-    ),
-    AccountBook(
-        7,
-        0,
-        660,
-        2,
-        37.5704345703125f,
-        126.99214935302734f,
-        "대한민국 서울특별시 종로3가 종로3가",
-        "12",
-        2021,
-        11,
-        4
-    ),
-    AccountBook(
-        8,
-        0,
-        131110,
-        3,
-        37.57961654663086f,
-        126.97704315185547f,
-        "대한민국 서울특별시 종로구 종로1.2.3.4가동 사직로 161",
-        "12",
-        2021,
-        11,
-        10
-    )
-)

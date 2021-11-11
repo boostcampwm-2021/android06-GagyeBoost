@@ -15,6 +15,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_item_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

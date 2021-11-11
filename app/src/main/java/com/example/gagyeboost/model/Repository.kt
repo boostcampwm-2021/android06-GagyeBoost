@@ -40,7 +40,7 @@ class Repository(
             filter.endMonth,
             filter.endDay,
             filter.categoryList,
-            filter.startMonth,
+            filter.startMoney,
             filter.endMoney,
             filter.startLatitude,
             filter.startLongitude,
