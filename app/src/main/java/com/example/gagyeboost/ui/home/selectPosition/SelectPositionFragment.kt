@@ -89,6 +89,7 @@ class SelectPositionFragment :
 
         viewModel.selectedAddress.observe(viewLifecycleOwner) {
             val latLng = LatLng(it.geometry.location.lat, it.geometry.location.lng)
+            googleMap.clear()
             googleMap.addMarker(
                 MarkerOptions().position(latLng).title(it.formattedAddress)
             )
