@@ -109,6 +109,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun refreshCalendarData() {
         homeViewModel.loadAllDayDataInMonth()
+        homeViewModel.loadDateDetailItemList(homeViewModel.selectedDate.value)
     }
 
     override fun onStop() {
