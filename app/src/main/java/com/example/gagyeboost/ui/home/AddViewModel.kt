@@ -91,7 +91,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
     fun addAccountBookData() {
         if (dateString.isEmpty()) return
         viewModelScope.launch {
@@ -112,7 +111,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                     day = splitedStr[2].toInt()
                 )
             )
-            //TODO 달력 데이터 갱신
         }
     }
 
