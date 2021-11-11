@@ -207,6 +207,37 @@
                 app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
                 app:layout_constraintTop_toBottomOf="@id/tv_address" />
 
+            <EditText
+                android:id="@+id/et_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/background_white_radius_5dp"
+                android:gravity="center_vertical"
+                android:hint="@string/search_address"
+                android:imeOptions="actionSearch"
+                android:inputType="textPostalAddress"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:drawableLeftCompat="@drawable/ic_search"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
+                app:layout_constraintTop_toTopOf="@id/map" />
+
+            <ImageView
+                android:id="@+id/btn_gps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/background_gradation_circle"
+                android:padding="10dp"
+                android:src="@drawable/ic_gps"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintTop_toBottomOf="@id/et_address"
+                android:contentDescription="@string/find_my_location" />
+
             <TextView
                 android:id="@+id/btn_update"
                 android:layout_width="100dp"
