@@ -41,7 +41,7 @@
                 android:id="@+id/toggle_group_money_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="20dp"
                 app:checkedButton="@id/btn_expense"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_year_and_month"
@@ -103,11 +103,14 @@
                 app:layout_constraintStart_toStartOf="@id/tv_monthly_stat"
                 app:layout_constraintTop_toBottomOf="@id/rv_record_list" />
 
-            <com.github.mikephil.charting.charts.LineChart
+            <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chart_daily_stat"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="6:4"
+                android:layout_marginVertical="20dp"
+                app:layout_constraintStart_toStartOf="@id/tv_monthly_stat"
+                app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintTop_toBottomOf="@id/tv_daily_stat"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
