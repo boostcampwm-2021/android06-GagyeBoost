@@ -12,7 +12,6 @@ import com.example.gagyeboost.model.data.StatRecordItem
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.NumberPickerDialog
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -37,7 +36,7 @@ class StatisticsFragment : BaseFragment<FragmentStatisticsBinding>(R.layout.frag
         binding.tvYearAndMonth.setOnClickListener {
             setDialog()
         }
-        binding.toggleGroupMoneyType.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        binding.toggleGroupMoneyType.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
             viewModel.setType(if (checkedId == R.id.btn_expense) EXPENSE else INCOME)
         }

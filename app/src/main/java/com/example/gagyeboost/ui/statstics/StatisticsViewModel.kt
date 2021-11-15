@@ -10,6 +10,7 @@ import com.example.gagyeboost.model.data.StatRecordItem
 import com.example.gagyeboost.model.data.nothingEmoji
 import com.example.gagyeboost.ui.home.CustomCalendar
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.round
@@ -46,19 +47,22 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
     fun loadRecordList() {
         viewModelScope.launch(IO) {
             val type = selectedType.value ?: 0
-            val categoryMap =
-                repository.loadCategoryList(type).map { Pair(it.id, it) }.toMap()
+            val deferredCategory =
+                async { repository.loadCategoryList(type).map { Pair(it.id, it) }.toMap() }
             val timePair = yearMonthPair.value ?: Pair(
                 currentYear,
                 Calendar.getInstance().get(Calendar.MONTH) + 1
             )
-
-            val recordSumMap: MutableMap<Int, Int> = HashMap<Int, Int>()
-            repository.loadMonthData(timePair.first, timePair.second).filter {
+            val deferredMonthData =
+                async { repository.loadMonthData(timePair.first, timePair.second) }
+            val recordSumMap = HashMap<Int, Int>()
+            deferredMonthData.await().filter {
                 it.moneyType == type
             }.forEach {
                 recordSumMap[it.category] = (recordSumMap[it.category] ?: 0) + it.money
             }
+
+            val categoryMap = deferredCategory.await()
             val sum = recordSumMap.toList().sumOf { it.second }
             _sortedStatRecordList.postValue(
                 recordSumMap.toList().sortedWith { a: Pair<Int, Int>, b: Pair<Int, Int> ->
