@@ -45,6 +45,7 @@
                 app:checkedButton="@id/btn_expense"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_year_and_month"
+                app:selectionRequired="true"
                 app:singleSelection="true">
 
                 <Button
