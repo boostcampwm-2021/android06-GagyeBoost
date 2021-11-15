@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
+    <data>
+
+        <variable
+            name="statRecord"
+            type="com.example.gagyeboost.model.data.StatRecordItem" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -11,6 +18,7 @@
             android:id="@+id/tv_category_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{statRecord.categoryIcon}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -22,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:text="@{statRecord.categoryName}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -33,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:text="@{String.valueOf(statRecord.percentage)}"
             android:textColor="@color/gray3"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -43,6 +53,7 @@
             android:id="@+id/tv_total_money_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{String.valueOf(statRecord.totalMoney)}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"

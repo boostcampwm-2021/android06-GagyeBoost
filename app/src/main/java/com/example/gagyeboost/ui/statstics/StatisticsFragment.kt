@@ -14,10 +14,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class StatisticsFragment : BaseFragment<FragmentStatisticsBinding>(R.layout.fragment_statistics) {
     private val viewModel: StatisticsViewModel by viewModel()
     private lateinit var dialog: NumberPickerDialog
+    private val statResultAdapter = StatResultAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initObserver()
     }
 
     private fun initView() {
@@ -32,6 +34,7 @@ class StatisticsFragment : BaseFragment<FragmentStatisticsBinding>(R.layout.frag
             viewModel.loadRecordList(if (checkedId == R.id.btn_expense) EXPENSE else INCOME)
         }
         binding.toggleGroupMoneyType.check(R.id.btn_expense)
+        binding.rvRecordList.adapter = statResultAdapter
     }
 
     private fun setDialog() {
@@ -58,9 +61,10 @@ class StatisticsFragment : BaseFragment<FragmentStatisticsBinding>(R.layout.frag
         }
     }
 
-    private fun initObserver(){
-        with(viewModel){
-            sortedStatRecordList.observe(viewLifecycleOwner,{
+    private fun initObserver() {
+        with(viewModel) {
+            sortedStatRecordList.observe(viewLifecycleOwner, {
+                statResultAdapter.submitList(it)
                 //TODO chart 표현하기
 
             })
