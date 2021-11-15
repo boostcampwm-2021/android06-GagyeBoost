@@ -3,11 +3,18 @@ package com.example.gagyeboost.ui.statstics
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.StatRecordItem
+import com.example.gagyeboost.model.data.nothingEmoji
 import com.example.gagyeboost.ui.home.CustomCalendar
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
-class StatisticsViewModel(private val repository: Repository): ViewModel() {
+class StatisticsViewModel(private val repository: Repository) : ViewModel() {
     private val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
     private val _yearAndMonth = MutableLiveData<String>()
@@ -17,6 +24,9 @@ class StatisticsViewModel(private val repository: Repository): ViewModel() {
     val yearMonthPair: LiveData<Pair<Int, Int>> = _yearMonthPair
 
     private val calendar = CustomCalendar()
+
+    private val _sortedStatRecordList = MutableLiveData<List<StatRecordItem>>()
+    val sortedStatRecordList: LiveData<List<StatRecordItem>> = _sortedStatRecordList
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
@@ -28,5 +38,40 @@ class StatisticsViewModel(private val repository: Repository): ViewModel() {
         calendar.setYearAndMonth(year, month)
         _yearAndMonth.value = stringDate
         _yearMonthPair.value = Pair(year, month)
+    }
+
+    fun loadRecordList(type: Byte) {
+        viewModelScope.launch(IO) {
+            val categoryMap = repository.loadCategoryList(type).map { Pair(it.id, it) }.toMap()
+            val timePair = yearMonthPair.value ?: Pair(
+                currentYear,
+                Calendar.getInstance().get(Calendar.MONTH) + 1
+            )
+
+            val recordSumMap: MutableMap<Int, Int> = HashMap<Int, Int>()
+            repository.loadMonthData(timePair.first, timePair.second).filter {
+                it.moneyType == type
+            }.forEach {
+                recordSumMap[it.category] = (recordSumMap[it.category] ?: 0) + it.money
+            }
+            val sum = recordSumMap.toList().sumOf { it.second }
+            _sortedStatRecordList.postValue(
+                recordSumMap.toList().sortedWith { a: Pair<Int, Int>, b: Pair<Int, Int> ->
+                    when {
+                        a.second < b.second -> 1
+                        a.second > b.second -> -1
+                        else -> 0
+                    }
+                }.map {
+                    val category = categoryMap[it.first] ?: Category(0, "", nothingEmoji, type)
+                    StatRecordItem(
+                        category.id,
+                        category.emoji,
+                        category.categoryName,
+                        it.second * 100 / sum,
+                        it.second
+                    )
+                })
+        }
     }
 }

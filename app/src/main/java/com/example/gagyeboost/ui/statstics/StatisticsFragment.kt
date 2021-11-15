@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.databinding.FragmentStatisticsBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.NumberPickerDialog
@@ -26,7 +28,8 @@ class StatisticsFragment : BaseFragment<FragmentStatisticsBinding>(R.layout.frag
             setDialog()
         }
         binding.toggleGroupMoneyType.addOnButtonCheckedListener { group, checkedId, isChecked ->
-            println("$checkedId $isChecked")
+            if (!isChecked) return@addOnButtonCheckedListener
+            viewModel.loadRecordList(if (checkedId == R.id.btn_expense) EXPENSE else INCOME)
         }
         binding.toggleGroupMoneyType.check(R.id.btn_expense)
     }
@@ -52,6 +55,15 @@ class StatisticsFragment : BaseFragment<FragmentStatisticsBinding>(R.layout.frag
             tvCancel.setOnClickListener {
                 dialog.dismiss()
             }
+        }
+    }
+
+    private fun initObserver(){
+        with(viewModel){
+            sortedStatRecordList.observe(viewLifecycleOwner,{
+                //TODO chart 표현하기
+
+            })
         }
     }
 }
