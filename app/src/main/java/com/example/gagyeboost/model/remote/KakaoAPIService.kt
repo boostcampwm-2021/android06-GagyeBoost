@@ -8,8 +8,8 @@ import retrofit2.http.Query
 
 interface KakaoAPIService {
 
-    @GET("textsearch/json")
-    suspend fun getPlaceListFromKeyword(
+    @GET("v2/local/search/keyword.json")
+    suspend fun fetchPlaceListFromKeyword(
         @Query("query") input: String,
         @Query("key") key: String = BuildConfig.google_map_key
     ): Response<PlaceDetailResponse>
