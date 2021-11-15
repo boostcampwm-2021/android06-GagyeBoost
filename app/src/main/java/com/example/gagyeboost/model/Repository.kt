@@ -5,8 +5,11 @@ import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.Filter
+import com.example.gagyeboost.model.data.PlaceDetailResponse
 import com.example.gagyeboost.model.local.AccountBookDAO
 import com.example.gagyeboost.model.remote.KakaoAPIClient
+import retrofit2.Response
+import timber.log.Timber
 
 class Repository(
     private val accountBookDao: AccountBookDAO,
@@ -57,8 +60,11 @@ class Repository(
             filter.endLongitude
         )
 
-    suspend fun fetchPlaceListFromKeyword(input: String) =
-        client.getGooglePlayService().fetchPlaceListFromKeyword(input)
+    suspend fun fetchPlaceListFromKeyword(input: String): Response<PlaceDetailResponse> {
+        val data = client.getGooglePlayService().fetchPlaceListFromKeyword(input)
+        Timber.d(data.body()?.meta.toString())
+        return data
+    }
 
     suspend fun loadCategoryMap(): HashMap<Int, Category> {
         val categoryMap = HashMap<Int, Category>()

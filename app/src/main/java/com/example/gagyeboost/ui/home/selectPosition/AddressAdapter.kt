@@ -41,10 +41,10 @@ class AddressAdapter(
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<PlaceDetail>() {
             override fun areItemsTheSame(oldItem: PlaceDetail, newItem: PlaceDetail) =
-                oldItem.geometry == newItem.geometry
+                oldItem == newItem
 
             override fun areContentsTheSame(oldItem: PlaceDetail, newItem: PlaceDetail) =
-                oldItem == newItem
+                oldItem.id == newItem.id
 
         }
     }

@@ -98,10 +98,10 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 moneyType = _categoryType,
                 money = if (money.value != null) money.value!!.toInt() else 0,
                 category = selectedCategoryId,
-                address = "${selectedLocation?.formattedAddress ?: userLocation.getAddressLine(0)} ${selectedLocation?.name ?: ""}",
-                latitude = selectedLocation?.geometry?.location?.lat?.toFloat()
+                address = "${selectedLocation?.roadAddressName ?: userLocation.getAddressLine(0)} ${selectedLocation?.placeName ?: ""}",
+                latitude = selectedLocation?.lat?.toFloat()
                     ?: userLocation.latitude.toFloat(),
-                longitude = selectedLocation?.geometry?.location?.lng?.toFloat()
+                longitude = selectedLocation?.lng?.toFloat()
                     ?: userLocation.longitude.toFloat(),
                 content = content.value ?: "",
                 year = splitedStr[0].toInt(),
@@ -139,11 +139,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 val body = response.body()
 
                 body?.let {
-                    if (it.status == "OK") {
-                        data.postValue(Result.success(body.results))
-                    } else {
-                        data.postValue(Result.failure(Throwable()))
-                    }
+                    data.postValue(Result.success(body.documents))
                 }
             } else {
                 data.postValue(Result.failure(Throwable()))

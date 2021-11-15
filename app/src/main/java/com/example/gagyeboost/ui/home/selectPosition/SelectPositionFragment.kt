@@ -34,12 +34,12 @@ class SelectPositionFragment :
     private lateinit var googleMap: GoogleMap
     private val gpsUtils: GPSUtils by lazy { GPSUtils(requireContext()) }
     private val moveCameraToPlace: (PlaceDetail) -> Unit = {
-        val latLng = LatLng(it.geometry.location.lat, it.geometry.location.lng)
+        val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
 
         googleMap.let { map ->
             map.clear()
             map.addMarker(
-                MarkerOptions().position(latLng).title(it.formattedAddress)
+                MarkerOptions().position(latLng).title(it.roadAddressName)
             )
             map.animateCamera(newLatLng(latLng))
         }
