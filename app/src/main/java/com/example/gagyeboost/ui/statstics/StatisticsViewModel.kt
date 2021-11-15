@@ -10,9 +10,9 @@ import com.example.gagyeboost.model.data.StatRecordItem
 import com.example.gagyeboost.model.data.nothingEmoji
 import com.example.gagyeboost.ui.home.CustomCalendar
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.math.round
 
 class StatisticsViewModel(private val repository: Repository) : ViewModel() {
     private val currentYear = Calendar.getInstance().get(Calendar.YEAR)
@@ -73,7 +73,7 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
                         category.id,
                         category.emoji,
                         category.categoryName,
-                        it.second * 100 / sum,
+                        round(it.second.toDouble() * 100 / sum).toInt(),
                         it.second
                     )
                 })
