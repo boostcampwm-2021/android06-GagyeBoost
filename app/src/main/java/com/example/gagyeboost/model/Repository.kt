@@ -6,11 +6,11 @@ import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.Filter
 import com.example.gagyeboost.model.local.AccountBookDAO
-import com.example.gagyeboost.model.remote.GooglePlaceClient
+import com.example.gagyeboost.model.remote.KakaoAPIClient
 
 class Repository(
     private val accountBookDao: AccountBookDAO,
-    private val client: GooglePlaceClient
+    private val client: KakaoAPIClient
 ) {
 
     suspend fun addAccountBookData(accountBook: AccountBook) {
