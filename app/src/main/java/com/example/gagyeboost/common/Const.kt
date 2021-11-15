@@ -19,3 +19,8 @@ val formatter = DecimalFormat("###,###")
 // GPSUtils
 const val DEFAULT_LAT = 37.49724110935863
 const val DEFAULT_LNG = 127.02877164249468
+
+// StatisticsFragment, StatisticsViewModel
+const val ANIMATE_Y_TIME = 1500
+const val CHART_Y_AXIS_UNIT = 10000
+

@@ -62,5 +62,6 @@
     <string name="record_delete_dialog_message">내역을 삭제하시겠습니까?</string>
     <string name="monthly_statistics">월별 통계</string>
     <string name="daily_statistics">일별 통계</string>
+    <string name="chart_y_axis_unit">만원</string>
 
 </resources>

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gagyeboost.common.CHART_Y_AXIS_UNIT
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
@@ -55,11 +56,12 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
                         date
                     ).filter { it.moneyType == _selectedMoneyType.value }
 
-                if (accountDataList.isNotEmpty()) {
-                    val totalMoney =
-                        accountDataList.fold(0) { total, record: AccountBook -> total + record.money }
-                    dataList.add(Pair(date, totalMoney))
-                }
+                val totalMoney =
+                    accountDataList.fold(0) {
+                            total, record: AccountBook -> total + record.money
+                    } / CHART_Y_AXIS_UNIT
+
+                if (totalMoney > 0) dataList.add(Pair(date, totalMoney))
             }
             _dailyChartData.value = dataList
         }
