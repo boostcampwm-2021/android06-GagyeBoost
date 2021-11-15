@@ -9,7 +9,10 @@ import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.databinding.FragmentStatisticsBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.NumberPickerDialog
-import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -17,7 +20,7 @@ class StatisticsFragment :
     BaseFragment<FragmentStatisticsBinding>(com.example.gagyeboost.R.layout.fragment_statistics) {
     private val viewModel: StatisticsViewModel by viewModel()
     private lateinit var dialog: NumberPickerDialog
-    private lateinit var chartDaily: LineChart
+    private lateinit var chartDaily: BarChart
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,7 +38,6 @@ class StatisticsFragment :
         }
 
         chartDaily = binding.chartDailyStat
-        setDailyChart()
     }
 
     private fun setObservers() {
@@ -46,8 +48,12 @@ class StatisticsFragment :
         viewModel.yearMonthPair.observe(viewLifecycleOwner) {
             viewModel.setDailyChartData()
         }
+
+        viewModel.dailyChartData.observe(viewLifecycleOwner) {
+            setDailyChart(it)
+        }
     }
-    
+
     private fun setListeners() {
         binding.toggleGroupMoneyType.addOnButtonCheckedListener { _, checkedId, _ ->
             when (checkedId) {
@@ -81,7 +87,13 @@ class StatisticsFragment :
         }
     }
 
-    private fun setDailyChart() {
+    private fun setDailyChart(chartData: List<Pair<Int, Int>>) {
+        val dataSet = BarDataSet(
+            chartData.map { BarEntry(it.first.toFloat(), it.second.toFloat()) },
+            "hi"
+        )
+        val data = BarData(dataSet)
 
+        chartDaily.data = data
     }
 }
