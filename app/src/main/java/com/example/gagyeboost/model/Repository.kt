@@ -65,7 +65,7 @@ class Repository(
         val categoryList =
             accountBookDao.loadCategoryAllData(EXPENSE) + accountBookDao.loadCategoryAllData(INCOME)
         categoryList.forEach {
-            categoryMap.put(it.id, it)
+            categoryMap[it.id] = it
         }
         return categoryMap
     }

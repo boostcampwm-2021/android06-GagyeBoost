@@ -3,6 +3,7 @@ package com.example.gagyeboost.ui.statstics
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.ui.home.CustomCalendar
 import java.util.*
@@ -18,6 +19,12 @@ class StatisticsViewModel(private val repository: Repository): ViewModel() {
 
     private val calendar = CustomCalendar()
 
+    private val _selectedMoneyType = MutableLiveData(EXPENSE)
+    val selectedMoneyType: LiveData<Byte> = _selectedMoneyType
+
+    private val _dailyChartData = MutableLiveData<MutableMap<String, Int>>()
+    val dailyChartData: LiveData<MutableMap<String, Int>> = _dailyChartData
+
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
     }
@@ -29,4 +36,14 @@ class StatisticsViewModel(private val repository: Repository): ViewModel() {
         _yearAndMonth.value = stringDate
         _yearMonthPair.value = Pair(year, month)
     }
+
+    fun setDailyChartData() {
+
+    }
+
+    fun setSelectedMoneyType(type: Byte) {
+        _selectedMoneyType.value = type
+    }
+
+    private fun dateStringFormatter(date: Int) = "" + _yearMonthPair.value?.second + "." + date
 }
