@@ -31,7 +31,7 @@ class StatisticsFragment : BaseFragment<FragmentStatisticsBinding>(R.layout.frag
         }
         binding.toggleGroupMoneyType.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
-            viewModel.loadRecordList(if (checkedId == R.id.btn_expense) EXPENSE else INCOME)
+            viewModel.setType(if (checkedId == R.id.btn_expense) EXPENSE else INCOME)
         }
         binding.toggleGroupMoneyType.check(R.id.btn_expense)
         binding.rvRecordList.adapter = statResultAdapter
@@ -68,6 +68,13 @@ class StatisticsFragment : BaseFragment<FragmentStatisticsBinding>(R.layout.frag
                 //TODO chart 표현하기
 
             })
+            selectedType.observe(viewLifecycleOwner, {
+                viewModel.loadRecordList()
+            })
+            yearMonthPair.observe(viewLifecycleOwner, {
+                viewModel.loadRecordList()
+            })
+
         }
     }
 }

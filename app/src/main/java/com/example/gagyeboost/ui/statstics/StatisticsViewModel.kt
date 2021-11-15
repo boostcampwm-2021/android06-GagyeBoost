@@ -25,6 +25,9 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
 
     private val calendar = CustomCalendar()
 
+    private val _selectedType = MutableLiveData(0.toByte())
+    val selectedType: LiveData<Byte> = _selectedType
+
     private val _sortedStatRecordList = MutableLiveData<List<StatRecordItem>>()
     val sortedStatRecordList: LiveData<List<StatRecordItem>> = _sortedStatRecordList
 
@@ -40,9 +43,11 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
         _yearMonthPair.value = Pair(year, month)
     }
 
-    fun loadRecordList(type: Byte) {
+    fun loadRecordList() {
         viewModelScope.launch(IO) {
-            val categoryMap = repository.loadCategoryList(type).map { Pair(it.id, it) }.toMap()
+            val type = selectedType.value ?: 0
+            val categoryMap =
+                repository.loadCategoryList(type).map { Pair(it.id, it) }.toMap()
             val timePair = yearMonthPair.value ?: Pair(
                 currentYear,
                 Calendar.getInstance().get(Calendar.MONTH) + 1
@@ -73,5 +78,9 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
                     )
                 })
         }
+    }
+
+    fun setType(type: Byte) {
+        _selectedType.value = type
     }
 }
