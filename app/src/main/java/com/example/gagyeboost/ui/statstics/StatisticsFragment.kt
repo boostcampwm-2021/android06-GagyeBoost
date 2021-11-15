@@ -25,6 +25,10 @@ class StatisticsFragment : BaseFragment<FragmentStatisticsBinding>(R.layout.frag
         binding.tvYearAndMonth.setOnClickListener {
             setDialog()
         }
+        binding.toggleGroupMoneyType.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            println("$checkedId $isChecked")
+        }
+        binding.toggleGroupMoneyType.check(R.id.btn_expense)
     }
 
     private fun setDialog() {
