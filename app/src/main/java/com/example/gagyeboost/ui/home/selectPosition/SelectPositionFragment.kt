@@ -5,7 +5,6 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -77,16 +76,11 @@ class SelectPositionFragment :
                 if (viewModel.searchAddress.value!!.isNotEmpty()) {
                     binding.pbLoading.isVisible = true
 
-                    viewModel.fetchPlaceListData(view.text.toString()).observe(viewLifecycleOwner) {
-                        it.getOrNull()?.let { list ->
-                            val bottom = AddressResultFragment(list, viewModel, moveCameraToPlace)
-                            bottom.show(childFragmentManager, bottom.tag)
-                        } ?: run {
-                            Toast.makeText(requireContext(), "결과가 없습니다.", Toast.LENGTH_LONG).show()
+                    val bottom =
+                        AddressResultFragment(viewModel, moveCameraToPlace, view.text.toString()) {
+                            binding.pbLoading.isVisible = false
                         }
-
-                        binding.pbLoading.isVisible = false
-                    }
+                    bottom.show(childFragmentManager, bottom.tag)
                 }
             }
 

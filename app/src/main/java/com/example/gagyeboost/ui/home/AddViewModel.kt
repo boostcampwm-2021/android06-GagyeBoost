@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
@@ -12,6 +13,7 @@ import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.model.data.nothingEmoji
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
@@ -130,22 +132,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         return formatter.format(money.value?.toIntOrNull() ?: 0) + "원"
     }
 
-    fun fetchPlaceListData(input: String): LiveData<Result<List<PlaceDetail>>> {
-        val data = MutableLiveData<Result<List<PlaceDetail>>>()
-
-        viewModelScope.launch {
-            val response = repository.fetchPlaceListFromKeyword(input)
-            if (response.isSuccessful) {
-                val body = response.body()
-
-                body?.let {
-                    data.postValue(Result.success(body.documents))
-                }
-            } else {
-                data.postValue(Result.failure(Throwable()))
-            }
-        }
-
-        return data
-    }
+    fun fetchPlaceListData(input: String, latLng: LatLng, callback: () -> Unit) =
+        repository.fetchPlaceListFromKeyword(input, latLng, callback).cachedIn(viewModelScope)
 }

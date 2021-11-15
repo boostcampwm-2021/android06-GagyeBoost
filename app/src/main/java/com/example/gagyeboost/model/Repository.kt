@@ -1,15 +1,19 @@
 package com.example.gagyeboost.model
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.Filter
-import com.example.gagyeboost.model.data.PlaceDetailResponse
+import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.model.local.AccountBookDAO
 import com.example.gagyeboost.model.remote.KakaoAPIClient
-import retrofit2.Response
-import timber.log.Timber
+import com.example.gagyeboost.ui.home.selectPosition.AddressPagingSource
+import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.flow.Flow
 
 class Repository(
     private val accountBookDao: AccountBookDAO,
@@ -60,10 +64,14 @@ class Repository(
             filter.endLongitude
         )
 
-    suspend fun fetchPlaceListFromKeyword(input: String): Response<PlaceDetailResponse> {
-        val data = client.getGooglePlayService().fetchPlaceListFromKeyword(input)
-        Timber.d(data.body()?.meta.toString())
-        return data
+    fun fetchPlaceListFromKeyword(
+        input: String,
+        latLng: LatLng,
+        callback: () -> Unit
+    ): Flow<PagingData<PlaceDetail>> {
+        return Pager(PagingConfig(1)) {
+            AddressPagingSource(client.getGooglePlayService(), input, latLng, callback)
+        }.flow
     }
 
     suspend fun loadCategoryMap(): HashMap<Int, Category> {
