@@ -24,12 +24,11 @@ import com.google.maps.android.collections.MarkerManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.*
 
-
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
     private val viewModel: MapViewModel by sharedViewModel()
-    private lateinit var clusterManager: ClusterManager<MyItem>
+    private lateinit var clusterManager: ClusterManager<MyItem?>
     private lateinit var markerManager: MarkerManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -124,12 +123,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun setUpMap() {
         markerManager = MarkerManager(googleMap)
-        clusterManager = ClusterManager(requireContext(), googleMap, markerManager)
+        clusterManager = ClusterManager(context, googleMap, markerManager)
         googleMap.setOnCameraIdleListener(clusterManager)
         //TODO 내위치 설정
         val myLocation = LatLng(37.5642135, 127.0016985)
         // TODO 설정된 위치로 이동
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
+        clusterManager.renderer = MyClusterRenderer(context, googleMap, clusterManager)
     }
 
     private fun addItems() {
@@ -151,12 +151,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     private fun clickListener() {
-        clusterManager.setOnClusterItemClickListener { item: MyItem ->
+        clusterManager.setOnClusterItemClickListener { item: MyItem? ->
             // 마커 클릭
             Log.e("item click", "setOnClusterItemClickListener click")
             false
         }
-        clusterManager.setOnClusterClickListener { item: Cluster<MyItem> ->
+        clusterManager.setOnClusterClickListener { item: Cluster<MyItem?> ->
             //클러스터링 된 item 클릭
             Log.e("item click", "setOnClusterClickListener click")
             false
