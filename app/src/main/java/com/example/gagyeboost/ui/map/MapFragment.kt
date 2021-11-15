@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.map
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
@@ -17,15 +18,19 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.collections.MarkerManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.*
+
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
     private val viewModel: MapViewModel by sharedViewModel()
     private lateinit var clusterManager: ClusterManager<MyItem>
+    private lateinit var markerManager: MarkerManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -112,32 +117,25 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        val seoul = LatLng(37.5642135, 127.0016985)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15f))
-//        googleMap.setOnInfoWindowClickListener {
-//            viewModel.setSelectedDetail(
-//                it.position.latitude.toFloat(),
-//                it.position.longitude.toFloat()
-//            )
-//            val bottomSheet =
-//                MapDetailFragment(it.title ?: "", viewModel.selectedDetailList, viewModel)
-//            bottomSheet.show(childFragmentManager, bottomSheet.tag)
-//        }
-
-        setUpClusterer()
+        setUpMap()
         addItems()
-
+        clickListener()
     }
 
-    private fun setUpClusterer() {
-        clusterManager = ClusterManager(context, googleMap)
+    private fun setUpMap() {
+        markerManager = MarkerManager(googleMap)
+        clusterManager = ClusterManager(requireContext(), googleMap, markerManager)
         googleMap.setOnCameraIdleListener(clusterManager)
-//        googleMap.setOnMarkerClickListener(clusterManager)
+        //TODO 내위치 설정
+        val myLocation = LatLng(37.5642135, 127.0016985)
+        // TODO 설정된 위치로 이동
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
     }
 
     private fun addItems() {
         viewModel.dataMap.observe(viewLifecycleOwner) {
             googleMap.clear()
+            clusterManager.clearItems()
             val markerMap = viewModel.hashMapToMarkerMap(it)
             markerMap.forEach { (latLng, addrMoney) ->
                 val offsetItem =
@@ -149,6 +147,30 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                     )
                 clusterManager.addItem(offsetItem)
             }
+        }
+    }
+
+    private fun clickListener() {
+        clusterManager.setOnClusterItemClickListener { item: MyItem ->
+            // 마커 클릭
+            Log.e("item click", "setOnClusterItemClickListener click")
+            false
+        }
+        clusterManager.setOnClusterClickListener { item: Cluster<MyItem> ->
+            //클러스터링 된 item 클릭
+            Log.e("item click", "setOnClusterClickListener click")
+            false
+        }
+
+        clusterManager.markerCollection.setOnInfoWindowClickListener { marker ->
+            viewModel.setSelectedDetail(
+                marker.position.latitude.toFloat(),
+                marker.position.longitude.toFloat()
+            )
+            val bottomSheet =
+                MapDetailFragment(marker.title ?: "주소 없음", viewModel.selectedDetailList, viewModel)
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
+            Log.e("item click", "setOnInfoWindowClickListener click")
         }
     }
 }

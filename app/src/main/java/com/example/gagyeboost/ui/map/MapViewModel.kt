@@ -1,5 +1,6 @@
 package com.example.gagyeboost.ui.map
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
@@ -51,6 +52,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val selectedDetailList: LiveData<List<DateDetailItem>> = _selectedDetailList
 
     fun setSelectedDetail(latitude: Float, longitude: Float) {
+        Log.e("setSelectedDetail", "확인")
         val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
         _selectedDetailList.value = (dataList ?: listOf()).map {
             DateDetailItem(
