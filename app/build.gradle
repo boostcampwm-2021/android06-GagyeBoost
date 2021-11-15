@@ -35,6 +35,7 @@ android {
 
         manifestPlaceholders = [googleMapKey: googleMapKey]
         buildConfigField "String", "google_map_key", properties["google_map_key"]
+        buildConfigField "String", "kakao_api_key", properties["kakao_api_key"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
