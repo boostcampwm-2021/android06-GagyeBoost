@@ -35,8 +35,6 @@ class Repository(
     suspend fun updateAccountBookData(accountBook: AccountBook) =
         accountBookDao.updateAccountBookData(accountBook)
 
-    suspend fun loadAllCategoryID() = accountBookDao.loadAllCategoryID()
-
     suspend fun loadFilterData(filter: Filter): List<AccountBook> =
         accountBookDao.loadSearchData(
             filter.moneyType,

@@ -6,10 +6,12 @@ import android.view.View
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.databinding.DialogFilterCategoryBinding
 import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.MyItem
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.map.filter.CategoryFilterAdapter
 import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -34,14 +36,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        initObserver()
         setDialog()
-    }
-
-    private fun initObserver() {
-        viewModel.categoryList.observe(viewLifecycleOwner) {
-            viewModel.loadFilterData()
-        }
     }
 
     private fun initView() {
@@ -59,10 +54,24 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.btnMoneyType.setOnClickListener {
             showMoneyTypeDialog()
         }
-
         binding.btnPeriod.setOnClickListener {
             showDateRangePicker()
         }
+        binding.btnCategory.setOnClickListener {
+            showCategoryDialog()
+        }
+    }
+
+    private fun showCategoryDialog() {
+        val categoryBinding = DialogFilterCategoryBinding.inflate(layoutInflater)
+        val adapter = CategoryFilterAdapter()
+        categoryBinding.rvFilterCategory.adapter = adapter
+        adapter.submitList(viewModel.getCategoryList())
+
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(categoryBinding.root)
+        dialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        dialog.show()
     }
 
     private fun showMoneyTypeDialog() {
@@ -77,11 +86,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
         moneyTypeBinding.btnIncome.setOnClickListener {
             viewModel.byteMoneyType.value = INCOME
+            viewModel.setCategoryIDList(INCOME)
             viewModel.loadFilterData()
             dialog.dismiss()
         }
         moneyTypeBinding.btnExpense.setOnClickListener {
             viewModel.byteMoneyType.value = EXPENSE
+            viewModel.setCategoryIDList(EXPENSE)
             viewModel.loadFilterData()
             dialog.dismiss()
         }
@@ -96,6 +107,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
         dateRangePicker.addOnPositiveButtonClickListener { date ->
             viewModel.setPeriod(Date(date.first), Date(date.second))
+            viewModel.loadFilterData()
         }
     }
 
@@ -125,7 +137,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         markerManager = MarkerManager(googleMap)
         clusterManager = ClusterManager(context, googleMap, markerManager)
         googleMap.setOnCameraIdleListener(clusterManager)
-        //TODO 내위치 설정
+        // TODO 내위치 설정
         val myLocation = LatLng(37.5642135, 127.0016985)
         // TODO 설정된 위치로 이동
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
