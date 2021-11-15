@@ -3,13 +3,13 @@ package com.example.gagyeboost.ui.home
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.DateAlpha
 import com.example.gagyeboost.model.data.DateColor
 import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.model.data.DateItem
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import java.util.*
 
 class HomeViewModel(private val repository: Repository) : ViewModel() {
@@ -32,8 +32,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     private val _detailItemList = MutableLiveData<MutableList<DateDetailItem>>()
     val detailItemList: LiveData<MutableList<DateDetailItem>> = _detailItemList
-
-    private val formatter = DecimalFormat("###,###")
 
     private val _totalMonthIncome = MutableLiveData<String>()
     val totalMonthIncome: LiveData<String> = _totalMonthIncome
