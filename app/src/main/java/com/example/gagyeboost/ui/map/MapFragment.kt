@@ -1,23 +1,23 @@
 package com.example.gagyeboost.ui.map
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
+import com.example.gagyeboost.model.data.MyItem
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.maps.android.clustering.ClusterManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.*
 
@@ -25,6 +25,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private lateinit var googleMap: GoogleMap
     private val viewModel: MapViewModel by sharedViewModel()
+    private lateinit var clusterManager: ClusterManager<MyItem>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -113,31 +114,41 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         googleMap = map
         val seoul = LatLng(37.5642135, 127.0016985)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15f))
-        googleMap.setOnInfoWindowClickListener {
-            viewModel.setSelectedDetail(
-                it.position.latitude.toFloat(),
-                it.position.longitude.toFloat()
-            )
-            val bottomSheet =
-                MapDetailFragment(it.title ?: "", viewModel.selectedDetailList, viewModel)
-            bottomSheet.show(childFragmentManager, bottomSheet.tag)
-        }
+//        googleMap.setOnInfoWindowClickListener {
+//            viewModel.setSelectedDetail(
+//                it.position.latitude.toFloat(),
+//                it.position.longitude.toFloat()
+//            )
+//            val bottomSheet =
+//                MapDetailFragment(it.title ?: "", viewModel.selectedDetailList, viewModel)
+//            bottomSheet.show(childFragmentManager, bottomSheet.tag)
+//        }
 
+        setUpClusterer()
+        addItems()
+
+    }
+
+    private fun setUpClusterer() {
+        clusterManager = ClusterManager(context, googleMap)
+        googleMap.setOnCameraIdleListener(clusterManager)
+//        googleMap.setOnMarkerClickListener(clusterManager)
+    }
+
+    private fun addItems() {
         viewModel.dataMap.observe(viewLifecycleOwner) {
-            Log.e("fragment", it.toString())
             googleMap.clear()
             val markerMap = viewModel.hashMapToMarkerMap(it)
-            markerMap.forEach { markerData ->
-                googleMap.addMarker(
-                    MarkerOptions().position(
-                        LatLng(
-                            markerData.key.first.toDouble(),
-                            markerData.key.second.toDouble()
-                        )
-                    ).title(markerData.value.first).snippet(markerData.value.second)
-                )
+            markerMap.forEach { (latLng, addrMoney) ->
+                val offsetItem =
+                    MyItem(
+                        latLng.first.toDouble(),
+                        latLng.second.toDouble(),
+                        addrMoney.first,
+                        addrMoney.second
+                    )
+                clusterManager.addItem(offsetItem)
             }
         }
     }
-
 }
