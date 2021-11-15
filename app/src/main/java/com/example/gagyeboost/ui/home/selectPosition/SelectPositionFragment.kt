@@ -77,7 +77,7 @@ class SelectPositionFragment :
                 if (viewModel.searchAddress.value!!.isNotEmpty()) {
                     binding.pbLoading.isVisible = true
 
-                    viewModel.getPlaceListData(view.text.toString()).observe(viewLifecycleOwner) {
+                    viewModel.fetchPlaceListData(view.text.toString()).observe(viewLifecycleOwner) {
                         it.getOrNull()?.let { list ->
                             val bottom = AddressResultFragment(list, viewModel, moveCameraToPlace)
                             bottom.show(childFragmentManager, bottom.tag)

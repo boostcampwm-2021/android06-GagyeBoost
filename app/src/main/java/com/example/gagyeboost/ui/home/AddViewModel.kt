@@ -1,7 +1,6 @@
 package com.example.gagyeboost.ui.home
 
 import android.location.Address
-import android.location.Geocoder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -131,11 +130,11 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         return formatter.format(money.value?.toIntOrNull() ?: 0) + "원"
     }
 
-    fun getPlaceListData(input: String): LiveData<Result<List<PlaceDetail>>> {
+    fun fetchPlaceListData(input: String): LiveData<Result<List<PlaceDetail>>> {
         val data = MutableLiveData<Result<List<PlaceDetail>>>()
 
         viewModelScope.launch {
-            val response = repository.getPlaceListFromKeyword(input)
+            val response = repository.fetchPlaceListFromKeyword(input)
             if (response.isSuccessful) {
                 val body = response.body()
 

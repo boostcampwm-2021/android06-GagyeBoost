@@ -57,8 +57,8 @@ class Repository(
             filter.endLongitude
         )
 
-    suspend fun getPlaceListFromKeyword(input: String) =
-        client.getGooglePlayService().getPlaceListFromKeyword(input)
+    suspend fun fetchPlaceListFromKeyword(input: String) =
+        client.getGooglePlayService().fetchPlaceListFromKeyword(input)
 
     suspend fun loadCategoryMap(): HashMap<Int, Category> {
         val categoryMap = HashMap<Int, Category>()
