@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="m"
+            android:text="@string/meter"
             android:textColor="@color/green"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_distance"

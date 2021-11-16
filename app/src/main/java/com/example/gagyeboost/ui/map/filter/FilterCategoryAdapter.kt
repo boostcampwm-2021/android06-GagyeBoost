@@ -10,26 +10,56 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemRvFilterCategoryBinding
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.ui.map.MapViewModel
 
-class CategoryFilterAdapter : ListAdapter<Category, CategoryFilterAdapter.ViewHolder>(diffUtil) {
+class FilterCategoryAdapter(private val viewModel: MapViewModel) :
+    ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    private val initCategoryList: List<Int> = viewModel.categoryIDList.value ?: listOf()
+    val categoryList = initCategoryList.toMutableList()
+
+    fun setCategoryList(boolean: Boolean) {
+        categoryList.clear()
+        if (boolean) {
+            categoryList.addAll(initCategoryList)
+        }
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding =
             ItemRvFilterCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ViewHolder(binding)
+        return CategoryViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemRvFilterCategoryBinding) :
+    inner class CategoryViewHolder(private val binding: ItemRvFilterCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        private var currentItem: Category? = null
+
+        init {
+            binding.cbCategory.setOnCheckedChangeListener { buttonView, isChecked ->
+                currentItem?.let {
+                    if (isChecked) {
+                        categoryList.add(it.id)
+                    } else {
+                        categoryList.remove(it.id)
+                    }
+                    viewModel.categoryIDList.value = categoryList
+                }
+            }
+        }
+
         fun bind(categoryItem: Category) {
+            currentItem = categoryItem
             binding.category = categoryItem
             setCategoryColor()
+            binding.cbCategory.isChecked = categoryList.contains(categoryItem.id)
         }
 
         private fun setCategoryColor() {
@@ -68,5 +98,4 @@ class CategoryFilterAdapter : ListAdapter<Category, CategoryFilterAdapter.ViewHo
             }
         }
     }
-
 }

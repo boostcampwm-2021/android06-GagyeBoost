@@ -30,10 +30,13 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
             formatter.format(it) + "원"
         }
     }
+    // 필터로 보낼 id list
+    val categoryIDList = MutableLiveData<MutableList<Int>>()
+    // 화면에 보여줄 카테고리 리스트
+    private val categoryExpenseList = MutableLiveData<List<Category>>()
+    private val categoryIncomeList = MutableLiveData<List<Category>>()
 
-    val categoryIDList = MutableLiveData<List<Int>>()
-    val categoryExpenseList = MutableLiveData<List<Category>>()
-    val categoryIncomeList = MutableLiveData<List<Category>>()
+    var isAllCategory = true
 
     var startYear: Int = 1900
     var startMonth: Int = 1
@@ -46,7 +49,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endLatitude: Float = 200.0F
     var endLongitude: Float = 200.0F
 
-    val filterData = MutableLiveData<List<AccountBook>>()
+    private val filterData = MutableLiveData<List<AccountBook>>()
 
     // HashMap<좌표, 좌표에 해당하는 내역 list>
     val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> =
@@ -127,14 +130,14 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
             val incomeCategory = repository.loadCategoryList(INCOME)
             categoryExpenseList.postValue(expenseCategory)
             categoryIncomeList.postValue(incomeCategory)
-            categoryIDList.postValue(expenseCategory.map { it.id })
+            categoryIDList.postValue(expenseCategory.map { it.id }.toMutableList())
         }
     }
 
     fun setCategoryIDList(moneyType: Byte) {
         when (moneyType) {
-            INCOME -> categoryIDList.value = categoryIncomeList.value?.map { it.id }
-            EXPENSE -> categoryIDList.value = categoryExpenseList.value?.map { it.id }
+            INCOME -> categoryIDList.value = categoryIncomeList.value?.map { it.id }?.toMutableList()
+            EXPENSE -> categoryIDList.value = categoryExpenseList.value?.map { it.id }?.toMutableList()
         }
     }
 

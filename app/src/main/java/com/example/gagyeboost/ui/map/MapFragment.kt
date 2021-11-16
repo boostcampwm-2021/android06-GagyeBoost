@@ -6,12 +6,11 @@ import android.view.View
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
-import com.example.gagyeboost.databinding.DialogFilterCategoryBinding
 import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.MyItem
 import com.example.gagyeboost.ui.base.BaseFragment
-import com.example.gagyeboost.ui.map.filter.CategoryFilterAdapter
+import com.example.gagyeboost.ui.map.filter.FilterCategoryDialog
 import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -58,20 +57,10 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             showDateRangePicker()
         }
         binding.btnCategory.setOnClickListener {
-            showCategoryDialog()
+            val dialog = FilterCategoryDialog()
+            dialog.show(childFragmentManager, dialog.tag)
+            childFragmentManager.executePendingTransactions()
         }
-    }
-
-    private fun showCategoryDialog() {
-        val categoryBinding = DialogFilterCategoryBinding.inflate(layoutInflater)
-        val adapter = CategoryFilterAdapter()
-        categoryBinding.rvFilterCategory.adapter = adapter
-        adapter.submitList(viewModel.getCategoryList())
-
-        val dialog = BottomSheetDialog(requireContext())
-        dialog.setContentView(categoryBinding.root)
-        dialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        dialog.show()
     }
 
     private fun showMoneyTypeDialog() {
