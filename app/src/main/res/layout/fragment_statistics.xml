@@ -42,9 +42,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                app:checkedButton="@id/btn_expense"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_year_and_month"
+                app:selectionRequired="true"
                 app:singleSelection="true">
 
                 <Button
@@ -76,8 +76,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toggle_group_money_type" />
 
-            <View
-                android:id="@+id/temp_view"
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pie_chart_month_statistics"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_monthly_stat" />
@@ -86,9 +86,10 @@
                 android:id="@+id/rv_record_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintHeight_max="150dp"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/temp_view"
+                app:layout_constraintTop_toBottomOf="@id/pie_chart_month_statistics"
                 tools:listitem="@layout/item_stat_record" />
 
             <TextView

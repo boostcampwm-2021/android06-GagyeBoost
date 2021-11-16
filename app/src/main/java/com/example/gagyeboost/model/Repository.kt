@@ -16,7 +16,8 @@ class Repository(private val accountBookDao: AccountBookDAO) {
         accountBookDao.addCategoryData(category)
     }
 
-    suspend fun loadMonthExpense(year: Int, month: Int) = accountBookDao.loadMonthExpense(year, month)
+    suspend fun loadMonthExpense(year: Int, month: Int) =
+        accountBookDao.loadMonthExpense(year, month)
 
     suspend fun loadCategoryList(moneyType: Byte) = accountBookDao.loadCategoryAllData(moneyType)
 
@@ -27,4 +28,6 @@ class Repository(private val accountBookDao: AccountBookDAO) {
     }
 
     suspend fun loadCategoryData(id: Int) = accountBookDao.loadCategoryData(id)
+
+    suspend fun loadMonthData(year: Int, month: Int) = accountBookDao.loadMonthData(year, month)
 }
