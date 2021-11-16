@@ -80,3 +80,5 @@
 - [![Android](https://img.shields.io/badge/Android%20Studio-Arctic%20Fox%20%7C%202020.3.1%20Patch%203-blue)]()
 - [![Kotlin](https://img.shields.io/badge/language-kotlin-yellow)]()
 
+## 데모 영상
+- 2주차 스프린트: https://youtu.be/BN5JgnGBhhU

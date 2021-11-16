@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.home
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -40,7 +41,7 @@ class CustomCalendarAdapter(
 
         init {
             itemView.setOnClickListener {
-                if (getItem(adapterPosition).date > 0) {
+                if (adapterPosition >= 0 && getItem(adapterPosition).date > 0) {
                     selectedDatePosition = adapterPosition
                     viewModel.setSelectedDate(getItem(adapterPosition))
                     notifyDataSetChanged()
@@ -56,7 +57,6 @@ class CustomCalendarAdapter(
                 binding.tvDate.isGone = true
             }
             binding.executePendingBindings()
-
             setMoney(binding.tvIncome, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
             // setClickedDate()
@@ -67,6 +67,7 @@ class CustomCalendarAdapter(
             if (money == null) {
                 textView.isGone = true
             } else {
+                textView.isGone = false
                 textView.text = dec.format(money)
             }
         }

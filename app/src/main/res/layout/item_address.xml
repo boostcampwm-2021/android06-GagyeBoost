@@ -15,27 +15,57 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tv_address"
+            android:id="@+id/tv_place_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@{item.formattedAddress + ' ' + item.name }"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{item.placeName }"
             android:textColor="@color/black"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_distance"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="서울시 송파구 오금로" />
+            tools:text="치킨집" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0.5dp"
-            android:background="@color/gray2"
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:text="@{item.roadAddressName}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="@id/tv_place_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_place_name"
+            tools:text="서울 송파구 동남로" />
+
+
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.distance}"
+            android:textColor="@color/green"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tv_address"
+            app:layout_constraintEnd_toStartOf="@id/tv_m"
+            app:layout_constraintTop_toTopOf="@id/tv_place_name"
+            tools:text="300" />
+
+        <TextView
+            android:id="@+id/tv_m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="@string/meter"
+            android:textColor="@color/green"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tv_distance"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
