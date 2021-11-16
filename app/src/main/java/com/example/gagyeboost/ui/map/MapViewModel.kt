@@ -110,6 +110,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endLatitude = 200.0f
         endLongitude = 200.0f
         initLoadCategory()
+        setCategoryIDList(EXPENSE)
     }
 
     private fun initLoadCategory() {

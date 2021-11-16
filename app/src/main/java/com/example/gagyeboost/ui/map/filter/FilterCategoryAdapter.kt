@@ -11,20 +11,20 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemRvFilterCategoryBinding
 import com.example.gagyeboost.model.data.Category
 
-class CategoryFilterAdapter : ListAdapter<Category, CategoryFilterAdapter.ViewHolder>(diffUtil) {
+class FilterCategoryAdapter : ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding =
             ItemRvFilterCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ViewHolder(binding)
+        return CategoryViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemRvFilterCategoryBinding) :
+    class CategoryViewHolder(private val binding: ItemRvFilterCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(categoryItem: Category) {
@@ -68,5 +68,4 @@ class CategoryFilterAdapter : ListAdapter<Category, CategoryFilterAdapter.ViewHo
             }
         }
     }
-
 }
