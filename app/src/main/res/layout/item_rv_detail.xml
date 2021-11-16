@@ -5,18 +5,23 @@
 
     <data>
 
+        <import type="kotlin.jvm.functions.Function1" />
+        <import type="kotlin.Unit" />
+
         <variable
             name="item"
             type="com.example.gagyeboost.model.data.DateDetailItem" />
 
         <variable
-            name="category"
-            type="com.example.gagyeboost.model.data.Category" />
+            name="listener"
+            type="Function1&lt;Integer, Boolean>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_item_detail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{ _ -> listener.invoke(item.id) }">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/gl_start_vertical"
@@ -46,7 +51,7 @@
             tools:text="➕" />
 
         <TextView
-            android:id="@+id/tv_category"
+            android:id="@+id/tv_category_body"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
@@ -68,7 +73,7 @@
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_money"
-            app:layout_constraintStart_toEndOf="@id/tv_category"
+            app:layout_constraintStart_toEndOf="@id/tv_category_body"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="강아지 간식" />
 

@@ -1,19 +1,15 @@
 package com.example.gagyeboost.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.DateAlpha
 import com.example.gagyeboost.model.data.DateColor
 import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.model.data.DateItem
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import java.util.*
 
 class HomeViewModel(private val repository: Repository) : ViewModel() {
@@ -36,8 +32,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     private val _detailItemList = MutableLiveData<MutableList<DateDetailItem>>()
     val detailItemList: LiveData<MutableList<DateDetailItem>> = _detailItemList
-
-    private val formatter = DecimalFormat("###,###")
 
     private val _totalMonthIncome = MutableLiveData<String>()
     val totalMonthIncome: LiveData<String> = _totalMonthIncome
@@ -153,12 +147,12 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                     val category = repository.loadCategoryData(account.category)
                     list.add(
                         DateDetailItem(
-                            account.id.toString(),
+                            account.id,
                             category.emoji,
                             category.categoryName,
                             account.content,
                             formatter.format(account.money) + "원",
-                            account.moneyType == INCOME
+                            account.moneyType == INCOME,
                         )
                     )
                 }

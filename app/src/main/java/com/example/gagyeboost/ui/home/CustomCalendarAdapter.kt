@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.home
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -40,7 +41,7 @@ class CustomCalendarAdapter(
 
         init {
             itemView.setOnClickListener {
-                if (getItem(adapterPosition).date > 0) {
+                if (adapterPosition >= 0 && getItem(adapterPosition).date > 0) {
                     selectedDatePosition = adapterPosition
                     viewModel.setSelectedDate(getItem(adapterPosition))
                     notifyDataSetChanged()
@@ -56,10 +57,9 @@ class CustomCalendarAdapter(
                 binding.tvDate.isGone = true
             }
             binding.executePendingBindings()
-
             setMoney(binding.tvIncome, dateItem.income)
             setMoney(binding.tvExpense, dateItem.expense)
-//            setClickedDate()
+            // setClickedDate()
             setToday(dateItem)
         }
 
@@ -67,6 +67,7 @@ class CustomCalendarAdapter(
             if (money == null) {
                 textView.isGone = true
             } else {
+                textView.isGone = false
                 textView.text = dec.format(money)
             }
         }
@@ -102,7 +103,7 @@ class CustomCalendarAdapter(
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<DateItem>() {
             override fun areItemsTheSame(oldItem: DateItem, newItem: DateItem) =
-                oldItem.year == newItem.year && oldItem.month == newItem.month && oldItem.date == newItem.date
+                oldItem.date == newItem.date
 
             override fun areContentsTheSame(oldItem: DateItem, newItem: DateItem) =
                 oldItem == newItem

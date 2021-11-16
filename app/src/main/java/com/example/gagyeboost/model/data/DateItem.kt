@@ -9,3 +9,20 @@ data class DateItem(
     val color: String,
     val alpha: Float
 )
+
+data class Filter(
+    val moneyType: Byte,
+    val startYear: Int,
+    val startMonth: Int,
+    val startDay: Int,
+    val endYear: Int,
+    val endMonth: Int,
+    val endDay: Int,
+    val startLatitude: Float,
+    val startLongitude: Float,
+    val endLatitude: Float,
+    val endLongitude: Float,
+    val startMoney: Int,
+    val endMoney: Int,
+    val categoryList: List<Int>
+)

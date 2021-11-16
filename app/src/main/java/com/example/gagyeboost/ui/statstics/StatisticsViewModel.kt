@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gagyeboost.common.CHART_Y_AXIS_UNIT
+import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.StatRecordItem
 import com.example.gagyeboost.model.data.nothingEmoji
@@ -26,14 +29,18 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
 
     private val calendar = CustomCalendar()
 
-    private val _selectedType = MutableLiveData(0.toByte())
-    val selectedType: LiveData<Byte> = _selectedType
+    private val _selectedMoneyType = MutableLiveData(EXPENSE)
+    val selectedMoneyType: LiveData<Byte> = _selectedMoneyType
+
+    private val _dailyChartData = MutableLiveData<List<Pair<Int, Int>>>()
+    val dailyChartData: LiveData<List<Pair<Int, Int>>> = _dailyChartData
 
     private val _sortedStatRecordList = MutableLiveData<List<StatRecordItem>>()
     val sortedStatRecordList: LiveData<List<StatRecordItem>> = _sortedStatRecordList
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
+        setDailyChartData()
     }
 
     fun setYearAndMonth(year: Int, month: Int) {
@@ -44,9 +51,38 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
         _yearMonthPair.value = Pair(year, month)
     }
 
+    fun setDailyChartData() {
+        viewModelScope.launch {
+            val dataList = mutableListOf<Pair<Int, Int>>()
+            calendar.datesInMonth.forEach { date ->
+                // include only current month date
+                if (date < 0) return@forEach
+
+                val accountDataList =
+                    repository.loadDayData(
+                        _yearMonthPair.value?.first ?: 0,
+                        _yearMonthPair.value?.second ?: 0,
+                        date
+                    ).filter { it.moneyType == _selectedMoneyType.value }
+
+                val totalMoney =
+                    accountDataList.fold(0) {
+                            total, record: AccountBook -> total + record.money
+                    } / CHART_Y_AXIS_UNIT
+
+                if (totalMoney > 0) dataList.add(Pair(date, totalMoney))
+            }
+            _dailyChartData.value = dataList
+        }
+    }
+
+    fun setSelectedMoneyType(type: Byte) {
+        _selectedMoneyType.value = type
+    }
+
     fun loadRecordList() {
         viewModelScope.launch(IO) {
-            val type = selectedType.value ?: 0
+            val type = selectedMoneyType.value ?: 0
             val deferredCategory =
                 async { repository.loadCategoryList(type).map { Pair(it.id, it) }.toMap() }
             val timePair = yearMonthPair.value ?: Pair(
@@ -82,9 +118,5 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
                     )
                 })
         }
-    }
-
-    fun setType(type: Byte) {
-        _selectedType.value = type
     }
 }

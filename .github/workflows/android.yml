@@ -1,6 +1,10 @@
 name: Android CI
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
 
 jobs:
   build:
@@ -8,15 +12,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: set up JDK 11
-      uses: actions/setup-java@v2
-      with:
-        java-version: '11'
-        distribution: 'adopt'
-        cache: gradle
+      - uses: actions/checkout@v2
+      - name: set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew assembleDebug
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Get Key from Secrets
+        env:
+          google_map_key: ${{ secrets.API_KEY }}
+        run: echo google_map_key="$google_map_key" > ./local.properties
+
+      - name: Get KeyStore from Secrets
+        env:
+          storePassword: ${{ secrets.STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+          keyAlias: ${{ secrets.KEY_ALIAS }}
+          storeFile: ${{ secrets.STORE_FILE }}
+        run:
+          echo -e storePassword="$storePassword"\n
+          keyPassword="$keyPassword"\n
+          keyAlias="$keyAlias" > ./keystore.properties
+
+      - name: Build with Gradle
+        run: ./gradlew assembleDebug --stacktrace
