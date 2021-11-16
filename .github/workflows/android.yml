@@ -42,5 +42,8 @@ jobs:
           keyPassword="$keyPassword"\n
           keyAlias="$keyAlias" > ./keystore.properties
 
+      - name: print ls
+        run: ls
+
       - name: Build with Gradle
         run: ./gradlew assembleDebug --stacktrace
