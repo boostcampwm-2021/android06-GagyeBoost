@@ -11,10 +11,10 @@ import com.example.gagyeboost.model.remote.GooglePlaceClient
 import com.example.gagyeboost.model.remote.HeaderInterceptor
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.home.HomeViewModel
+import com.example.gagyeboost.ui.statstics.StatisticsViewModel
 import com.example.gagyeboost.ui.map.MapViewModel
 import okhttp3.logging.HttpLoggingInterceptor
 import com.example.gagyeboost.ui.home.detail.RecordDetailViewModel
-import com.example.gagyeboost.ui.statstics.StatisticsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
