@@ -18,24 +18,27 @@
             android:id="@+id/tv_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingVertical="10dp"
+            android:paddingStart="20dp"
             android:text="@{item.roadAddressName + ' ' + item.placeName }"
             android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="19sp"
+            app:layout_constraintEnd_toStartOf="@id/iv_arrow_right"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="서울시 송파구 오금로" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0.5dp"
-            android:background="@color/gray2"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <ImageView
+            android:id="@+id/iv_arrow_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_arrow_right"
+            app:layout_constraintBottom_toBottomOf="@id/tv_address"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/tv_address" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

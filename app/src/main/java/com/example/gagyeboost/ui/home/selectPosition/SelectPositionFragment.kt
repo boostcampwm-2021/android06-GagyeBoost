@@ -2,6 +2,7 @@ package com.example.gagyeboost.ui.home.selectPosition
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -14,6 +15,7 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.common.GPSUtils
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
 import com.example.gagyeboost.model.data.PlaceDetail
+import com.example.gagyeboost.ui.address.AddressResultActivity
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
@@ -71,20 +73,8 @@ class SelectPositionFragment :
             findNavController().popBackStack()
         }
 
-        binding.etAddress.setOnEditorActionListener { view, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                if (viewModel.searchAddress.value!!.isNotEmpty()) {
-                    binding.pbLoading.isVisible = true
-
-                    val bottom =
-                        AddressResultFragment(viewModel, moveCameraToPlace, view.text.toString()) {
-                            binding.pbLoading.isVisible = false
-                        }
-                    bottom.show(childFragmentManager, bottom.tag)
-                }
-            }
-
-            true
+        binding.btnSearch.setOnClickListener {
+            startActivity(Intent(requireContext(), AddressResultActivity::class.java))
         }
 
         binding.btnGps.setOnClickListener {
