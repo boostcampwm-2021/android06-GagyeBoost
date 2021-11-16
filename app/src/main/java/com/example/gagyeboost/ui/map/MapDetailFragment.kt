@@ -25,7 +25,7 @@ class MapDetailFragment(
         DetailAdapter {
             // TODO("MapDetailFragment 돌아왔을 때 수정사항 반영")
             startActivity(Intent(requireContext(), RecordDetailActivity::class.java).apply {
-                putExtra(DATE_DETAIL_ITEM_ID_KEY, id)
+                putExtra(DATE_DETAIL_ITEM_ID_KEY, it)
             })
             true
         }.apply {
