@@ -6,12 +6,11 @@ import android.view.View
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
-import com.example.gagyeboost.databinding.DialogFilterCategoryBinding
 import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.MyItem
 import com.example.gagyeboost.ui.base.BaseFragment
-import com.example.gagyeboost.ui.map.filter.CategoryFilterAdapter
+import com.example.gagyeboost.ui.map.filter.FilterCategoryDialog
 import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -24,6 +23,7 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.collections.MarkerManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 import java.util.*
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
@@ -58,20 +58,10 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             showDateRangePicker()
         }
         binding.btnCategory.setOnClickListener {
-            showCategoryDialog()
+            val dialog = FilterCategoryDialog()
+            dialog.show(childFragmentManager, dialog.tag)
+            childFragmentManager.executePendingTransactions()
         }
-    }
-
-    private fun showCategoryDialog() {
-        val categoryBinding = DialogFilterCategoryBinding.inflate(layoutInflater)
-        val adapter = CategoryFilterAdapter()
-        categoryBinding.rvFilterCategory.adapter = adapter
-        adapter.submitList(viewModel.getCategoryList())
-
-        val dialog = BottomSheetDialog(requireContext())
-        dialog.setContentView(categoryBinding.root)
-        dialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        dialog.show()
     }
 
     private fun showMoneyTypeDialog() {
@@ -165,12 +155,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private fun clickListener() {
         clusterManager.setOnClusterItemClickListener { item: MyItem? ->
             // 마커 클릭
-            Log.e("item click", "setOnClusterItemClickListener click")
+            Timber.e("setOnClusterItemClickListener click")
             false
         }
         clusterManager.setOnClusterClickListener { item: Cluster<MyItem?> ->
             //클러스터링 된 item 클릭
-            Log.e("item click", "setOnClusterClickListener click")
+            Timber.e("setOnClusterClickListener click")
             false
         }
 
@@ -184,7 +174,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                     viewModel.loadFilterData()
                 }
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
-            Log.e("item click", "setOnInfoWindowClickListener click")
+            Timber.e("setOnInfoWindowClickListener click")
         }
     }
 }
