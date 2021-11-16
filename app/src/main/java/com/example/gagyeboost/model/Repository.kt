@@ -57,6 +57,25 @@ class Repository(
             filter.endLongitude
         )
 
+    suspend fun loadFilterDataWithKeyword(filter: Filter, keyword: String) =
+        accountBookDao.loadSearchDataWithKeyword(
+            filter.moneyType,
+            filter.startYear,
+            filter.startMonth,
+            filter.startDay,
+            filter.endYear,
+            filter.endMonth,
+            filter.endDay,
+            filter.categoryList,
+            filter.startMoney,
+            filter.endMoney,
+            filter.startLatitude,
+            filter.startLongitude,
+            filter.endLatitude,
+            filter.endLongitude,
+            keyword
+        )
+
     suspend fun getPlaceListFromKeyword(input: String) =
         client.getGooglePlayService().getPlaceListFromKeyword(input)
 
