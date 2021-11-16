@@ -15,7 +15,16 @@ import com.example.gagyeboost.ui.map.MapViewModel
 class FilterCategoryAdapter(private val viewModel: MapViewModel) :
     ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
 
-    val categoryList = viewModel.categoryIDList.value ?: mutableListOf()
+    private val initCategoryList: List<Int> = viewModel.categoryIDList.value ?: listOf()
+    val categoryList = initCategoryList.toMutableList()
+
+    fun setCategoryList(boolean: Boolean) {
+        categoryList.clear()
+        if (boolean) {
+            categoryList.addAll(initCategoryList)
+        }
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding =

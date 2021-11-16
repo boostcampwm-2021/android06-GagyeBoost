@@ -46,6 +46,17 @@ class FilterCategoryDialog : BottomSheetDialogFragment() {
         this.dialog?.setOnCancelListener {
             viewModel.loadFilterData()
         } ?: Log.e("map fragment", "dialog setOnCancelListener")
+
+        clickListener()
+    }
+
+    private fun clickListener() {
+        binding.tvSelectAll.setOnClickListener {
+            adapter.setCategoryList(true)
+        }
+        binding.tvSelectClear.setOnClickListener {
+            adapter.setCategoryList(false)
+        }
     }
 
     override fun onDestroyView() {

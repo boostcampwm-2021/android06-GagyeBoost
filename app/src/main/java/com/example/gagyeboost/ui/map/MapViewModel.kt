@@ -33,8 +33,8 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     // 필터로 보낼 id list
     val categoryIDList = MutableLiveData<MutableList<Int>>()
     // 화면에 보여줄 카테고리 리스트
-    val categoryExpenseList = MutableLiveData<List<Category>>()
-    val categoryIncomeList = MutableLiveData<List<Category>>()
+    private val categoryExpenseList = MutableLiveData<List<Category>>()
+    private val categoryIncomeList = MutableLiveData<List<Category>>()
 
     var isAllCategory = true
 
