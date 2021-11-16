@@ -31,7 +31,7 @@ android {
         minSdk 21
         targetSdk 30
         versionCode 1
-        versionName "1.0.1"
+        versionName "1.0.2"
 
         manifestPlaceholders = [googleMapKey: googleMapKey]
         buildConfigField "String", "google_map_key", properties["google_map_key"]
