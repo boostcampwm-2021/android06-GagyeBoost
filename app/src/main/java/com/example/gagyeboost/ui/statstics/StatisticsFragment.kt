@@ -14,20 +14,23 @@ import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.NumberPickerDialog
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class StatisticsFragment :
-    BaseFragment<FragmentStatisticsBinding>(com.example.gagyeboost.R.layout.fragment_statistics) {
+    BaseFragment<FragmentStatisticsBinding>(R.layout.fragment_statistics) {
     private val viewModel: StatisticsViewModel by viewModel()
     private lateinit var dialog: NumberPickerDialog
     private val statResultAdapter = StatResultAdapter()
     private lateinit var chartDaily: BarChart
+    private lateinit var chartMonthly: PieChart
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,14 +43,18 @@ class StatisticsFragment :
         dialog = NumberPickerDialog(binding.root.context)
 
         binding.viewModel = viewModel
-        binding.tvYearAndMonth.setOnClickListener {
-            setDialog()
+
+        with(binding) {
+            tvYearAndMonth.setOnClickListener {
+                setDialog()
+            }
+
+            toggleGroupMoneyType.check(R.id.btn_expense)
+            rvRecordList.adapter = statResultAdapter
+
+            chartDaily = chartDailyStat
+            chartMonthly = pieChartMonthStatistics
         }
-
-        binding.toggleGroupMoneyType.check(R.id.btn_expense)
-        binding.rvRecordList.adapter = statResultAdapter
-
-        chartDaily = binding.chartDailyStat
     }
 
     private fun setObservers() {
@@ -139,9 +146,10 @@ class StatisticsFragment :
             val chartDataSet = BarDataSet(
                 chartData.map { BarEntry(it.first.toFloat(), it.second.toFloat()) },
                 ""
-            )
-            chartDataSet.colors = ColorTemplate.VORDIPLOM_COLORS.toList()
-            chartDataSet.setDrawValues(false)
+            ).apply {
+                colors = ColorTemplate.VORDIPLOM_COLORS.toList()
+                setDrawValues(false)
+            }
 
             val resultData = BarData(chartDataSet)
 
@@ -154,34 +162,41 @@ class StatisticsFragment :
             data = resultData
             notifyDataSetChanged()
 
-            setVisibleXRangeMaximum(8F)
+           // setVisibleXRangeMaximum(8F)
         }
     }
 
     private fun initPieChart(recordList: List<StatRecordItem>) {
-        binding.pieChartMonthStatistics.apply {
+        chartMonthly.apply {
+            val colorList = ColorTemplate.MATERIAL_COLORS.toList() + ColorTemplate.COLORFUL_COLORS.toList()
             setUsePercentValues(true) // true : 백분율로 표시, false : 값으로 표시
             description.isEnabled = false
             setExtraOffsets(5f, 5f, 5f, 5f)
+            legend.isEnabled = false
+            setUsePercentValues(true)
 
             isDragDecelerationEnabled = false // 드래그 시 마찰 계수 적용 여부
             dragDecelerationFrictionCoef = 0.95f // 드래그 시 마찰계수
 
             setHoleColor(Color.WHITE)
+            setEntryLabelColor(Color.BLACK)
 
             animateY(ANIMATE_Y_TIME, Easing.EaseInOutCubic)
             val dataSet = PieDataSet(
-                recordList.map { PieEntry(it.totalMoney.toFloat(), it.categoryName) },
+                recordList.map { PieEntry(it.totalMoney.toFloat(), it.categoryIcon) },
                 ""
             ).apply {
                 sliceSpace = 3f
                 selectionShift = 5f
-                colors = (ColorTemplate.JOYFUL_COLORS.toMutableList())
+                xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+                colors = colorList
             }
 
             val data = PieData(dataSet).apply {
-                setValueTextSize(12f)
-                setValueTextColor(Color.BLACK)
+                setValueTextSize(14F)
+                setValueTextColor(Color.WHITE)
+                setEntryLabelTextSize(18F)
+                setValueFormatter(PercentFormatter(chartMonthly))
             }
 
             setData(data)
