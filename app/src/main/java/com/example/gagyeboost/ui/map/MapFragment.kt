@@ -1,7 +1,6 @@
 package com.example.gagyeboost.ui.map
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE

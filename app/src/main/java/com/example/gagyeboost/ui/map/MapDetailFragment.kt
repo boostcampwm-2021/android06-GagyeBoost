@@ -1,13 +1,15 @@
 package com.example.gagyeboost.ui.map
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
+import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
 import com.example.gagyeboost.databinding.DialogMapBottomDetailBinding
 import com.example.gagyeboost.model.data.DateDetailItem
+import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class MapDetailFragment(
