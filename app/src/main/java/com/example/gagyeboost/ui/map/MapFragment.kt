@@ -23,6 +23,7 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.collections.MarkerManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 import java.util.*
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
@@ -154,12 +155,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private fun clickListener() {
         clusterManager.setOnClusterItemClickListener { item: MyItem? ->
             // 마커 클릭
-            Log.e("item click", "setOnClusterItemClickListener click")
+            Timber.e("setOnClusterItemClickListener click")
             false
         }
         clusterManager.setOnClusterClickListener { item: Cluster<MyItem?> ->
             //클러스터링 된 item 클릭
-            Log.e("item click", "setOnClusterClickListener click")
+            Timber.e("setOnClusterClickListener click")
             false
         }
 
@@ -171,7 +172,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             val bottomSheet =
                 MapDetailFragment(marker.title ?: "주소 없음", viewModel.selectedDetailList, viewModel)
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
-            Log.e("item click", "setOnInfoWindowClickListener click")
+            Timber.e("setOnInfoWindowClickListener click")
         }
     }
 }

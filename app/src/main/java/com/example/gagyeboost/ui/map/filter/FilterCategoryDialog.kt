@@ -1,7 +1,6 @@
 package com.example.gagyeboost.ui.map.filter
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import com.example.gagyeboost.databinding.DialogFilterCategoryBinding
 import com.example.gagyeboost.ui.map.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class FilterCategoryDialog : BottomSheetDialogFragment() {
 
@@ -45,7 +45,7 @@ class FilterCategoryDialog : BottomSheetDialogFragment() {
 
         this.dialog?.setOnCancelListener {
             viewModel.loadFilterData()
-        } ?: Log.e("map fragment", "dialog setOnCancelListener")
+        } ?: Timber.e("dialog setOnCancelListener")
 
         clickListener()
     }
