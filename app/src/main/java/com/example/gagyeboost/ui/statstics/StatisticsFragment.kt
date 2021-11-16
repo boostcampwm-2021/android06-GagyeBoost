@@ -154,7 +154,7 @@ class StatisticsFragment :
 
             val resultData = BarData(chartDataSet)
 
-            val barWidth = resources.getDimensionPixelSize(R.dimen.chart_bar_width);
+            val barWidth = resources.getDimensionPixelSize(R.dimen.chart_bar_width)
             val count = chartDataSet.entryCount.toFloat()
             val totalWidth = binding.chartDailyStat.width
             val ratio = barWidth * count / totalWidth
@@ -163,13 +163,14 @@ class StatisticsFragment :
             data = resultData
             notifyDataSetChanged()
 
-           // setVisibleXRangeMaximum(8F)
+            // setVisibleXRangeMaximum(8F)
         }
     }
 
     private fun initPieChart(recordList: List<StatRecordItem>) {
         chartMonthly.apply {
-            val colorList = ColorTemplate.MATERIAL_COLORS.toList() + ColorTemplate.COLORFUL_COLORS.toList()
+            val colorList =
+                ColorTemplate.MATERIAL_COLORS.toList() + ColorTemplate.COLORFUL_COLORS.toList()
             setUsePercentValues(true) // true : 백분율로 표시, false : 값으로 표시
             description.isEnabled = false
             setExtraOffsets(5f, 5f, 5f, 5f)
@@ -184,7 +185,12 @@ class StatisticsFragment :
 
             animateY(ANIMATE_Y_TIME, Easing.EaseInOutCubic)
             val dataSet = PieDataSet(
-                recordList.map { PieEntry(it.totalMoney.toFloat(), it.categoryIcon) },
+                recordList.map {
+                    PieEntry(
+                        it.totalMoney.replace(",", "").toFloat(),
+                        it.categoryIcon
+                    )
+                },
                 ""
             ).apply {
                 sliceSpace = 3f
@@ -194,6 +200,7 @@ class StatisticsFragment :
 
                 valueLinePart1Length = 0.4f
                 valueLinePart2Length = 0.3f
+                valueLineWidth = 2f
                 isUsingSliceColorAsValueLineColor = true
             }
 
