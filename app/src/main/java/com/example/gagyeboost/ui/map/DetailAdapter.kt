@@ -28,11 +28,18 @@ class DetailAdapter(private val longClickListener: (Int) -> (Boolean)) :
     inner class DetailViewHolder(private val binding: ItemRvDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: DateDetailItem) {
-            binding.item = item
+        private lateinit var item: DateDetailItem
+
+        init {
             binding.constraintItemDetail.setOnLongClickListener {
-                longClickListener(item.id.toInt())
+                if (::item.isInitialized) longClickListener(item.id)
+                else false
             }
+        }
+
+        fun bind(item: DateDetailItem) {
+            this.item = item
+            binding.item = item
         }
     }
 

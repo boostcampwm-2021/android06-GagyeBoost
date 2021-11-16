@@ -19,3 +19,6 @@ val formatter = DecimalFormat("###,###")
 // GPSUtils
 const val DEFAULT_LAT = 37.49724110935863
 const val DEFAULT_LNG = 127.02877164249468
+
+// INTENT
+const val INTENT_EXTRA_PLACE_DETAIL = "INTENT_EXTRA_PLACE_DETAIL"

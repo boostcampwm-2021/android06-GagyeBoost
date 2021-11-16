@@ -1,6 +1,5 @@
 package com.example.gagyeboost.ui.map
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
@@ -10,6 +9,7 @@ import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.model.data.Filter
+import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -56,17 +56,25 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val selectedDetailList: LiveData<List<DateDetailItem>> = _selectedDetailList
 
     fun setSelectedDetail(latitude: Float, longitude: Float) {
-        Log.e("setSelectedDetail", "확인")
-        val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
-        _selectedDetailList.value = (dataList ?: listOf()).map {
-            DateDetailItem(
-                it.id,
-                "\uD83E\uDD70",
-                "밥",
-                it.content,
-                it.money.toString(),
-                it.moneyType == INCOME
-            )
+        viewModelScope.launch {
+            val categoryMap = repository.loadCategoryMap()
+            val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
+            _selectedDetailList.value = (dataList ?: listOf()).map {
+                val category = categoryMap[it.category] ?: Category(
+                    it.category,
+                    categoryName = "NULL",
+                    emoji = nothingEmoji,
+                    it.moneyType
+                )
+                DateDetailItem(
+                    it.id,
+                    category.emoji,
+                    category.categoryName,
+                    it.content,
+                    it.money.toString(),
+                    it.moneyType == INCOME
+                )
+            }
         }
     }
 
@@ -94,6 +102,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         return markerMap
     }
 
+    //viewModel 공유하면 다시 map화면 돌아왔을때 init
     fun setInitData() {
         byteMoneyType.value = EXPENSE
         intStartMoney.value = 0
@@ -104,7 +113,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endYear = startYear
         endMonth = startMonth
         endDay = Calendar.getInstance().getActualMaximum(Calendar.DATE)
-        // TODO 화면에 보이는 위도/경도로 설정 해야함
+        // 화면에 보이는 위도/경도로 설정 해야함
         startLatitude = 0.0f
         startLongitude = 0.0f
         endLatitude = 200.0f

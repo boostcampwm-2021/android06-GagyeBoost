@@ -1,14 +1,23 @@
 package com.example.gagyeboost.model
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.Filter
+import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.model.local.AccountBookDAO
-import com.example.gagyeboost.model.remote.GooglePlaceClient
+import com.example.gagyeboost.model.remote.KakaoAPIClient
+import com.example.gagyeboost.ui.home.selectPosition.AddressPagingSource
+import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.flow.Flow
 
 class Repository(
     private val accountBookDao: AccountBookDAO,
-    private val client: GooglePlaceClient
+    private val client: KakaoAPIClient
 ) {
 
     suspend fun addAccountBookData(accountBook: AccountBook) {
@@ -53,6 +62,23 @@ class Repository(
             filter.endLongitude
         )
 
-    suspend fun getPlaceListFromKeyword(input: String) =
-        client.getGooglePlayService().getPlaceListFromKeyword(input)
+    fun fetchPlaceListFromKeyword(
+        input: String,
+        latLng: LatLng,
+        callback: (Boolean) -> Unit
+    ): Flow<PagingData<PlaceDetail>> {
+        return Pager(PagingConfig(1)) {
+            AddressPagingSource(client.getKakaoApiService(), input, latLng, callback)
+        }.flow
+    }
+
+    suspend fun loadCategoryMap(): HashMap<Int, Category> {
+        val categoryMap = HashMap<Int, Category>()
+        val categoryList =
+            accountBookDao.loadCategoryAllData(EXPENSE) + accountBookDao.loadCategoryAllData(INCOME)
+        categoryList.forEach {
+            categoryMap.put(it.id, it)
+        }
+        return categoryMap
+    }
 }
