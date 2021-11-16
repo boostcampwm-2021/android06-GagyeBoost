@@ -145,8 +145,16 @@ class StatisticsFragment :
 
             val resultData = BarData(chartDataSet)
 
+            val barWidth = resources.getDimensionPixelSize(R.dimen.chart_bar_width);
+            val count = chartDataSet.entryCount.toFloat()
+            val totalWidth = binding.chartDailyStat.width
+            val ratio = barWidth * count / totalWidth
+            resultData.barWidth = ratio
+
             data = resultData
             notifyDataSetChanged()
+
+            setVisibleXRangeMaximum(8F)
         }
     }
 
