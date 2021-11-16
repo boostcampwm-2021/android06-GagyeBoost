@@ -180,7 +180,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                 marker.position.longitude.toFloat()
             )
             val bottomSheet =
-                MapDetailFragment(marker.title ?: "주소 없음", viewModel.selectedDetailList, viewModel)
+                MapDetailFragment(marker.title ?: "주소 없음", viewModel.selectedDetailList, viewModel) {
+                    viewModel.loadFilterData()
+                }
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
             Log.e("item click", "setOnInfoWindowClickListener click")
         }
