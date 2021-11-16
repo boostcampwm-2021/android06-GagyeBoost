@@ -59,6 +59,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.btnCategory.setOnClickListener {
             val dialog = FilterCategoryDialog()
             dialog.show(childFragmentManager, dialog.tag)
+            childFragmentManager.executePendingTransactions()
         }
     }
 

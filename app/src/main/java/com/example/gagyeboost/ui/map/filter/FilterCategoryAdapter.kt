@@ -15,7 +15,7 @@ import com.example.gagyeboost.ui.map.MapViewModel
 class FilterCategoryAdapter(private val viewModel: MapViewModel) :
     ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
 
-    val checkMap = hashMapOf<Category, Boolean>()
+    val categoryList = viewModel.categoryIDList.value ?: mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding =
@@ -31,12 +31,17 @@ class FilterCategoryAdapter(private val viewModel: MapViewModel) :
     inner class CategoryViewHolder(private val binding: ItemRvFilterCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        var currentItem: Category? = null
+        private var currentItem: Category? = null
 
         init {
             binding.cbCategory.setOnCheckedChangeListener { buttonView, isChecked ->
                 currentItem?.let {
-                    checkMap[it] = isChecked
+                    if (isChecked) {
+                        categoryList.add(it.id)
+                    } else {
+                        categoryList.remove(it.id)
+                    }
+                    viewModel.categoryIDList.value = categoryList
                 }
             }
         }
@@ -45,7 +50,7 @@ class FilterCategoryAdapter(private val viewModel: MapViewModel) :
             currentItem = categoryItem
             binding.category = categoryItem
             setCategoryColor()
-            binding.cbCategory.isChecked = checkMap[categoryItem] ?: true
+            binding.cbCategory.isChecked = categoryList.contains(categoryItem.id)
         }
 
         private fun setCategoryColor() {
