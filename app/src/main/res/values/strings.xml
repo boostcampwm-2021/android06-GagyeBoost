@@ -65,4 +65,6 @@
     <string name="chart_y_axis_unit">만원</string>
     <string name="total_expense">총 지출</string>
     <string name="total_income">총 수입</string>
+    <string name="show_all">전체 보기</string>
+    <string name="hide">숨기기</string>
 </resources>

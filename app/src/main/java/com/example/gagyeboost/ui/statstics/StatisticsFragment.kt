@@ -78,6 +78,11 @@ class StatisticsFragment :
             dailyChartData.observe(viewLifecycleOwner) {
                 setDailyChart(it)
             }
+
+            isShowingAllData.observe(viewLifecycleOwner) {
+                statResultAdapter.isShowingAllList = it
+                statResultAdapter.notifyDataSetChanged()
+            }
         }
     }
 
@@ -85,6 +90,10 @@ class StatisticsFragment :
         binding.toggleGroupMoneyType.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
             viewModel.setSelectedMoneyType(if (checkedId == R.id.btn_expense) EXPENSE else INCOME)
+        }
+
+        binding.btnShowRecordList.setOnClickListener {
+            viewModel.setDataListState()
         }
     }
 

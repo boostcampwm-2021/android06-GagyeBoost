@@ -42,6 +42,9 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
     private val _totalMoneyAmount = MutableLiveData<String>()
     val totalMoneyAmount: LiveData<String> = _totalMoneyAmount
 
+    private val _isShowingAllData = MutableLiveData(false)
+    val isShowingAllData: LiveData<Boolean> = _isShowingAllData
+
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
         setDailyChartData()
@@ -121,9 +124,14 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
                         category.emoji,
                         category.categoryName,
                         round(it.second.toDouble() * 100 / sum).toInt(),
-                        it.second
+                        formatter.format(it.second)
                     )
                 })
         }
+    }
+
+    fun setDataListState() {
+        val isShowingAll = _isShowingAllData.value ?: false
+        _isShowingAllData.value = !isShowingAll
     }
 }
