@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.map.MapViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,6 +17,7 @@
         <CheckBox
             android:id="@+id/cb_total"
             android:layout_width="wrap_content"
+            android:checked="@={viewModel.allCategory}"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
@@ -26,7 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:text="@string/expense"
+            android:text="@{viewModel.intMoneyType == 0 ? @string/expense : @string/earnings}"
+            android:textColor="@color/gray1"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/rv_filter_category"

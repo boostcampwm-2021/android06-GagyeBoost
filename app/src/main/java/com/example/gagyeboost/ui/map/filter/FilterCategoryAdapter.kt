@@ -10,8 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemRvFilterCategoryBinding
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.ui.map.MapViewModel
 
-class FilterCategoryAdapter : ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
+class FilterCategoryAdapter(private val viewModel: MapViewModel) :
+    ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
+
+    val checkMap = hashMapOf<Category, Boolean>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding =
@@ -24,12 +28,24 @@ class FilterCategoryAdapter : ListAdapter<Category, FilterCategoryAdapter.Catego
         holder.bind(getItem(position))
     }
 
-    class CategoryViewHolder(private val binding: ItemRvFilterCategoryBinding) :
+    inner class CategoryViewHolder(private val binding: ItemRvFilterCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        var currentItem: Category? = null
+
+        init {
+            binding.cbCategory.setOnCheckedChangeListener { buttonView, isChecked ->
+                currentItem?.let {
+                    checkMap[it] = isChecked
+                }
+            }
+        }
+
         fun bind(categoryItem: Category) {
+            currentItem = categoryItem
             binding.category = categoryItem
             setCategoryColor()
+            binding.cbCategory.isChecked = checkMap[categoryItem] ?: true
         }
 
         private fun setCategoryColor() {

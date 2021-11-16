@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.map.filter
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,18 +31,17 @@ class FilterCategoryDialog : BottomSheetDialogFragment() {
             null,
             false
         )
-        adapter = FilterCategoryAdapter()
+        adapter = FilterCategoryAdapter(viewModel)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.rvFilterCategory.adapter = adapter
+        binding.viewModel = viewModel
 
-        viewModel.categoryIDList.observe(viewLifecycleOwner) {
-            adapter.submitList(viewModel.getCategoryList())
-        }
+        binding.rvFilterCategory.adapter = adapter
+        adapter.submitList(viewModel.getCategoryList())
     }
 
     override fun onDestroyView() {
