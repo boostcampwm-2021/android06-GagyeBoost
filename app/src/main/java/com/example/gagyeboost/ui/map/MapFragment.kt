@@ -1,22 +1,28 @@
 package com.example.gagyeboost.ui.map
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.databinding.DialogFilterCategoryBinding
 import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
+import com.example.gagyeboost.model.data.MyItem
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.map.filter.CategoryFilterAdapter
 import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.maps.android.clustering.Cluster
+import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.collections.MarkerManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.*
 
@@ -24,18 +30,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private lateinit var googleMap: GoogleMap
     private val viewModel: MapViewModel by sharedViewModel()
+    private lateinit var clusterManager: ClusterManager<MyItem?>
+    private lateinit var markerManager: MarkerManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        initObserver()
         setDialog()
-    }
-
-    private fun initObserver() {
-        viewModel.categoryList.observe(viewLifecycleOwner) {
-            viewModel.loadFilterData()
-        }
     }
 
     private fun initView() {
@@ -53,10 +54,24 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.btnMoneyType.setOnClickListener {
             showMoneyTypeDialog()
         }
-
         binding.btnPeriod.setOnClickListener {
             showDateRangePicker()
         }
+        binding.btnCategory.setOnClickListener {
+            showCategoryDialog()
+        }
+    }
+
+    private fun showCategoryDialog() {
+        val categoryBinding = DialogFilterCategoryBinding.inflate(layoutInflater)
+        val adapter = CategoryFilterAdapter()
+        categoryBinding.rvFilterCategory.adapter = adapter
+        adapter.submitList(viewModel.getCategoryList())
+
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(categoryBinding.root)
+        dialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        dialog.show()
     }
 
     private fun showMoneyTypeDialog() {
@@ -71,11 +86,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
         moneyTypeBinding.btnIncome.setOnClickListener {
             viewModel.byteMoneyType.value = INCOME
+            viewModel.setCategoryIDList(INCOME)
             viewModel.loadFilterData()
             dialog.dismiss()
         }
         moneyTypeBinding.btnExpense.setOnClickListener {
             viewModel.byteMoneyType.value = EXPENSE
+            viewModel.setCategoryIDList(EXPENSE)
             viewModel.loadFilterData()
             dialog.dismiss()
         }
@@ -90,6 +107,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
         dateRangePicker.addOnPositiveButtonClickListener { date ->
             viewModel.setPeriod(Date(date.first), Date(date.second))
+            viewModel.loadFilterData()
         }
     }
 
@@ -110,32 +128,61 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        val seoul = LatLng(37.5642135, 127.0016985)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15f))
-        googleMap.setOnInfoWindowClickListener {
-            viewModel.setSelectedDetail(
-                it.position.latitude.toFloat(),
-                it.position.longitude.toFloat()
-            )
-            val bottomSheet =
-                MapDetailFragment(it.title ?: "", viewModel.selectedDetailList, viewModel)
-            bottomSheet.show(childFragmentManager, bottomSheet.tag)
-        }
+        setUpMap()
+        addItems()
+        clickListener()
+    }
 
+    private fun setUpMap() {
+        markerManager = MarkerManager(googleMap)
+        clusterManager = ClusterManager(context, googleMap, markerManager)
+        googleMap.setOnCameraIdleListener(clusterManager)
+        // TODO 내위치 설정
+        val myLocation = LatLng(37.5642135, 127.0016985)
+        // TODO 설정된 위치로 이동
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
+        clusterManager.renderer = MyClusterRenderer(context, googleMap, clusterManager)
+    }
+
+    private fun addItems() {
         viewModel.dataMap.observe(viewLifecycleOwner) {
             googleMap.clear()
+            clusterManager.clearItems()
             val markerMap = viewModel.hashMapToMarkerMap(it)
-            markerMap.forEach { markerData ->
-                googleMap.addMarker(
-                    MarkerOptions().position(
-                        LatLng(
-                            markerData.key.first.toDouble(),
-                            markerData.key.second.toDouble()
-                        )
-                    ).title(markerData.value.first).snippet(markerData.value.second)
-                )
+            markerMap.forEach { (latLng, addrMoney) ->
+                val offsetItem =
+                    MyItem(
+                        latLng.first.toDouble(),
+                        latLng.second.toDouble(),
+                        addrMoney.first,
+                        addrMoney.second
+                    )
+                clusterManager.addItem(offsetItem)
             }
         }
     }
 
+    private fun clickListener() {
+        clusterManager.setOnClusterItemClickListener { item: MyItem? ->
+            // 마커 클릭
+            Log.e("item click", "setOnClusterItemClickListener click")
+            false
+        }
+        clusterManager.setOnClusterClickListener { item: Cluster<MyItem?> ->
+            //클러스터링 된 item 클릭
+            Log.e("item click", "setOnClusterClickListener click")
+            false
+        }
+
+        clusterManager.markerCollection.setOnInfoWindowClickListener { marker ->
+            viewModel.setSelectedDetail(
+                marker.position.latitude.toFloat(),
+                marker.position.longitude.toFloat()
+            )
+            val bottomSheet =
+                MapDetailFragment(marker.title ?: "주소 없음", viewModel.selectedDetailList, viewModel)
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
+            Log.e("item click", "setOnInfoWindowClickListener click")
+        }
+    }
 }
