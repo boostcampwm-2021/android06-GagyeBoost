@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
@@ -13,7 +12,6 @@ import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.model.data.nothingEmoji
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
@@ -131,7 +129,4 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     fun getFormattedMoneyText(): String {
         return formatter.format(money.value?.toIntOrNull() ?: 0) + "원"
     }
-
-    fun fetchPlaceListData(input: String, latLng: LatLng, callback: () -> Unit) =
-        repository.fetchPlaceListFromKeyword(input, latLng, callback).cachedIn(viewModelScope)
 }

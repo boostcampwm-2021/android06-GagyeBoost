@@ -10,7 +10,7 @@ class AddressPagingSource(
     private val service: KakaoAPIService,
     private val keyword: String,
     private val latLng: LatLng,
-    private val callback: () -> Unit
+    private val callback: (Boolean) -> Unit
 ) :
     PagingSource<Int, PlaceDetail>() {
 
@@ -24,6 +24,7 @@ class AddressPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PlaceDetail> {
         return try {
+            callback(true)
             val next = params.key ?: 1
             val response = service.fetchPlaceListFromKeyword(
                 keyword,
@@ -33,8 +34,8 @@ class AddressPagingSource(
             )
 
             response.body()?.let {
+                callback(false)
                 if (it.meta.isEnd && it.documents.isEmpty()) {
-                    callback()
                     LoadResult.Error(Exception())
                 } else if (it.meta.isEnd) {
                     LoadResult.Page(
@@ -49,9 +50,12 @@ class AddressPagingSource(
                         nextKey = next + 1
                     )
                 }
-            } ?: LoadResult.Error(Exception())
+            } ?: run {
+                callback(false)
+                LoadResult.Error(Exception())
+            }
         } catch (e: Exception) {
-            callback()
+            callback(false)
             LoadResult.Error(e)
         }
     }

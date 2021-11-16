@@ -70,5 +70,5 @@ val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { (id: Int) -> RecordDetailViewModel(get(), id) }
     viewModel { MapViewModel(get()) }
-    viewModel { AddressResultViewModel() }
+    viewModel { AddressResultViewModel(get()) }
 }

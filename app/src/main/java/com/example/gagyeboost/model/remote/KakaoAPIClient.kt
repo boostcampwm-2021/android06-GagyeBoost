@@ -13,7 +13,7 @@ class KakaoAPIClient(
 
     private var service: KakaoAPIService? = null
 
-    fun getGooglePlayService(): KakaoAPIService {
+    fun getKakaoApiService(): KakaoAPIService {
         service?.let {
             return it
         } ?: run {
