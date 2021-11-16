@@ -19,7 +19,6 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -184,7 +183,6 @@ class StatisticsFragment :
             description.isEnabled = false
             setExtraOffsets(5f, 5f, 5f, 5f)
             legend.isEnabled = false
-            setUsePercentValues(true)
 
             isDragDecelerationEnabled = false // 드래그 시 마찰 계수 적용 여부
             dragDecelerationFrictionCoef = 0.95f // 드래그 시 마찰계수
@@ -218,7 +216,7 @@ class StatisticsFragment :
                 setValueTextColor(Color.WHITE)
                 setEntryLabelTextSize(18F)
                 setValueTypeface(Typeface.DEFAULT_BOLD)
-                setValueFormatter(PercentFormatter(chartMonthly))
+                setValueFormatter(CustomPieNumberFormatter(chartMonthly))
             }
 
             setData(data)
