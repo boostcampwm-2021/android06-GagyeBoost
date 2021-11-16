@@ -1,6 +1,7 @@
 package com.example.gagyeboost.model.data
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class PlaceDetailResponse(
     val meta: PlaceMeta,
@@ -27,7 +28,7 @@ data class PlaceDetail(
     val lat: String,
     @SerializedName("x")
     val lng: String
-)
+): Serializable
 
 data class PlaceMeta(
     @SerializedName("total_count")
