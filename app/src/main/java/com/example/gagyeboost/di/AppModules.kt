@@ -7,7 +7,7 @@ import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.local.AccountBookDatabase
-import com.example.gagyeboost.model.remote.GooglePlaceClient
+import com.example.gagyeboost.model.remote.KakaoAPIClient
 import com.example.gagyeboost.model.remote.HeaderInterceptor
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.home.HomeViewModel
@@ -60,7 +60,7 @@ val appModule = module {
     }
 
     single {
-        GooglePlaceClient(get(), get())
+        KakaoAPIClient(get(), get())
     }
 }
 

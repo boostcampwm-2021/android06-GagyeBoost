@@ -5,6 +5,10 @@ import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.AccountBook
+import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.DateDetailItem
+import com.example.gagyeboost.model.data.Filter
 import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 import java.util.*
@@ -27,7 +31,10 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    val categoryList = MutableLiveData<List<Int>>()
+    val categoryIDList = MutableLiveData<List<Int>>()
+    val categoryExpenseList = MutableLiveData<List<Category>>()
+    val categoryIncomeList = MutableLiveData<List<Category>>()
+
     var startYear: Int = 1900
     var startMonth: Int = 1
     var startDay: Int = 1
@@ -97,7 +104,6 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
 
     //viewModel 공유하면 다시 map화면 돌아왔을때 init
     fun setInitData() {
-        loadAllCategoryID()
         byteMoneyType.value = EXPENSE
         intStartMoney.value = 0
         intEndMoney.value = 300000
@@ -112,11 +118,30 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         startLongitude = 0.0f
         endLatitude = 200.0f
         endLongitude = 200.0f
+        initLoadCategory()
     }
 
-    private fun loadAllCategoryID() {
+    private fun initLoadCategory() {
         viewModelScope.launch {
-            categoryList.postValue(repository.loadAllCategoryID())
+            val expenseCategory = repository.loadCategoryList(EXPENSE)
+            val incomeCategory = repository.loadCategoryList(INCOME)
+            categoryExpenseList.postValue(expenseCategory)
+            categoryIncomeList.postValue(incomeCategory)
+            categoryIDList.postValue(expenseCategory.map { it.id })
+        }
+    }
+
+    fun setCategoryIDList(moneyType: Byte) {
+        when (moneyType) {
+            INCOME -> categoryIDList.value = categoryIncomeList.value?.map { it.id }
+            EXPENSE -> categoryIDList.value = categoryExpenseList.value?.map { it.id }
+        }
+    }
+
+    fun getCategoryList(): List<Category> {
+        return when (byteMoneyType.value) {
+            INCOME -> categoryIncomeList.value ?: listOf()
+            else -> categoryExpenseList.value ?: listOf()
         }
     }
 
@@ -147,7 +172,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endLongitude,
         intStartMoney.value ?: 0,
         intEndMoney.value ?: 300000,
-        categoryList.value ?: listOf()
+        categoryIDList.value ?: listOf()
     )
 
     fun setPeriod(startDate: Date, endDate: Date) {
@@ -160,7 +185,5 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endYear = calendar.get(Calendar.YEAR)
         endMonth = calendar.get(Calendar.MONTH) + 1
         endDay = calendar.get(Calendar.DAY_OF_MONTH)
-
-        loadFilterData()
     }
 }

@@ -6,14 +6,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class GooglePlaceClient(
+class KakaoAPIClient(
     private val httpLoggingInterceptor: HttpLoggingInterceptor,
     private val headerInterceptor: HeaderInterceptor
 ) {
 
-    private var service: GooglePlaceService? = null
+    private var service: KakaoAPIService? = null
 
-    fun getGooglePlayService(): GooglePlaceService {
+    fun getGooglePlayService(): KakaoAPIService {
         service?.let {
             return it
         } ?: run {
@@ -28,13 +28,13 @@ class GooglePlaceClient(
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
-                .create(GooglePlaceService::class.java)
+                .create(KakaoAPIService::class.java)
 
             return service!!
         }
     }
 
     companion object {
-        const val BASE_URL = "https://maps.googleapis.com/maps/api/place/"
+        const val BASE_URL = "https://dapi.kakao.com/"
     }
 }
