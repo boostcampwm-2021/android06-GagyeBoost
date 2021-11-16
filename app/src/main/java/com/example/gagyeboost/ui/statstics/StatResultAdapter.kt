@@ -11,7 +11,6 @@ import com.example.gagyeboost.model.data.StatRecordItem
 class StatResultAdapter : ListAdapter<StatRecordItem, StatResultAdapter.ResultRecordViewHolder>(
     diffUtil
 ) {
-    var isShowingAllList = false
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -24,12 +23,6 @@ class StatResultAdapter : ListAdapter<StatRecordItem, StatResultAdapter.ResultRe
 
     override fun onBindViewHolder(holder: ResultRecordViewHolder, position: Int) {
         holder.bind(getItem(position))
-    }
-
-    override fun getItemCount(): Int {
-        val count = currentList.size
-        if (isShowingAllList) return count
-        return if (count > MAX_VISIBLE_ITEMS) MAX_VISIBLE_ITEMS else count
     }
 
     class ResultRecordViewHolder(private val binding: ItemStatRecordBinding) :

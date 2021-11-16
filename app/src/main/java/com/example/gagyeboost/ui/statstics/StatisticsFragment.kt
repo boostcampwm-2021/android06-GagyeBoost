@@ -9,6 +9,7 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.common.ANIMATE_Y_TIME
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.common.MAX_LIST_ITEMS
 import com.example.gagyeboost.databinding.FragmentStatisticsBinding
 import com.example.gagyeboost.model.data.StatRecordItem
 import com.example.gagyeboost.ui.base.BaseFragment
@@ -60,7 +61,16 @@ class StatisticsFragment :
     private fun setObservers() {
         with(viewModel) {
             sortedStatRecordList.observe(viewLifecycleOwner, {
-                statResultAdapter.submitList(it)
+                when (viewModel.isShowingAllData.value) {
+                    true -> statResultAdapter.submitList(it)
+                    false -> {
+                        if (it.size < MAX_LIST_ITEMS) {
+                            statResultAdapter.submitList(it)
+                        } else {
+                            statResultAdapter.submitList(it.subList(0, MAX_LIST_ITEMS))
+                        }
+                    }
+                }
                 initPieChart(it)
             })
 
@@ -79,8 +89,15 @@ class StatisticsFragment :
             }
 
             isShowingAllData.observe(viewLifecycleOwner) {
-                statResultAdapter.isShowingAllList = it
-                statResultAdapter.notifyDataSetChanged()
+                when (it) {
+                    true -> statResultAdapter.submitList(viewModel.sortedStatRecordList.value)
+                    false -> statResultAdapter.submitList(
+                        viewModel.sortedStatRecordList.value?.subList(
+                            0,
+                            5
+                        )
+                    )
+                }
             }
         }
     }

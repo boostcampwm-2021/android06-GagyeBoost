@@ -74,8 +74,8 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
                     ).filter { it.moneyType == _selectedMoneyType.value }
 
                 val totalMoney =
-                    accountDataList.fold(0) {
-                            total, record: AccountBook -> total + record.money
+                    accountDataList.fold(0) { total, record: AccountBook ->
+                        total + record.money
                     } / CHART_Y_AXIS_UNIT
                 totalSum += totalMoney * CHART_Y_AXIS_UNIT
 
