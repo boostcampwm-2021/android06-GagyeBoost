@@ -9,7 +9,7 @@
 
     </data>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -86,9 +86,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_record_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintHeight_max="150dp"
+                android:layout_height="0dp"
                 android:orientation="vertical"
+                android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toBottomOf="@id/pie_chart_month_statistics"
                 tools:listitem="@layout/item_stat_record" />
@@ -111,6 +111,7 @@
                 android:layout_height="0dp"
                 android:layout_marginVertical="40dp"
                 android:textSize="18sp"
+                android:nestedScrollingEnabled="true"
                 app:layout_constraintStart_toStartOf="@id/tv_monthly_stat"
                 app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
                 app:layout_constraintDimensionRatio="1:1"
@@ -118,5 +119,5 @@
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>
