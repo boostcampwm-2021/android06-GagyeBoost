@@ -8,9 +8,15 @@ import com.example.gagyeboost.common.CHART_Y_AXIS_UNIT
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
+import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.StatRecordItem
+import com.example.gagyeboost.model.data.nothingEmoji
 import com.example.gagyeboost.ui.home.CustomCalendar
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.math.round
 
 class StatisticsViewModel(private val repository: Repository) : ViewModel() {
     private val currentYear = Calendar.getInstance().get(Calendar.YEAR)
@@ -28,6 +34,9 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
 
     private val _dailyChartData = MutableLiveData<List<Pair<Int, Int>>>()
     val dailyChartData: LiveData<List<Pair<Int, Int>>> = _dailyChartData
+
+    private val _sortedStatRecordList = MutableLiveData<List<StatRecordItem>>()
+    val sortedStatRecordList: LiveData<List<StatRecordItem>> = _sortedStatRecordList
 
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
@@ -71,5 +80,43 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
         _selectedMoneyType.value = type
     }
 
-    private fun dateStringFormatter(date: Int) = "" + _yearMonthPair.value?.second + "." + date
+    fun loadRecordList() {
+        viewModelScope.launch(IO) {
+            val type = selectedMoneyType.value ?: 0
+            val deferredCategory =
+                async { repository.loadCategoryList(type).map { Pair(it.id, it) }.toMap() }
+            val timePair = yearMonthPair.value ?: Pair(
+                currentYear,
+                Calendar.getInstance().get(Calendar.MONTH) + 1
+            )
+            val deferredMonthData =
+                async { repository.loadMonthData(timePair.first, timePair.second) }
+            val recordSumMap = HashMap<Int, Int>()
+            deferredMonthData.await().filter {
+                it.moneyType == type
+            }.forEach {
+                recordSumMap[it.category] = (recordSumMap[it.category] ?: 0) + it.money
+            }
+
+            val categoryMap = deferredCategory.await()
+            val sum = recordSumMap.toList().sumOf { it.second }
+            _sortedStatRecordList.postValue(
+                recordSumMap.toList().sortedWith { a: Pair<Int, Int>, b: Pair<Int, Int> ->
+                    when {
+                        a.second < b.second -> 1
+                        a.second > b.second -> -1
+                        else -> 0
+                    }
+                }.map {
+                    val category = categoryMap[it.first] ?: Category(0, "", nothingEmoji, type)
+                    StatRecordItem(
+                        category.id,
+                        category.emoji,
+                        category.categoryName,
+                        round(it.second.toDouble() * 100 / sum).toInt(),
+                        it.second
+                    )
+                })
+        }
+    }
 }

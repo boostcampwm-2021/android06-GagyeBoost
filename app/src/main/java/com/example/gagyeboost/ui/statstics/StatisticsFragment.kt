@@ -1,5 +1,6 @@
 package com.example.gagyeboost.ui.statstics
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -8,14 +9,14 @@ import com.example.gagyeboost.common.ANIMATE_Y_TIME
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.databinding.FragmentStatisticsBinding
+import com.example.gagyeboost.model.data.StatRecordItem
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.NumberPickerDialog
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,6 +26,7 @@ class StatisticsFragment :
     BaseFragment<FragmentStatisticsBinding>(com.example.gagyeboost.R.layout.fragment_statistics) {
     private val viewModel: StatisticsViewModel by viewModel()
     private lateinit var dialog: NumberPickerDialog
+    private val statResultAdapter = StatResultAdapter()
     private lateinit var chartDaily: BarChart
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,29 +44,39 @@ class StatisticsFragment :
             setDialog()
         }
 
+        binding.toggleGroupMoneyType.check(R.id.btn_expense)
+        binding.rvRecordList.adapter = statResultAdapter
+
         chartDaily = binding.chartDailyStat
     }
 
     private fun setObservers() {
-        viewModel.selectedMoneyType.observe(viewLifecycleOwner) {
-            viewModel.setDailyChartData()
-        }
+        with(viewModel) {
+            sortedStatRecordList.observe(viewLifecycleOwner, {
+                statResultAdapter.submitList(it)
+                initPieChart(it)
+            })
 
-        viewModel.yearMonthPair.observe(viewLifecycleOwner) {
-            viewModel.setDailyChartData()
-        }
+            selectedMoneyType.observe(viewLifecycleOwner) {
+                viewModel.setDailyChartData()
+                viewModel.loadRecordList()
+            }
 
-        viewModel.dailyChartData.observe(viewLifecycleOwner) {
-            setDailyChart(it)
+            yearMonthPair.observe(viewLifecycleOwner) {
+                viewModel.loadRecordList()
+                viewModel.setDailyChartData()
+            }
+
+            dailyChartData.observe(viewLifecycleOwner) {
+                setDailyChart(it)
+            }
         }
     }
 
     private fun setListeners() {
-        binding.toggleGroupMoneyType.addOnButtonCheckedListener { _, checkedId, _ ->
-            when (checkedId) {
-                R.id.btn_expense -> viewModel.setSelectedMoneyType(EXPENSE)
-                R.id.btn_income -> viewModel.setSelectedMoneyType(INCOME)
-            }
+        binding.toggleGroupMoneyType.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+            viewModel.setSelectedMoneyType(if (checkedId == R.id.btn_expense) EXPENSE else INCOME)
         }
     }
 
@@ -135,6 +147,36 @@ class StatisticsFragment :
 
             data = resultData
             notifyDataSetChanged()
+        }
+    }
+
+    private fun initPieChart(recordList: List<StatRecordItem>) {
+        binding.pieChartMonthStatistics.apply {
+            setUsePercentValues(true) // true : 백분율로 표시, false : 값으로 표시
+            description.isEnabled = false
+            setExtraOffsets(5f, 5f, 5f, 5f)
+
+            isDragDecelerationEnabled = false // 드래그 시 마찰 계수 적용 여부
+            dragDecelerationFrictionCoef = 0.95f // 드래그 시 마찰계수
+
+            setHoleColor(Color.WHITE)
+
+            animateY(ANIMATE_Y_TIME, Easing.EaseInOutCubic)
+            val dataSet = PieDataSet(
+                recordList.map { PieEntry(it.totalMoney.toFloat(), it.categoryName) },
+                ""
+            ).apply {
+                sliceSpace = 3f
+                selectionShift = 5f
+                colors = (ColorTemplate.JOYFUL_COLORS.toMutableList())
+            }
+
+            val data = PieData(dataSet).apply {
+                setValueTextSize(12f)
+                setValueTextColor(Color.BLACK)
+            }
+
+            setData(data)
         }
     }
 }

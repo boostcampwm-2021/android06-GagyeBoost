@@ -9,13 +9,13 @@ import com.example.gagyeboost.databinding.ItemStatRecordBinding
 import com.example.gagyeboost.model.data.StatRecordItem
 
 class StatResultAdapter : ListAdapter<StatRecordItem, StatResultAdapter.ResultRecordViewHolder>(
-    StatResultAdapter.diffUtil
+    diffUtil
 ) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): StatResultAdapter.ResultRecordViewHolder {
+    ): ResultRecordViewHolder {
         val binding =
             ItemStatRecordBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ResultRecordViewHolder(binding)
@@ -28,7 +28,7 @@ class StatResultAdapter : ListAdapter<StatRecordItem, StatResultAdapter.ResultRe
     class ResultRecordViewHolder(private val binding: ItemStatRecordBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(statRecordItem: StatRecordItem) {
-
+            binding.statRecord = statRecordItem
         }
     }
 
@@ -38,18 +38,15 @@ class StatResultAdapter : ListAdapter<StatRecordItem, StatResultAdapter.ResultRe
                 oldItem: StatRecordItem,
                 newItem: StatRecordItem
             ): Boolean {
-                // TODO("추후 로직 추가 예정")
-                return true
+                return oldItem.categoryId == newItem.categoryId
             }
 
             override fun areContentsTheSame(
                 oldItem: StatRecordItem,
                 newItem: StatRecordItem
             ): Boolean {
-                // TODO("추후 로직 추가 예정")
-                return true
+                return oldItem == newItem
             }
-
         }
     }
 }
