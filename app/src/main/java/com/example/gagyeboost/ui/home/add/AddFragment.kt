@@ -6,8 +6,6 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.IS_EXPENSE_KEY
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentAddBinding
@@ -29,6 +27,19 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
         binding.tvDate.text = dateStr
         viewModel.dateString = dateStr ?: ""
         initClickListeners()
+        observe()
+    }
+
+    private fun observe() {
+        viewModel.money.observe(viewLifecycleOwner) {
+            if (it == "0" || it.isEmpty()) {
+                binding.btnExpense.isEnabled = false
+                binding.btnIncome.isEnabled = false
+            } else {
+                binding.btnExpense.isEnabled = true
+                binding.btnIncome.isEnabled = true
+            }
+        }
     }
 
     private fun initClickListeners() {

@@ -147,12 +147,12 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                     val category = repository.loadCategoryData(account.category)
                     list.add(
                         DateDetailItem(
-                            account.id.toString(),
+                            account.id,
                             category.emoji,
                             category.categoryName,
                             account.content,
                             formatter.format(account.money) + "원",
-                            account.moneyType == INCOME
+                            account.moneyType == INCOME,
                         )
                     )
                 }

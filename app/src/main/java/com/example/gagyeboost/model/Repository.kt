@@ -28,7 +28,12 @@ class Repository(
 
     suspend fun loadCategoryData(id: Int) = accountBookDao.loadCategoryData(id)
 
-    suspend fun loadAllCategoryID() = accountBookDao.loadAllCategoryID()
+    suspend fun loadAccountBookData(id: Int) = accountBookDao.loadAccountBookData(id)
+
+    suspend fun deleteAccountBookData(id: Int) = accountBookDao.deleteAccountBookData(id)
+
+    suspend fun updateAccountBookData(accountBook: AccountBook) =
+        accountBookDao.updateAccountBookData(accountBook)
 
     suspend fun loadFilterData(filter: Filter): List<AccountBook> =
         accountBookDao.loadSearchData(

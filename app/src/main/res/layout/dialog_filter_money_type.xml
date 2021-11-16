@@ -21,6 +21,8 @@
             android:layout_marginTop="100dp"
             android:layout_marginBottom="100dp"
             android:background="@{viewModel.intMoneyType==1 ? @drawable/gradation_background : @drawable/btn_selected_false }"
+            android:clickable="true"
+            android:focusable="true"
             android:paddingStart="30dp"
             android:paddingTop="10dp"
             android:paddingEnd="30dp"

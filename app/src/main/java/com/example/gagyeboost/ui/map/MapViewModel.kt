@@ -1,11 +1,13 @@
 package com.example.gagyeboost.ui.map
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
+import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.model.data.Filter
 import kotlinx.coroutines.launch
@@ -23,13 +25,16 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val intEndMoney = MutableLiveData(300000)
     val endMoney: LiveData<String> = Transformations.map(intEndMoney) {
         if (it == Int.MAX_VALUE) {
-            formatter.format(it) + "원 이상"
+            formatter.format(1000000) + "원 이상"
         } else {
             formatter.format(it) + "원"
         }
     }
 
-    val categoryList = MutableLiveData<List<Int>>()
+    val categoryIDList = MutableLiveData<List<Int>>()
+    val categoryExpenseList = MutableLiveData<List<Category>>()
+    val categoryIncomeList = MutableLiveData<List<Category>>()
+
     var startYear: Int = 1900
     var startMonth: Int = 1
     var startDay: Int = 1
@@ -51,10 +56,11 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val selectedDetailList: LiveData<List<DateDetailItem>> = _selectedDetailList
 
     fun setSelectedDetail(latitude: Float, longitude: Float) {
+        Log.e("setSelectedDetail", "확인")
         val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
         _selectedDetailList.value = (dataList ?: listOf()).map {
             DateDetailItem(
-                it.id.toString(),
+                it.id,
                 "\uD83E\uDD70",
                 "밥",
                 it.content,
@@ -88,9 +94,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         return markerMap
     }
 
-    //viewModel 공유하면 다시 map화면 돌아왔을때 init
     fun setInitData() {
-        loadAllCategoryID()
         byteMoneyType.value = EXPENSE
         intStartMoney.value = 0
         intEndMoney.value = 300000
@@ -100,16 +104,35 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endYear = startYear
         endMonth = startMonth
         endDay = Calendar.getInstance().getActualMaximum(Calendar.DATE)
-        // 화면에 보이는 위도/경도로 설정 해야함
+        // TODO 화면에 보이는 위도/경도로 설정 해야함
         startLatitude = 0.0f
         startLongitude = 0.0f
         endLatitude = 200.0f
         endLongitude = 200.0f
+        initLoadCategory()
     }
 
-    private fun loadAllCategoryID() {
+    private fun initLoadCategory() {
         viewModelScope.launch {
-            categoryList.postValue(repository.loadAllCategoryID())
+            val expenseCategory = repository.loadCategoryList(EXPENSE)
+            val incomeCategory = repository.loadCategoryList(INCOME)
+            categoryExpenseList.postValue(expenseCategory)
+            categoryIncomeList.postValue(incomeCategory)
+            categoryIDList.postValue(expenseCategory.map { it.id })
+        }
+    }
+
+    fun setCategoryIDList(moneyType: Byte) {
+        when (moneyType) {
+            INCOME -> categoryIDList.value = categoryIncomeList.value?.map { it.id }
+            EXPENSE -> categoryIDList.value = categoryExpenseList.value?.map { it.id }
+        }
+    }
+
+    fun getCategoryList(): List<Category> {
+        return when (byteMoneyType.value) {
+            INCOME -> categoryIncomeList.value ?: listOf()
+            else -> categoryExpenseList.value ?: listOf()
         }
     }
 
@@ -140,7 +163,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endLongitude,
         intStartMoney.value ?: 0,
         intEndMoney.value ?: 300000,
-        categoryList.value ?: listOf()
+        categoryIDList.value ?: listOf()
     )
 
     fun setPeriod(startDate: Date, endDate: Date) {
@@ -153,7 +176,5 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endYear = calendar.get(Calendar.YEAR)
         endMonth = calendar.get(Calendar.MONTH) + 1
         endDay = calendar.get(Calendar.DAY_OF_MONTH)
-
-        loadFilterData()
     }
 }

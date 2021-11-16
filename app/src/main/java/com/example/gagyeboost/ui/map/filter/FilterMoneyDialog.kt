@@ -1,28 +1,40 @@
 package com.example.gagyeboost.ui.map.filter
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.DialogFilterMoneyBinding
 import com.example.gagyeboost.ui.map.MapViewModel
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class FilterMoneyDialog(context: Context, val viewModel: MapViewModel) :
-    BottomSheetDialog(context) {
+class FilterMoneyDialog : BottomSheetDialogFragment() {
 
-    lateinit var binding: DialogFilterMoneyBinding
+    private var _binding: DialogFilterMoneyBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: MapViewModel by sharedViewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.inflate(
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+        _binding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
             R.layout.dialog_filter_money,
             null,
             false
         )
-        setContentView(binding.root)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         var left = binding.rsMoney.valueFrom.toInt()
@@ -54,5 +66,10 @@ class FilterMoneyDialog(context: Context, val viewModel: MapViewModel) :
             viewModel.loadFilterData()
             dismiss()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
