@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.common.CHART_Y_AXIS_UNIT
 import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
@@ -38,6 +39,9 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
     private val _sortedStatRecordList = MutableLiveData<List<StatRecordItem>>()
     val sortedStatRecordList: LiveData<List<StatRecordItem>> = _sortedStatRecordList
 
+    private val _totalMoneyAmount = MutableLiveData<String>()
+    val totalMoneyAmount: LiveData<String> = _totalMoneyAmount
+
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
         setDailyChartData()
@@ -52,6 +56,7 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun setDailyChartData() {
+        var totalSum = 0
         viewModelScope.launch {
             val dataList = mutableListOf<Pair<Int, Int>>()
             calendar.datesInMonth.forEach { date ->
@@ -69,10 +74,12 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
                     accountDataList.fold(0) {
                             total, record: AccountBook -> total + record.money
                     } / CHART_Y_AXIS_UNIT
+                totalSum += totalMoney * CHART_Y_AXIS_UNIT
 
                 if (totalMoney > 0) dataList.add(Pair(date, totalMoney))
             }
             _dailyChartData.value = dataList
+            _totalMoneyAmount.value = formatter.format(totalSum)
         }
     }
 
