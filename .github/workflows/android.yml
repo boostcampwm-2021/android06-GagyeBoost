@@ -26,12 +26,9 @@ jobs:
       - name: Get Key from Secrets
         env:
           google_map_key: ${{ secrets.API_KEY }}
-        run: echo google_map_key="$google_map_key" > ./local.properties
-
-      - name: Get Key from Secrets
-        env:
           kakao_api_key: ${{ secrets.KAKAO_API_KEY }}
-        run: echo kakao_api_key="kakao_api_key" > ./local.properties
+        run: echo -e google_map_key="$google_map_key"\n
+        kakao_api_key="kakao_api_key" > ./local.properties
 
       - name: Get KeyStore from Secrets
         env:
