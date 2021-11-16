@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.statstics
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -190,12 +191,17 @@ class StatisticsFragment :
                 selectionShift = 5f
                 xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
                 colors = colorList
+
+                valueLinePart1Length = 0.4f
+                valueLinePart2Length = 0.3f
+                isUsingSliceColorAsValueLineColor = true
             }
 
             val data = PieData(dataSet).apply {
-                setValueTextSize(14F)
+                setValueTextSize(12F)
                 setValueTextColor(Color.WHITE)
                 setEntryLabelTextSize(18F)
+                setValueTypeface(Typeface.DEFAULT_BOLD)
                 setValueFormatter(PercentFormatter(chartMonthly))
             }
 
