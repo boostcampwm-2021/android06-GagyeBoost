@@ -74,7 +74,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
                     category.emoji,
                     category.categoryName,
                     it.content,
-                    it.money.toString(),
+                    it.money,
                     it.moneyType == INCOME
                 )
             }

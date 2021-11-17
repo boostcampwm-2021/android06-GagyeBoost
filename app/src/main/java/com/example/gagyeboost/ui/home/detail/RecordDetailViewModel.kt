@@ -50,7 +50,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                 category.emoji,
                 category.categoryName,
                 accountBookData.content,
-                formatter.format(accountBookData.money),
+                accountBookData.money,
                 accountBookData.moneyType == INCOME,
             )
 
@@ -73,7 +73,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                 val updatedAccountBookData = AccountBook(
                     accountBookId,
                     if (moneyType) INCOME else EXPENSE,
-                    money.replace(",", "").toIntOrNull() ?: 0,
+                    money,
                     _category.value?.id ?: 0,
                     DEFAULT_LAT.toFloat(),
                     DEFAULT_LNG.toFloat(),

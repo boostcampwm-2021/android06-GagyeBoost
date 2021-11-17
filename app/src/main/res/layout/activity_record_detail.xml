@@ -119,15 +119,19 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_money_body"
                 style="@style/RecordDetailEditTheme"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@android:color/transparent"
+                android:gravity="end"
+                android:inputType="number"
                 android:maxLength="9"
                 android:maxLines="1"
-                android:text="@={viewModel.dateDetailItem.money}"
+                app:intToString="@={viewModel.dateDetailItem.money}"
                 app:layout_constraintEnd_toStartOf="@id/tv_monetary_unit"
-                app:layout_constraintTop_toBottomOf="@id/tv_category_body" />
+                app:layout_constraintStart_toEndOf="@id/tv_money_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_category_body"
+                tools:text="3,000" />
 
             <TextView
                 android:id="@+id/tv_monetary_unit"

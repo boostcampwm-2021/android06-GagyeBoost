@@ -151,7 +151,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                             category.emoji,
                             category.categoryName,
                             account.content,
-                            formatter.format(account.money) + "원",
+                            account.money,
                             account.moneyType == INCOME,
                         )
                     )
