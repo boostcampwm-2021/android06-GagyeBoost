@@ -8,11 +8,11 @@ import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.IS_EXPENSE_KEY
 import com.example.gagyeboost.common.TODAY_STRING_KEY
+import com.example.gagyeboost.common.setEditTextSize
 import com.example.gagyeboost.databinding.FragmentAddBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
@@ -27,6 +27,11 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
         viewModel.dateString = dateStr ?: ""
         initClickListeners()
         observe()
+        setTextSize()
+    }
+
+    private fun setTextSize() {
+        binding.etWon.setEditTextSize(binding.tvTextSize)
     }
 
     private fun observe() {
