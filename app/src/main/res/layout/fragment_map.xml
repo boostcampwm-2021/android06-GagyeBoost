@@ -55,5 +55,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/btn_gps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/background_gradation_circle"
+            android:contentDescription="@string/find_my_location"
+            android:padding="10dp"
+            android:src="@drawable/ic_gps"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/flow_filter_btn" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

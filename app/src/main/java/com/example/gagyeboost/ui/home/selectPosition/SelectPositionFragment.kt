@@ -6,13 +6,13 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isVisible
+import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.BitmapUtils
 import com.example.gagyeboost.common.GPSUtils
 import com.example.gagyeboost.common.INTENT_EXTRA_PLACE_DETAIL
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
@@ -24,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -72,7 +73,7 @@ class SelectPositionFragment :
 
         init()
         initMap()
-        requestLocation.launch(permissions)
+
     }
 
     private fun init() {
@@ -109,12 +110,20 @@ class SelectPositionFragment :
     }
 
     private fun moveCameraToUser() {
-        val userLocation = gpsUtils.getUserLocation()
-        val latLng = LatLng(userLocation.latitude, userLocation.longitude)
+        val userLocation = gpsUtils.getUserLatLng()
 
-        viewModel.userLocation = userLocation
+        viewModel.userLocation = gpsUtils.getUserLocation()
 
-        googleMap.animateCamera(newLatLngZoom(latLng, 15f))
+        googleMap.animateCamera(newLatLngZoom(userLocation, 15f))
+
+        val marker = MarkerOptions()
+
+        ResourcesCompat.getDrawable(resources, R.drawable.ic_user_marker, null)?.let {
+            val bitmap = BitmapUtils.createBitmapFromDrawable(it)
+            marker.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+            marker.position(userLocation)
+            googleMap.addMarker(marker)
+        }
     }
 
     override fun onStart() {
@@ -135,10 +144,7 @@ class SelectPositionFragment :
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
 
-        val userLocation = gpsUtils.getUserLocation()
-        val latLng = LatLng(userLocation.latitude, userLocation.longitude)
-
-        googleMap.moveCamera(newLatLngZoom(latLng, 15f))
+        requestLocation.launch(permissions)
     }
 
 }
