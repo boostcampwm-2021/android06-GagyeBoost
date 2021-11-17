@@ -131,10 +131,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:text="@{String.valueOf(viewModel.startYear)+`. `+String.valueOf(viewModel.startMonth)+`. `+String.valueOf(viewModel.startDay)+`.`}"
             app:layout_constraintEnd_toStartOf="@id/tv_date_range"
             app:layout_constraintStart_toStartOf="@id/tv_date_title"
             app:layout_constraintTop_toBottomOf="@id/tv_date_title"
-            tools:text="2021년 11월 1일" />
+            tools:text="2021. 11. 1." />
 
         <TextView
             android:id="@+id/tv_date_range"
@@ -142,7 +143,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:text="~"
-            android:textSize="40sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/btn_date_start_body"
             app:layout_constraintEnd_toStartOf="@id/btn_date_end_body"
             app:layout_constraintStart_toEndOf="@id/btn_date_start_body"
@@ -153,11 +154,12 @@
             style="@style/RangeSelectButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{String.valueOf(viewModel.endYear)+`. `+String.valueOf(viewModel.endMonth)+`. `+String.valueOf(viewModel.endDay)+`.`}"
             app:layout_constraintBottom_toBottomOf="@id/btn_date_start_body"
             app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
             app:layout_constraintStart_toEndOf="@id/tv_date_range"
             app:layout_constraintTop_toTopOf="@id/btn_date_start_body"
-            tools:text="2021년 11월 30일" />
+            tools:text="2021. 11. 30." />
 
         <TextView
             android:id="@+id/tv_category_title"
@@ -190,8 +192,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
             app:layout_constraintStart_toStartOf="@id/tv_type_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_category_title"
-            tools:text="🐱 🐔 🍎 🍉 🎠 📱 💊 🐶 ⚽ 🏀 🏈 ⚾" />
+            app:layout_constraintTop_toBottomOf="@id/tv_category_title" />
 
         <TextView
             android:id="@+id/tv_money_title"
@@ -218,7 +219,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:text="~"
-            android:textSize="40sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/btn_money_start_body"
             app:layout_constraintEnd_toStartOf="@id/btn_money_end_body"
             app:layout_constraintStart_toEndOf="@id/btn_money_start_body"

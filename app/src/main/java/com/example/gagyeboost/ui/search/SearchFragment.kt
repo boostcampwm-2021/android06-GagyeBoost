@@ -17,6 +17,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
 
     private fun initView() {
         with(binding) {
+            viewModel=this@SearchFragment.viewModel
             etKeywordBody.hint = resources.getString(R.string.content)
             etKeywordBody.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 etKeywordBody.hint = if (hasFocus) "" else resources.getString(R.string.content)
