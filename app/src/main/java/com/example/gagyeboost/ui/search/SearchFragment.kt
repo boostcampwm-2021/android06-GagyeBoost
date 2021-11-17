@@ -38,6 +38,24 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
                 this@SearchFragment.viewModel.setSelectedType(if (checkedId == btnExpense.id) EXPENSE else INCOME)
             }
             btnReset.setOnClickListener { this@SearchFragment.viewModel.resetData() }
+            btnDateStartBody.setOnClickListener {
+                // TODO DatePicker 처음 날짜 지정
+            }
+            btnDateEndBody.setOnClickListener {
+                // TODO DatePicker 마지막 날짜 지정
+            }
+            btnSelectCategory.setOnClickListener {
+                // TODO 카테고리 선택 dialog
+            }
+            btnMoneyStartBody.setOnClickListener {
+                // TODO 최소금액 지정
+            }
+            btnMoneyEndBody.setOnClickListener {
+                // TODO 최대금액 지정
+            }
+            btnSearch.setOnClickListener {
+                // TODO 검색 - 검색결과로 이동
+            }
         }
     }
 

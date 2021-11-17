@@ -252,6 +252,7 @@
             app:layout_constraintTop_toBottomOf="@id/btn_money_start_body" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_search"
             style="@style/GradationButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
