@@ -12,6 +12,7 @@ import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.DateDetailItem
+import com.example.gagyeboost.model.data.PlaceDetail
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 
@@ -33,6 +34,8 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
     val category: LiveData<Category> = _category
 
     private val formatter = DecimalFormat("###,###")
+
+    var placeDetail: PlaceDetail? = null
 
     fun setAccountBookData(callback: () -> Unit) {
         viewModelScope.launch {
@@ -63,7 +66,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
         }
     }
 
-    fun updateAccountBookData() {
+    fun updateAccountBookData(placeDetail: PlaceDetail? = this.placeDetail) {
         viewModelScope.launch {
             with(dateDetailItem.value) {
                 if (this == null) return@launch
@@ -74,9 +77,9 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                     if (moneyType) INCOME else EXPENSE,
                     money.replace(",", "").toIntOrNull() ?: 0,
                     _category.value?.id ?: 0,
-                    DEFAULT_LAT.toFloat(),
-                    DEFAULT_LNG.toFloat(),
-                    "부스트캠프",
+                    placeDetail?.lat?.toFloat() ?: DEFAULT_LAT.toFloat(),
+                    placeDetail?.lng?.toFloat() ?: DEFAULT_LNG.toFloat(),
+                    placeDetail?.addressName ?: "부스트캠프",
                     dateDetailItem.value?.content ?: "",
                     strDate.split(".")[0].toInt(),
                     strDate.split(".")[1].toInt(),
