@@ -189,8 +189,6 @@ class StatisticsFragment :
 
             data = resultData
             notifyDataSetChanged()
-
-            // setVisibleXRangeMaximum(8F)
         }
     }
 
