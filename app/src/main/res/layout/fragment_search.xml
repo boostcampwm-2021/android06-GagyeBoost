@@ -8,6 +8,10 @@
         <variable
             name="viewModel"
             type="com.example.gagyeboost.ui.search.SearchViewModel" />
+
+        <variable
+            name="constValues"
+            type="com.example.gagyeboost.common.ConstKt" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,7 +78,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            app:checkedButton="@id/btn_expense"
             app:layout_constraintEnd_toEndOf="@id/view_outline"
             app:layout_constraintStart_toEndOf="@id/tv_type_title"
             app:layout_constraintTop_toTopOf="@id/view_outline"
@@ -111,9 +114,9 @@
             android:layout_height="wrap_content"
             android:autofillHints="@null"
             android:gravity="end"
-            android:text="@={viewModel.keyword}"
             android:hint="@string/content"
             android:inputType="text"
+            android:text="@={viewModel.keyword}"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
             app:layout_constraintStart_toStartOf="@id/tv_type_title"
@@ -209,8 +212,8 @@
             style="@style/RangeSelectButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(viewModel.startMoney)+`원`}"
             android:layout_marginTop="10dp"
+            android:text="@{String.valueOf(viewModel.startMoney)+`원`}"
             app:layout_constraintEnd_toStartOf="@id/tv_money_range"
             app:layout_constraintStart_toStartOf="@id/tv_date_title"
             app:layout_constraintTop_toBottomOf="@id/tv_money_title"

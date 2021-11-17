@@ -72,4 +72,22 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
+    fun setSelectedType(type: Byte) {
+        _selectedType.value = type
+    }
+
+    fun resetData(){
+        keyword.value=""
+        _selectedType.value=EXPENSE
+        _startYear.value=Calendar.getInstance().get(Calendar.YEAR)
+        _startMoney.value=Calendar.getInstance().get(Calendar.MONTH)+1
+        _startDay.value=1
+        _endYear.value=Calendar.getInstance().get(Calendar.YEAR)
+        _endMonth.value=Calendar.getInstance().get(Calendar.MONTH)+1
+        _endDay.value=Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
+        _startMoney.value=0
+        _endMoney.value=1000000
+        _selectedCategory.value=listOf()
+    }
+
 }
