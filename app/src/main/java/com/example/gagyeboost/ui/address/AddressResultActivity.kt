@@ -1,7 +1,9 @@
 package com.example.gagyeboost.ui.address
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
@@ -48,6 +50,13 @@ class AddressResultActivity :
 
         binding.etSearch.doAfterTextChanged {
             observable.onNext(it?.toString())
+        }
+
+        binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus) {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+            }
         }
     }
 

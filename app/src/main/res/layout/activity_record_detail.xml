@@ -17,6 +17,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/constraint_detail"
             tools:context=".ui.home.detail.RecordDetailActivity">
 
             <com.google.android.material.appbar.AppBarLayout
