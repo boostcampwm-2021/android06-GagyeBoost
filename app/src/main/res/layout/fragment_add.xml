@@ -48,7 +48,7 @@
             app:layout_constraintStart_toStartOf="@id/tv_date"
             app:layout_constraintTop_toBottomOf="@id/tv_date" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_won"
             android:layout_width="0dp"
             android:layout_height="130dp"

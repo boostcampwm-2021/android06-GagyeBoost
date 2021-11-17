@@ -2,8 +2,8 @@ package com.example.gagyeboost.common
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.EditText
 import android.widget.TextView
+import com.google.android.material.textfield.TextInputEditText
 import java.text.DecimalFormat
 
 // AddFragment, CategoryFragment
@@ -28,7 +28,7 @@ const val DEFAULT_LNG = 127.02877164249468
 const val INTENT_EXTRA_PLACE_DETAIL = "INTENT_EXTRA_PLACE_DETAIL"
 
 
-fun EditText.setEditTextSize(textView: TextView) {
+fun TextInputEditText.setEditTextSize(textView: TextView) {
     this.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 

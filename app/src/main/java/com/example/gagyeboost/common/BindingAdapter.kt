@@ -2,7 +2,6 @@ package com.example.gagyeboost.common
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.EditText
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
@@ -20,9 +19,10 @@ object BindingAdapter {
 
     @BindingAdapter("intToString")
     @JvmStatic
-    fun intToString(text: EditText, money: Int) {
+    fun intToString(text: TextInputEditText, money: Int) {
         val new = formatter.format(money)
         val old = text.text.toString()
+        if (old == new) return
         if (old != new) {
             text.setText(formatter.format(money))
         }
@@ -30,7 +30,7 @@ object BindingAdapter {
 
     @JvmStatic
     @BindingAdapter("textChanged")
-    fun setInverseBindingListener(text: EditText, listener: InverseBindingListener?) {
+    fun setInverseBindingListener(text: TextInputEditText, listener: InverseBindingListener?) {
         val watcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -45,7 +45,7 @@ object BindingAdapter {
 
     @InverseBindingAdapter(attribute = "intToString", event = "textChanged")
     @JvmStatic
-    fun EditText.stringToInt(): Int {
+    fun TextInputEditText.stringToInt(): Int {
         return text.toString().replace(",", "").replace(" ", "").toIntOrNull() ?: 0
     }
 }
