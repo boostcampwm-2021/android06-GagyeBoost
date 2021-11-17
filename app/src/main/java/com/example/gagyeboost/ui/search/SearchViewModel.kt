@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gagyeboost.common.DEFAULT_FILTER
+import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.Filter
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -14,6 +15,9 @@ import java.util.*
 class SearchViewModel(private val repository: Repository) : ViewModel() {
 
     val keyword = MutableLiveData("")
+
+    private val _selectedType = MutableLiveData(EXPENSE)
+    val selectedType: LiveData<Byte> = _selectedType
 
     private val _startYear = MutableLiveData(Calendar.getInstance().get(Calendar.YEAR))
     val startYear: LiveData<Int> = _startYear
@@ -40,16 +44,31 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     private val _endMoney = MutableLiveData(1000000)
     val endMoney: LiveData<Int> = _endMoney
 
+    private val _selectedCategory = MutableLiveData<List<Category>>(listOf())
+    val selectedCategory: LiveData<List<Category>> = _selectedCategory
+
     fun loadFilterData() {
         viewModelScope.launch {
-            /*
-            val deferredDataList=async{
-                repository.loadFilterDataWithKeyword(filter.value?:DEFAULT_FILTER,keyword.value?:"")
+            val filter = Filter(
+                selectedType.value ?: EXPENSE,
+                startYear.value ?: 1970,
+                startMonth.value ?: 1,
+                startDay.value ?: 1,
+                endYear.value ?: 2500,
+                endMonth.value ?: 12,
+                endDay.value ?: 31,
+                0f,
+                0f,
+                200f,
+                200f,
+                startMoney.value ?: 0,
+                endMoney.value ?: 1000000,
+                (selectedCategory.value ?: listOf()).map { it.id }
+            )
+            val deferredDataList = async {
+                repository.loadFilterDataWithKeyword(filter, keyword.value ?: "")
             }
-            val dataList=deferredDataList.await()
-
-             */
-
+            val dataList = deferredDataList.await()
         }
     }
 
