@@ -202,7 +202,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun moveCameraToUser() {
         val userLocation = gpsUtils.getUserLatLng()
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f))
 
         val marker = MarkerOptions()
 

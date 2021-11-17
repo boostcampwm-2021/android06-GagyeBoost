@@ -114,7 +114,7 @@ class SelectPositionFragment :
 
         viewModel.userLocation = gpsUtils.getUserLocation()
 
-        googleMap.animateCamera(newLatLngZoom(userLocation, 15f))
+        googleMap.moveCamera(newLatLngZoom(userLocation, 15f))
 
         val marker = MarkerOptions()
 
