@@ -5,10 +5,6 @@ import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.DateDetailItem
-import com.example.gagyeboost.model.data.Filter
 import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 import java.util.*
@@ -104,8 +100,8 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     //viewModel 공유하면 다시 map화면 돌아왔을때 init
     fun setInitData() {
         byteMoneyType.value = EXPENSE
-        intStartMoney.value = 0
-        intEndMoney.value = 300000
+        intStartMoney.value = InitMoneyFilter.Start.money
+        intEndMoney.value = InitMoneyFilter.End.money
         startYear = Calendar.getInstance().get(Calendar.YEAR)
         startMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
         startDay = 1
@@ -132,8 +128,10 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
 
     fun setCategoryIDList(moneyType: Byte) {
         when (moneyType) {
-            INCOME -> categoryIDList.value = categoryIncomeList.value?.map { it.id }?.toMutableList()
-            EXPENSE -> categoryIDList.value = categoryExpenseList.value?.map { it.id }?.toMutableList()
+            INCOME -> categoryIDList.value =
+                categoryIncomeList.value?.map { it.id }?.toMutableList()
+            EXPENSE -> categoryIDList.value =
+                categoryExpenseList.value?.map { it.id }?.toMutableList()
         }
     }
 
