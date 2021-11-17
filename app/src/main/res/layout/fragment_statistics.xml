@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -69,20 +69,34 @@
                     android:textSize="16sp" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
+            <ImageView
+                android:id="@+id/iv_icon"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:alpha="0.7"
+                android:src="@drawable/app_icon3_circle"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_year_and_month"
+                app:layout_constraintWidth_percent="0.5" />
+
             <TextView
                 android:id="@+id/tv_no_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/has_no_chart_data"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:text="@string/has_no_chart_data"
+                android:textColor="@color/gray3"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/gray3"
                 android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.VISIBLE : View.GONE}"
-                app:layout_constraintTop_toBottomOf="@id/tv_year_and_month"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/iv_icon" />
 
             <TextView
                 android:id="@+id/tv_monthly_stat"
