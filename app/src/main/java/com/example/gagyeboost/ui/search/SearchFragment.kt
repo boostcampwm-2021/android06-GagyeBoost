@@ -12,6 +12,20 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
+        with(binding) {
+            etKeywordBody.hint = resources.getString(R.string.content)
+            etKeywordBody.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+                etKeywordBody.hint = if (hasFocus) "" else resources.getString(R.string.content)
+            }
+        }
+    }
+
+    private fun initListener() {
+
     }
 
 }

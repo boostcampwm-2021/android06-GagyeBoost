@@ -111,7 +111,6 @@
             android:layout_height="wrap_content"
             android:autofillHints="@null"
             android:gravity="end"
-            android:hint="@string/content"
             android:inputType="text"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
@@ -182,6 +181,14 @@
             app:layout_constraintStart_toStartOf="@id/view_outline"
             app:layout_constraintTop_toBottomOf="@id/btn_money_body" />
 
-
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/GradationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_outline" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
