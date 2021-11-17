@@ -61,7 +61,10 @@
     <string name="confirm">확인</string>
     <string name="record_delete_dialog_message">내역을 삭제하시겠습니까?</string>
     <string name="monthly_statistics">월별 통계</string>
-    <string name="daily_statistics">일별 통계</string>
+    <string name="daily_statistics">일별 추이</string>
     <string name="chart_y_axis_unit">만원</string>
-
+    <string name="total_expense">총 지출</string>
+    <string name="total_income">총 수입</string>
+    <string name="show_all">전체 보기</string>
+    <string name="hide">숨기기</string>
 </resources>

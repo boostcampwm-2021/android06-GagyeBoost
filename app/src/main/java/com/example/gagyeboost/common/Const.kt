@@ -23,4 +23,4 @@ const val DEFAULT_LNG = 127.02877164249468
 // StatisticsFragment, StatisticsViewModel
 const val ANIMATE_Y_TIME = 1500
 const val CHART_Y_AXIS_UNIT = 10000
-
+const val MAX_LIST_ITEMS = 5

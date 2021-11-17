@@ -48,5 +48,7 @@ class StatResultAdapter : ListAdapter<StatRecordItem, StatResultAdapter.ResultRe
                 return oldItem == newItem
             }
         }
+
+        private const val MAX_VISIBLE_ITEMS = 5
     }
 }
