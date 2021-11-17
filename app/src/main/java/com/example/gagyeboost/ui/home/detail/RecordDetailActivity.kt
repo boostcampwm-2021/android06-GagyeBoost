@@ -8,7 +8,6 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
 import com.example.gagyeboost.common.DEFAULT_LAT
 import com.example.gagyeboost.common.DEFAULT_LNG
-import com.example.gagyeboost.common.GPSUtils
 import com.example.gagyeboost.databinding.ActivityRecordDetailBinding
 import com.example.gagyeboost.databinding.BottomSheetCategoryBinding
 import com.example.gagyeboost.model.data.Category
@@ -18,6 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,12 +30,12 @@ class RecordDetailActivity :
     private var accountBookId = -1
     private val viewModel: RecordDetailViewModel by viewModel { parametersOf(accountBookId) }
     private lateinit var googleMap: GoogleMap
-    private val gpsUtils: GPSUtils by lazy { GPSUtils(this) }
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var bottomSheetDialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initMap()
         initView()
         setListeners()
         setObserver()
@@ -45,10 +45,10 @@ class RecordDetailActivity :
         accountBookId = intent.getIntExtra(DATE_DETAIL_ITEM_ID_KEY, 0)
         binding.viewModel = viewModel
 
+        viewModel.setAccountBookData { addMarkerToPlace() }
+
         categoryAdapter =
             CategoryAdapter({ category -> categoryOnClickListener(category) }, { true })
-
-        initMap()
     }
 
     private fun setListeners() {
@@ -79,10 +79,6 @@ class RecordDetailActivity :
                 viewModel.updateAccountBookData()
                 finish()
             }
-        }
-
-        binding.btnGps.setOnClickListener {
-            moveCameraToUser()
         }
 
         setDialogs()
@@ -174,19 +170,15 @@ class RecordDetailActivity :
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+    }
+
+    private fun addMarkerToPlace() {
         val latitude = viewModel.accountBookData.value?.latitude?.toDouble() ?: DEFAULT_LAT
         val longitude = viewModel.accountBookData.value?.longitude?.toDouble() ?: DEFAULT_LNG
 
-        val userLocation = gpsUtils.getUserLocation()
         val latLng = LatLng(latitude, longitude)
 
+        googleMap.addMarker(MarkerOptions().apply { position(latLng) })
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
-    }
-
-    private fun moveCameraToUser() {
-        val userLocation = gpsUtils.getUserLocation()
-        val latLng = LatLng(userLocation.latitude, userLocation.longitude)
-
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
     }
 }

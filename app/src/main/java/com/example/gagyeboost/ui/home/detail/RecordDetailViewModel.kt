@@ -34,16 +34,13 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
 
     private val formatter = DecimalFormat("###,###")
 
-    init {
-        setAccountBookData()
-    }
-
-    private fun setAccountBookData() {
+    fun setAccountBookData(callback: () -> Unit) {
         viewModelScope.launch {
             val accountBookData = repository.loadAccountBookData(accountBookId)
             val categoryId = accountBookData.category
             val category = repository.loadCategoryData(categoryId)
             _category.value = category
+            _accountBookData.value = accountBookData
 
             dateDetailItem.value = DateDetailItem(
                 accountBookId,
@@ -55,6 +52,8 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
             )
 
             setDate(accountBookData.year, accountBookData.month, accountBookData.day)
+
+            callback()
         }
     }
 
