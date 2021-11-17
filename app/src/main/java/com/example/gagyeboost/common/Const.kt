@@ -37,3 +37,5 @@ val DEFAULT_FILTER = Filter(
     1000000,
     listOf()
 )
+// INTENT
+const val INTENT_EXTRA_PLACE_DETAIL = "INTENT_EXTRA_PLACE_DETAIL"
