@@ -126,36 +126,37 @@
             app:layout_constraintTop_toBottomOf="@id/et_keyword_body" />
 
         <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
             android:id="@+id/btn_date_start_body"
             style="@style/RangeSelectButton"
-            app:layout_constraintTop_toBottomOf="@id/tv_date_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toStartOf="@id/tv_date_range"
             app:layout_constraintStart_toStartOf="@id/tv_date_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_date_title"
             tools:text="2021년 11월 1일" />
 
         <TextView
             android:id="@+id/tv_date_range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             android:text="~"
             android:textSize="40sp"
-            android:layout_width="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/btn_date_start_body"
             app:layout_constraintBottom_toBottomOf="@id/btn_date_start_body"
             app:layout_constraintEnd_toStartOf="@id/btn_date_end_body"
-            app:layout_constraintStart_toEndOf="@id/btn_date_start_body"/>
+            app:layout_constraintStart_toEndOf="@id/btn_date_start_body"
+            app:layout_constraintTop_toTopOf="@id/btn_date_start_body" />
 
         <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
             android:id="@+id/btn_date_end_body"
             style="@style/RangeSelectButton"
-            app:layout_constraintTop_toTopOf="@id/btn_date_start_body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/btn_date_start_body"
-            app:layout_constraintStart_toEndOf="@id/tv_date_range"
             app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+            app:layout_constraintStart_toEndOf="@id/tv_date_range"
+            app:layout_constraintTop_toTopOf="@id/btn_date_start_body"
             tools:text="2021년 11월 30일" />
 
         <TextView
@@ -165,36 +166,74 @@
             app:layout_constraintStart_toStartOf="@id/tv_type_title"
             app:layout_constraintTop_toBottomOf="@id/btn_date_start_body" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/GradationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:padding="0dp"
+            android:text="@string/select_category"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_category_title"
+            app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+            app:layout_constraintTop_toTopOf="@id/tv_category_title" />
+
         <TextView
-            android:id="@+id/btn_category_body"
+            android:id="@+id/tv_selected_category"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
             android:gravity="end"
-            android:textSize="18sp"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
             app:layout_constraintStart_toStartOf="@id/tv_type_title"
             app:layout_constraintTop_toBottomOf="@id/tv_category_title"
-            tools:text="전체" />
+            tools:text="🐱 🐔 🍎 🍉 🎠 📱 💊 🐶 ⚽ 🏀 🏈 ⚾" />
 
         <TextView
             android:id="@+id/tv_money_title"
             style="@style/SearchTitle"
             android:text="@string/money"
-            app:layout_constraintBottom_toTopOf="@id/btn_money_body"
+            app:layout_constraintBottom_toTopOf="@id/btn_money_start_body"
             app:layout_constraintStart_toStartOf="@id/tv_type_title"
-            app:layout_constraintTop_toBottomOf="@id/btn_category_body" />
+            app:layout_constraintTop_toBottomOf="@id/tv_selected_category" />
 
         <TextView
-            android:id="@+id/btn_money_body"
+            android:id="@+id/btn_money_start_body"
+            style="@style/RangeSelectButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="end"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
-            app:layout_constraintStart_toStartOf="@id/tv_type_title"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toStartOf="@id/tv_money_range"
+            app:layout_constraintStart_toStartOf="@id/tv_date_title"
             app:layout_constraintTop_toBottomOf="@id/tv_money_title"
-            tools:text="0~1000000원" />
+            tools:text="100원" />
+
+        <TextView
+            android:id="@+id/tv_money_range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:text="~"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_money_start_body"
+            app:layout_constraintEnd_toStartOf="@id/btn_money_end_body"
+            app:layout_constraintStart_toEndOf="@id/btn_money_start_body"
+            app:layout_constraintTop_toTopOf="@id/btn_money_start_body" />
+
+        <TextView
+            android:id="@+id/btn_money_end_body"
+            style="@style/RangeSelectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/btn_money_start_body"
+            app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+            app:layout_constraintStart_toEndOf="@id/tv_money_range"
+            app:layout_constraintTop_toTopOf="@id/btn_money_start_body"
+            tools:text="1000000원" />
 
         <Space
             android:id="@+id/space_outline_bottom"
@@ -202,7 +241,7 @@
             android:layout_height="20dp"
             app:layout_constraintBottom_toBottomOf="@id/view_outline"
             app:layout_constraintStart_toStartOf="@id/view_outline"
-            app:layout_constraintTop_toBottomOf="@id/btn_money_body" />
+            app:layout_constraintTop_toBottomOf="@id/btn_money_start_body" />
 
         <androidx.appcompat.widget.AppCompatButton
             style="@style/GradationButton"

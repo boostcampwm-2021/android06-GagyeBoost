@@ -65,5 +65,6 @@
     <string name="input_keyword">장소 검색어를 입력하세요.</string>
     <string name="meter">m</string>
     <string name="reset">초기화</string>
+    <string name="select_category">카테고리 선택</string>
 
 </resources>
