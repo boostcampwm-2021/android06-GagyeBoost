@@ -19,8 +19,6 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val intMoneyType: LiveData<Int> = Transformations.map(byteMoneyType) { it.toInt() }
 
     val intStartMoney = MutableLiveData(0)
-    val startMoney: LiveData<String> =
-        Transformations.map(intStartMoney) { formatter.format(it) + "원" }
 
     val intEndMoney = MutableLiveData(300000)
     val endMoney: LiveData<String> = Transformations.map(intEndMoney) {
@@ -35,8 +33,6 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     // 화면에 보여줄 카테고리 리스트
     private val categoryExpenseList = MutableLiveData<List<Category>>()
     private val categoryIncomeList = MutableLiveData<List<Category>>()
-
-    var isAllCategory = true
 
     var startYear: Int = 1900
     var startMonth: Int = 1

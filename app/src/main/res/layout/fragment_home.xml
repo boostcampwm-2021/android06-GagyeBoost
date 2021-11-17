@@ -93,12 +93,15 @@
 
         <TextView
             android:id="@+id/tv_expense_body"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{homeViewModel.totalMonthExpense}"
+            android:layout_marginStart="5dp"
+            android:gravity="end"
             android:textColor="@color/expense"
             android:textSize="20sp"
+            app:intToWon="@{homeViewModel.totalMonthExpense}"
             app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+            app:layout_constraintStart_toEndOf="@id/tv_expense_title"
             app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
 
         <TextView

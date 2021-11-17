@@ -12,6 +12,7 @@ import com.example.gagyeboost.databinding.FragmentAddBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
@@ -20,9 +21,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewModel = viewModel.apply {
-            money.value = "0"
-        }
+        binding.viewModel = viewModel
         val dateStr = arguments?.getString(TODAY_STRING_KEY)
         binding.tvDate.text = dateStr
         viewModel.dateString = dateStr ?: ""
@@ -32,7 +31,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
     private fun observe() {
         viewModel.money.observe(viewLifecycleOwner) {
-            if (it == "0" || it.isEmpty()) {
+            if (it == 0) {
                 binding.btnExpense.isEnabled = false
                 binding.btnIncome.isEnabled = false
             } else {
