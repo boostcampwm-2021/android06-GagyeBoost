@@ -34,8 +34,8 @@ android {
         versionName "1.0.1"
 
         manifestPlaceholders = [googleMapKey: googleMapKey]
-        buildConfigField "String", "google_map_key", properties["google_map_key"]
-        buildConfigField "String", "kakao_api_key", properties["kakao_api_key"]
+        buildConfigField "String", "google_map_key", properties["google_map_key"]?:"null"
+        buildConfigField "String", "kakao_api_key", properties["kakao_api_key"]?:"null"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
