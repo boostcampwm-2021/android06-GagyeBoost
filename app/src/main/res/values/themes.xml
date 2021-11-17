@@ -41,7 +41,6 @@
 
     <style name="GradationButton">
         <item name="android:textColor">@color/white</item>
-        <item name="android:background">@drawable/gradation_background</item>
         <item name="android:textSize">20sp</item>
         <item name="android:gravity">center</item>
         <item name="android:textStyle">bold</item>

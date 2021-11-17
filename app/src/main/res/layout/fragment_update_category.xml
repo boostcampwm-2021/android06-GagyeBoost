@@ -85,6 +85,7 @@
             android:layout_marginStart="24dp"
             android:text="@{viewModel.selectedCategoryIcon.isEmpty()? @string/emoji_meal:viewModel.selectedCategoryIcon}"
             android:textSize="40sp"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@id/tv_icon_title"
             app:layout_constraintStart_toEndOf="@id/tv_icon_title"
             app:layout_constraintTop_toTopOf="@id/tv_icon_title"

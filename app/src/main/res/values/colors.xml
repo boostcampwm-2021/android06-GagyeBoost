@@ -32,4 +32,6 @@
     <color name="category10">#D8AF8C</color>
 
     <color name="baseColor">#58C8AE</color>
+
+    <color name="transparent_white">#1AFFFFFF</color>
 </resources>
