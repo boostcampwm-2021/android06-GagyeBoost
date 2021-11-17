@@ -23,9 +23,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
         with(binding) {
             viewModel = this@SearchFragment.viewModel
             toggleGroupMoneyType.check(btnExpense.id)
-            etKeywordBody.hint = resources.getString(R.string.content)
+            etKeywordBody.hint = resources.getString(R.string.plz_enter_keyword)
             etKeywordBody.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-                etKeywordBody.hint = if (hasFocus) "" else resources.getString(R.string.content)
+                etKeywordBody.hint =
+                    if (hasFocus) "" else resources.getString(R.string.plz_enter_keyword)
             }
         }
     }

@@ -66,5 +66,6 @@
     <string name="meter">m</string>
     <string name="reset">초기화</string>
     <string name="select_category">카테고리 선택</string>
-
+    <string name="sp_tilde">~</string>
+    <string name="plz_enter_keyword">키워드를 입력해주세요</string>
 </resources>
