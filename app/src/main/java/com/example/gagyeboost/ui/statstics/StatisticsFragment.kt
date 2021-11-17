@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import androidx.core.view.isGone
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.ANIMATE_Y_TIME
 import com.example.gagyeboost.common.EXPENSE
@@ -61,6 +62,7 @@ class StatisticsFragment :
     private fun setObservers() {
         with(viewModel) {
             sortedStatRecordList.observe(viewLifecycleOwner, {
+                binding.btnShowRecordList.isGone = it.size < MAX_LIST_ITEMS
                 when (viewModel.isShowingAllData.value) {
                     true -> statResultAdapter.submitList(it)
                     false -> {
