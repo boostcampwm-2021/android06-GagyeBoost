@@ -70,13 +70,20 @@
 
         <TextView
             android:id="@+id/tv_income_body"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeMinTextSize="14sp"
+            android:autoSizeStepGranularity="1dp"
+            android:autoSizeTextType="uniform"
+            android:gravity="end"
+            android:maxLines="1"
             android:text="@{homeViewModel.totalMonthIncome}"
             android:textColor="@color/income"
             android:textSize="20sp"
-            app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
+            app:layout_constraintEnd_toEndOf="@id/gl_50percent_vertical"
+            app:layout_constraintStart_toEndOf="@id/tv_income_title"
             app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
 
         <TextView
@@ -96,7 +103,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeMinTextSize="14sp"
+            android:autoSizeStepGranularity="1dp"
+            android:autoSizeTextType="uniform"
             android:gravity="end"
+            android:maxLines="1"
             android:textColor="@color/expense"
             android:textSize="20sp"
             app:intToWon="@{homeViewModel.totalMonthExpense}"
@@ -118,14 +130,21 @@
 
         <TextView
             android:id="@+id/tv_balance_body"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeMinTextSize="14sp"
+            android:autoSizeStepGranularity="1dp"
+            android:autoSizeTextType="uniform"
+            android:gravity="end"
+            android:maxLines="1"
             android:text="@{homeViewModel.totalMonthBalance}"
             android:textColor="@color/gray3"
             android:textSize="20sp"
-            app:layout_constraintRight_toRightOf="@id/gl_50percent_vertical"
+            app:layout_constraintEnd_toEndOf="@id/gl_50percent_vertical"
+            app:layout_constraintStart_toEndOf="@id/tv_balance_title"
             app:layout_constraintTop_toBottomOf="@id/tv_income_body" />
 
         <TextView
