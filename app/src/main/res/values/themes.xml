@@ -88,4 +88,11 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="RangeSelectButton">
+        <item name="android:padding">8dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/background_outline_radius_20dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>
