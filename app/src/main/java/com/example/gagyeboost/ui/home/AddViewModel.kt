@@ -107,9 +107,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 month = splitedStr[1].toInt(),
                 day = splitedStr[2].toInt()
             )
-            repository.addAccountBookData(
-                data
-            )
+            repository.addAccountBookData(data)
         }
     }
 

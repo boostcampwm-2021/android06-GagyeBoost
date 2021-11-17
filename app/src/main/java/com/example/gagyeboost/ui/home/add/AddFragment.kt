@@ -1,7 +1,9 @@
 package com.example.gagyeboost.ui.home.add
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
@@ -20,14 +22,24 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+        initClickListeners()
+        observe()
+        setTextSize()
+        editTextFocus()
+    }
 
+    private fun initView() {
         binding.viewModel = viewModel
         val dateStr = arguments?.getString(TODAY_STRING_KEY)
         binding.tvDate.text = dateStr
         viewModel.dateString = dateStr ?: ""
-        initClickListeners()
-        observe()
-        setTextSize()
+    }
+
+    private fun editTextFocus() {
+        binding.etWon.requestFocus()
+        val imm = activity?.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etWon, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun setTextSize() {
