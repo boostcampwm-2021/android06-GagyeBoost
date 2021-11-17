@@ -1,7 +1,9 @@
 package com.example.gagyeboost.ui.home.add
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
@@ -66,6 +68,17 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
         findNavController().navigate(
             R.id.action_addFragment_to_categoryFragment,
             bundleOf(IS_EXPENSE_KEY to isExpense)
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.toggleSoftInput(
+            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.HIDE_IMPLICIT_ONLY
         )
     }
 }

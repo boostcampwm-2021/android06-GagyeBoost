@@ -69,7 +69,10 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_won_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_won_title"
-            app:layout_constraintTop_toTopOf="@id/tv_won_title" />
+            app:layout_constraintTop_toTopOf="@id/tv_won_title">
+
+            <requestFocus />
+        </EditText>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_income"
