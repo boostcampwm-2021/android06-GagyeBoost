@@ -111,6 +111,7 @@
             android:layout_height="wrap_content"
             android:autofillHints="@null"
             android:gravity="end"
+            android:text="@={viewModel.keyword}"
             android:hint="@string/content"
             android:inputType="text"
             android:textSize="18sp"
@@ -168,13 +169,14 @@
             app:layout_constraintStart_toStartOf="@id/tv_type_title"
             app:layout_constraintTop_toBottomOf="@id/btn_date_start_body" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            style="@style/GradationButton"
+        <Button
+            android:id="@+id/btn_select_category"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:padding="0dp"
             android:text="@string/select_category"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_category_title"
             app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
@@ -207,6 +209,7 @@
             style="@style/RangeSelectButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{String.valueOf(viewModel.startMoney)+`원`}"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toStartOf="@id/tv_money_range"
             app:layout_constraintStart_toStartOf="@id/tv_date_title"
@@ -230,6 +233,7 @@
             style="@style/RangeSelectButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{String.valueOf(viewModel.endMoney)+`원`}"
             app:layout_constraintBottom_toBottomOf="@id/btn_money_start_body"
             app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
             app:layout_constraintStart_toEndOf="@id/tv_money_range"
