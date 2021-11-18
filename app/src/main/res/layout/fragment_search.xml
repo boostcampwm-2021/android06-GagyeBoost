@@ -23,6 +23,7 @@
             android:id="@+id/app_bar_layout_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/default_color_gradation_app_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -46,7 +47,7 @@
                     android:padding="5dp"
                     android:text="@string/reset"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>

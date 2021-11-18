@@ -71,7 +71,8 @@
     <string name="total_income">총 수입</string>
     <string name="show_all">전체 보기</string>
     <string name="hide">숨기기</string>
-    <string name="has_no_chart_data">데이터가 없습니다.\n지출/수입 기록을 추가해주세요.</string>
+    <string name="has_no_expense_data">데이터가 없습니다.\n지출 기록을 추가해주세요.</string>
+    <string name="has_no_income_data">데이터가 없습니다.\n수입 기록을 추가해주세요.</string>
     <string name="reset">초기화</string>
     <string name="select_category">카테고리 선택</string>
     <string name="sp_tilde">~</string>
@@ -79,4 +80,5 @@
 
     <string name="select_place">장소 선택</string>
     <string name="select_place_dialog_message">선택된 장소 없이 등록하시겠습니까?</string>
+    <string name="app_icon">앱 아이콘</string>
 </resources>

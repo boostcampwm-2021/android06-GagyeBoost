@@ -22,6 +22,7 @@ abstract class BaseActivity<T : ViewDataBinding>(private val layoutId: Int) : Ap
 
         _binding = DataBindingUtil.setContentView(this, layoutId)
         _binding.lifecycleOwner = this
+
         _binding.root.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
     }
 }

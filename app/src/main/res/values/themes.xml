@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.GagyeBoost" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.GagyeBoost" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/baseColor</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -14,7 +14,8 @@
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/sfprotext</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
-        <item name="android:windowBackground">@drawable/default_color_gradation</item>
+        <item name="android:windowBackground">@drawable/default_color_gradation_app_bar</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="WhiteStatusBarTheme">
