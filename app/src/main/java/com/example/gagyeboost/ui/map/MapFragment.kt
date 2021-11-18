@@ -27,7 +27,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.collections.MarkerManager
-import okhttp3.internal.notify
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import java.util.*
@@ -58,7 +57,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun initView() {
         binding.viewModel = viewModel
-        //viewModel.setInitData()
         binding.mvMap.getMapAsync(this)
         binding.mvMap.onCreate(null)
         binding.btnGps.setOnClickListener {
@@ -183,7 +181,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             Timber.e("setOnClusterClickListener click")
             false
         }
-
         clusterManager.markerCollection.setOnInfoWindowClickListener { marker ->
             viewModel.setSelectedDetail(
                 marker.position.latitude.toFloat(),
