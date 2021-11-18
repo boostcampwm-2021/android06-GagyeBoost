@@ -2,7 +2,9 @@ package com.example.gagyeboost.ui.home.detail
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
@@ -83,6 +85,11 @@ class RecordDetailActivity :
 
         binding.btnGps.setOnClickListener {
             moveCameraToUser()
+        }
+
+        binding.constraintDetail.setOnClickListener {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
 
         setDialogs()

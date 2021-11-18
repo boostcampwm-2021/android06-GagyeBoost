@@ -6,17 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.example.gagyeboost.R
-import com.example.gagyeboost.databinding.DialogFilterMoneyBinding
-import com.example.gagyeboost.model.data.InitMoneyFilter
+import com.example.gagyeboost.databinding.DialogFilterCategoryBinding
 import com.example.gagyeboost.ui.map.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
-class FilterMoneyDialog : BottomSheetDialogFragment() {
+class FilterCategoryDialog : BottomSheetDialogFragment() {
 
-    private var _binding: DialogFilterMoneyBinding? = null
+    private var _binding: DialogFilterCategoryBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MapViewModel by sharedViewModel()
+    private lateinit var adapter: FilterCategoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,10 +27,11 @@ class FilterMoneyDialog : BottomSheetDialogFragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.dialog_filter_money,
+            R.layout.dialog_filter_category,
             null,
             false
         )
+        adapter = FilterCategoryAdapter(viewModel)
         return binding.root
     }
 
@@ -38,31 +40,22 @@ class FilterMoneyDialog : BottomSheetDialogFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        with(binding.rsMoney) {
-            var start = viewModel.intStartMoney.value?.toFloat() ?: 0f
-            var end = if (viewModel.intEndMoney.value == Int.MAX_VALUE) {
-                1000000f
-            } else {
-                viewModel.intEndMoney.value?.toFloat() ?: 300000f
-            }
-            values = listOf(start, end)
+        binding.rvFilterCategory.adapter = adapter
+        adapter.submitList(viewModel.getCategoryList())
 
-            addOnChangeListener { _, value, _ ->
-                when (focusedThumbIndex) {
-                    0 -> start = value
-                    1 -> end = value
-                }
-                if (right == InitMoneyFilter.End.money) {
-                    viewModel.setMoney(start.toInt(), Int.MAX_VALUE)
-                } else {
-                    viewModel.setMoney(start.toInt(), end.toInt())
-                }
-            }
-        }
-
-        binding.btnFilterApply.setOnClickListener {
+        this.dialog?.setOnCancelListener {
             viewModel.loadFilterData()
-            dismiss()
+        } ?: Timber.e("dialog setOnCancelListener")
+
+        clickListener()
+    }
+
+    private fun clickListener() {
+        binding.tvSelectAll.setOnClickListener {
+            adapter.setCategoryList(true)
+        }
+        binding.tvSelectClear.setOnClickListener {
+            adapter.setCategoryList(false)
         }
     }
 

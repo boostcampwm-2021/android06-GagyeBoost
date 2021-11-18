@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.databinding.ItemAddressBinding
 import com.example.gagyeboost.model.data.PlaceDetail
-import com.example.gagyeboost.ui.home.AddViewModel
+import com.example.gagyeboost.ui.address.AddressResultViewModel
 
 class AddressAdapter(
-    private val viewModel: AddViewModel,
+    private val viewModel: AddressResultViewModel,
     private val itemClickListener: (PlaceDetail) -> Unit
 ) :
     PagingDataAdapter<PlaceDetail, AddressAdapter.AddressViewHolder>(diffCallback) {
@@ -39,7 +39,7 @@ class AddressAdapter(
             itemView.setOnClickListener {
                 getItem(bindingAdapterPosition)?.let { item ->
                     itemClickListener(item)
-                    viewModel.selectedLocation = item
+//                    viewModel.selectedLocation = item
                 }
             }
         }

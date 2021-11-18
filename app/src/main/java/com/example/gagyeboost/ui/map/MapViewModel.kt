@@ -5,10 +5,6 @@ import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.DateDetailItem
-import com.example.gagyeboost.model.data.Filter
 import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 import java.util.*
@@ -19,8 +15,6 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val intMoneyType: LiveData<Int> = Transformations.map(byteMoneyType) { it.toInt() }
 
     val intStartMoney = MutableLiveData(0)
-    val startMoney: LiveData<String> =
-        Transformations.map(intStartMoney) { formatter.format(it) + "원" }
 
     val intEndMoney = MutableLiveData(300000)
     val endMoney: LiveData<String> = Transformations.map(intEndMoney) {
@@ -30,10 +24,11 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
             formatter.format(it) + "원"
         }
     }
-
-    val categoryIDList = MutableLiveData<List<Int>>()
-    val categoryExpenseList = MutableLiveData<List<Category>>()
-    val categoryIncomeList = MutableLiveData<List<Category>>()
+    // 필터로 보낼 id list
+    val categoryIDList = MutableLiveData<MutableList<Int>>()
+    // 화면에 보여줄 카테고리 리스트
+    private val categoryExpenseList = MutableLiveData<List<Category>>()
+    private val categoryIncomeList = MutableLiveData<List<Category>>()
 
     var startYear: Int = 1900
     var startMonth: Int = 1
@@ -46,7 +41,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endLatitude: Float = 200.0F
     var endLongitude: Float = 200.0F
 
-    val filterData = MutableLiveData<List<AccountBook>>()
+    private val filterData = MutableLiveData<List<AccountBook>>()
 
     // HashMap<좌표, 좌표에 해당하는 내역 list>
     val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> =
@@ -71,7 +66,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
                     category.emoji,
                     category.categoryName,
                     it.content,
-                    it.money.toString(),
+                    it.money,
                     it.moneyType == INCOME
                 )
             }
@@ -105,8 +100,8 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     //viewModel 공유하면 다시 map화면 돌아왔을때 init
     fun setInitData() {
         byteMoneyType.value = EXPENSE
-        intStartMoney.value = 0
-        intEndMoney.value = 300000
+        intStartMoney.value = InitMoneyFilter.Start.money
+        intEndMoney.value = InitMoneyFilter.End.money
         startYear = Calendar.getInstance().get(Calendar.YEAR)
         startMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
         startDay = 1
@@ -127,14 +122,16 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
             val incomeCategory = repository.loadCategoryList(INCOME)
             categoryExpenseList.postValue(expenseCategory)
             categoryIncomeList.postValue(incomeCategory)
-            categoryIDList.postValue(expenseCategory.map { it.id })
+            categoryIDList.postValue(expenseCategory.map { it.id }.toMutableList())
         }
     }
 
     fun setCategoryIDList(moneyType: Byte) {
         when (moneyType) {
-            INCOME -> categoryIDList.value = categoryIncomeList.value?.map { it.id }
-            EXPENSE -> categoryIDList.value = categoryExpenseList.value?.map { it.id }
+            INCOME -> categoryIDList.value =
+                categoryIncomeList.value?.map { it.id }?.toMutableList()
+            EXPENSE -> categoryIDList.value =
+                categoryExpenseList.value?.map { it.id }?.toMutableList()
         }
     }
 

@@ -2,18 +2,20 @@ package com.example.gagyeboost.ui.home.selectPosition
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.GPSUtils
+import com.example.gagyeboost.common.INTENT_EXTRA_PLACE_DETAIL
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
 import com.example.gagyeboost.model.data.PlaceDetail
+import com.example.gagyeboost.ui.address.AddressResultActivity
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
@@ -38,7 +40,7 @@ class SelectPositionFragment :
         googleMap.let { map ->
             map.clear()
             map.addMarker(
-                MarkerOptions().position(latLng).title(it.roadAddressName)
+                MarkerOptions().position(latLng).title("${it.roadAddressName} ${it.placeName}")
             )
             map.animateCamera(newLatLng(latLng))
         }
@@ -49,6 +51,17 @@ class SelectPositionFragment :
     ) {
         moveCameraToUser()
     }
+
+    private val goToAddressResultActivity =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                val place =
+                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as PlaceDetail
+
+                viewModel.selectedLocation = place
+                moveCameraToPlace(place)
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,20 +84,13 @@ class SelectPositionFragment :
             findNavController().popBackStack()
         }
 
-        binding.etAddress.setOnEditorActionListener { view, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                if (viewModel.searchAddress.value!!.isNotEmpty()) {
-                    binding.pbLoading.isVisible = true
-
-                    val bottom =
-                        AddressResultFragment(viewModel, moveCameraToPlace, view.text.toString()) {
-                            binding.pbLoading.isVisible = false
-                        }
-                    bottom.show(childFragmentManager, bottom.tag)
-                }
-            }
-
-            true
+        binding.btnSearch.setOnClickListener {
+            goToAddressResultActivity.launch(
+                Intent(
+                    requireContext(),
+                    AddressResultActivity::class.java
+                )
+            )
         }
 
         binding.btnGps.setOnClickListener {

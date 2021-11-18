@@ -65,10 +65,10 @@ class Repository(
     fun fetchPlaceListFromKeyword(
         input: String,
         latLng: LatLng,
-        callback: () -> Unit
+        callback: (Boolean) -> Unit
     ): Flow<PagingData<PlaceDetail>> {
         return Pager(PagingConfig(1)) {
-            AddressPagingSource(client.getGooglePlayService(), input, latLng, callback)
+            AddressPagingSource(client.getKakaoApiService(), input, latLng, callback)
         }.flow
     }
 

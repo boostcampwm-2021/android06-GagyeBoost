@@ -60,5 +60,9 @@
     <string name="delete_record">내역 삭제</string>
     <string name="confirm">확인</string>
     <string name="record_delete_dialog_message">내역을 삭제하시겠습니까?</string>
+    <string name="select_all">전체 선택</string>
+    <string name="select_clear">전체 해제</string>
+    <string name="input_keyword">장소 검색어를 입력하세요.</string>
+    <string name="meter">m</string>
 
 </resources>
