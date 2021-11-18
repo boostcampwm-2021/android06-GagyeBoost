@@ -6,6 +6,7 @@
     <data>
 
         <import type="kotlin.jvm.functions.Function1" />
+
         <import type="kotlin.Unit" />
 
         <variable
@@ -81,9 +82,9 @@
             android:id="@+id/tv_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{item.money}"
-            android:textSize="18sp"
             android:textColor="@{item.moneyType ? @color/income : @color/expense}"
+            android:textSize="18sp"
+            app:intToWon="@{item.money}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
             app:layout_constraintTop_toTopOf="parent"

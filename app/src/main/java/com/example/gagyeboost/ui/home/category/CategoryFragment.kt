@@ -1,7 +1,9 @@
 package com.example.gagyeboost.ui.home.category
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -24,7 +26,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-
         initView()
         initClickListeners()
         setObservers()
@@ -60,6 +61,11 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
         viewModel.loadCategoryList()
         viewModel.content.value = ""
+
+        binding.etHistory.requestFocus()
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etHistory, InputMethodManager.SHOW_IMPLICIT)
+
     }
 
     private fun categoryOnClick(category: Category): Boolean {
