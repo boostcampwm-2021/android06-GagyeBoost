@@ -6,6 +6,7 @@ import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.*
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -114,15 +115,21 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endLatitude = 200.0f
         endLongitude = 200.0f
         initLoadCategory()
+
     }
 
     private fun initLoadCategory() {
         viewModelScope.launch {
-            val expenseCategory = repository.loadCategoryList(EXPENSE)
-            val incomeCategory = repository.loadCategoryList(INCOME)
-            categoryExpenseList.postValue(expenseCategory)
-            categoryIncomeList.postValue(incomeCategory)
-            categoryIDList.postValue(expenseCategory.map { it.id }.toMutableList())
+            val deferredExpenseCategory = async { repository.loadCategoryList(EXPENSE) }
+            val deferredIncomeCategory = async { repository.loadCategoryList(INCOME) }
+
+            val expenseCategory = deferredExpenseCategory.await()
+            val incomeCategory = deferredIncomeCategory.await()
+
+            categoryExpenseList.value = expenseCategory
+            categoryIncomeList.value = incomeCategory
+            categoryIDList.value = expenseCategory.map { it.id }.toMutableList()
+            loadFilterData()
         }
     }
 

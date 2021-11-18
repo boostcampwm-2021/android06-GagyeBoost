@@ -57,7 +57,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun initView() {
         binding.viewModel = viewModel
-        viewModel.setInitData()
         binding.mvMap.getMapAsync(this)
         binding.mvMap.onCreate(null)
         binding.btnGps.setOnClickListener {
@@ -138,9 +137,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         setUpMap()
-        addItems()
         clickListener()
-
+        addItems()
+        viewModel.setInitData()
         requestLocation.launch(permissions)
     }
 
@@ -167,6 +166,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                     )
                 clusterManager.addItem(offsetItem)
             }
+            clusterManager.cluster()
         }
     }
 
@@ -181,7 +181,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             Timber.e("setOnClusterClickListener click")
             false
         }
-
         clusterManager.markerCollection.setOnInfoWindowClickListener { marker ->
             viewModel.setSelectedDetail(
                 marker.position.latitude.toFloat(),
