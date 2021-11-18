@@ -99,9 +99,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 category = selectedCategoryId,
                 address = "${selectedLocation?.roadAddressName ?: userLocation.getAddressLine(0)} ${selectedLocation?.placeName ?: ""}",
                 latitude = selectedLocation?.lat?.toFloat()
-                    ?: userLocation.latitude.toFloat(),
+                    ?: -1f,
                 longitude = selectedLocation?.lng?.toFloat()
-                    ?: userLocation.longitude.toFloat(),
+                    ?: -1f,
                 content = content.value ?: "",
                 year = splitStr[0].toInt(),
                 month = splitStr[1].toInt(),
