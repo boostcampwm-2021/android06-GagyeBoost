@@ -97,6 +97,13 @@ class AddressResultActivity :
         )
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+    }
+
     override fun onDestroy() {
         disposable.dispose()
         super.onDestroy()
