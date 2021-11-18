@@ -27,6 +27,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.collections.MarkerManager
+import okhttp3.internal.notify
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import java.util.*
@@ -57,7 +58,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun initView() {
         binding.viewModel = viewModel
-        viewModel.setInitData()
+        //viewModel.setInitData()
         binding.mvMap.getMapAsync(this)
         binding.mvMap.onCreate(null)
         binding.btnGps.setOnClickListener {
@@ -138,9 +139,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         setUpMap()
-        addItems()
         clickListener()
-
+        addItems()
+        viewModel.setInitData()
         requestLocation.launch(permissions)
     }
 
@@ -167,6 +168,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                     )
                 clusterManager.addItem(offsetItem)
             }
+            clusterManager.cluster()
         }
     }
 
