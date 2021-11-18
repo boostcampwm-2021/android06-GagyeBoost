@@ -71,12 +71,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.btnMoney.setOnClickListener {
             val dialog = FilterMoneyDialog()
             dialog.show(childFragmentManager, dialog.tag)
-            childFragmentManager.executePendingTransactions()
-            viewModel.isMoneyBackgroundChange.observe(viewLifecycleOwner) {
-
-                changeSelectedBackground(binding.btnMoney, it)
-
-            }
         }
         binding.btnMoneyType.setOnClickListener {
             showMoneyTypeDialog()
@@ -136,7 +130,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         } else {
             textView.setTextColor(ResourcesCompat.getColor(resources, R.color.gray1, null))
             textView.background =
-                ResourcesCompat.getDrawable(resources, R.drawable.background_white_radius_20dp, null)
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.background_white_radius_20dp,
+                    null
+                )
         }
     }
 

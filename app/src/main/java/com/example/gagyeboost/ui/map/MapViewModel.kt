@@ -1,9 +1,7 @@
 package com.example.gagyeboost.ui.map
 
 import androidx.lifecycle.*
-import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.INCOME
-import com.example.gagyeboost.common.formatter
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
@@ -25,8 +23,6 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    val isMoneyBackgroundChange = MutableLiveData(false)
-
     // 필터로 보낼 id list
     val categoryIDList = MutableLiveData<MutableList<Int>>()
 
@@ -44,6 +40,9 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var startLongitude: Float = 00.0F
     var endLatitude: Float = 200.0F
     var endLongitude: Float = 200.0F
+
+    val isMoneyBackgroundChange = MutableLiveData(false)
+    val isPeriodBackgroundChange = MutableLiveData(false)
 
     private val filterData = MutableLiveData<List<AccountBook>>()
 
@@ -106,12 +105,12 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         byteMoneyType.value = EXPENSE
         intStartMoney.value = InitMoneyFilter.Start.money
         intEndMoney.value = InitMoneyFilter.End.money
-        startYear = Calendar.getInstance().get(Calendar.YEAR)
-        startMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
+        startYear = NOW_YEAR
+        startMonth = NOW_MONTH
         startDay = 1
-        endYear = startYear
-        endMonth = startMonth
-        endDay = Calendar.getInstance().getActualMaximum(Calendar.DATE)
+        endYear = NOW_YEAR
+        endMonth = NOW_MONTH
+        endDay = END_DAY
         // 화면에 보이는 위도/경도로 설정 해야함
         startLatitude = 0.0f
         startLongitude = 0.0f
@@ -186,6 +185,13 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endYear = calendar.get(Calendar.YEAR)
         endMonth = calendar.get(Calendar.MONTH) + 1
         endDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+        isPeriodBackgroundChange.value = !(startYear == NOW_YEAR &&
+                startMonth == NOW_MONTH &&
+                startDay == 1 &&
+                endYear == NOW_YEAR &&
+                endMonth == NOW_MONTH &&
+                endDay == END_DAY)
     }
 
     fun changeMoneyBackground() {
