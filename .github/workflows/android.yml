@@ -26,7 +26,10 @@ jobs:
       - name: Get Key from Secrets
         env:
           google_map_key: ${{ secrets.API_KEY }}
-        run: echo google_map_key="$google_map_key" > ./local.properties
+          kakao_api_key: ${{ secrets.KAKAO_API_KEY }}
+        run:
+          echo google_map_key="$google_map_key" >> ./local.properties
+          echo kakao_api_key="$kakao_api_key" >> ./local.properties
 
       - name: Get KeyStore from Secrets
         env:
@@ -35,9 +38,9 @@ jobs:
           keyAlias: ${{ secrets.KEY_ALIAS }}
           storeFile: ${{ secrets.STORE_FILE }}
         run:
-          echo -e storePassword="$storePassword"\n
-          keyPassword="$keyPassword"\n
-          keyAlias="$keyAlias" > ./keystore.properties
+          echo storePassword="$storePassword" >> ./keystore.properties
+          echo keyPassword="$keyPassword" >> ./keystore.properties
+          echo keyAlias="$keyAlias" >> ./keystore.properties
 
       - name: Build with Gradle
         run: ./gradlew assembleDebug --stacktrace

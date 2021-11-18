@@ -24,6 +24,10 @@ buildscript {
         retrofit_version = "2.9.0"
         logging_interceptor_version = "4.8.0"
         timber_version = "4.7.1"
+        paging_version = "3.0.1"
+        rxjava_version = "3.0.6"
+        rxandroid_version = "3.0.0"
+        rxkotlin_version = "3.0.0"
     }
 }
 

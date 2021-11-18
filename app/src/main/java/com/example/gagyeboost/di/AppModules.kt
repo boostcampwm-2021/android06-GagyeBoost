@@ -7,8 +7,9 @@ import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.local.AccountBookDatabase
-import com.example.gagyeboost.model.remote.GooglePlaceClient
+import com.example.gagyeboost.model.remote.KakaoAPIClient
 import com.example.gagyeboost.model.remote.HeaderInterceptor
+import com.example.gagyeboost.ui.address.AddressResultViewModel
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.home.HomeViewModel
 import com.example.gagyeboost.ui.statstics.StatisticsViewModel
@@ -61,7 +62,7 @@ val appModule = module {
     }
 
     single {
-        GooglePlaceClient(get(), get())
+        KakaoAPIClient(get(), get())
     }
 }
 
@@ -71,4 +72,5 @@ val viewModelModule = module {
     viewModel { (id: Int) -> RecordDetailViewModel(get(), id) }
     viewModel { MapViewModel(get()) }
     viewModel { StatisticsViewModel(get()) }
+    viewModel { AddressResultViewModel(get()) }
 }

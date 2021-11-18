@@ -2,10 +2,11 @@ package com.example.gagyeboost.ui.home.selectPosition
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -13,8 +14,10 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.GPSUtils
+import com.example.gagyeboost.common.INTENT_EXTRA_PLACE_DETAIL
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
 import com.example.gagyeboost.model.data.PlaceDetail
+import com.example.gagyeboost.ui.address.AddressResultActivity
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
@@ -34,12 +37,12 @@ class SelectPositionFragment :
     private lateinit var googleMap: GoogleMap
     private val gpsUtils: GPSUtils by lazy { GPSUtils(requireContext()) }
     private val moveCameraToPlace: (PlaceDetail) -> Unit = {
-        val latLng = LatLng(it.geometry.location.lat, it.geometry.location.lng)
+        val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
 
         googleMap.let { map ->
             map.clear()
             map.addMarker(
-                MarkerOptions().position(latLng).title(it.formattedAddress)
+                MarkerOptions().position(latLng).title("${it.roadAddressName} ${it.placeName}")
             )
             map.animateCamera(newLatLng(latLng))
         }
@@ -50,6 +53,17 @@ class SelectPositionFragment :
     ) {
         moveCameraToUser()
     }
+
+    private val goToAddressResultActivity =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                val place =
+                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as PlaceDetail
+
+                viewModel.selectedLocation = place
+                moveCameraToPlace(place)
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,25 +86,13 @@ class SelectPositionFragment :
             findNavController().popBackStack()
         }
 
-        binding.etAddress.setOnEditorActionListener { view, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                if (viewModel.searchAddress.value!!.isNotEmpty()) {
-                    binding.pbLoading.isVisible = true
-
-                    viewModel.getPlaceListData(view.text.toString()).observe(viewLifecycleOwner) {
-                        it.getOrNull()?.let { list ->
-                            val bottom = AddressResultFragment(list, viewModel, moveCameraToPlace)
-                            bottom.show(childFragmentManager, bottom.tag)
-                        } ?: run {
-                            Toast.makeText(requireContext(), "결과가 없습니다.", Toast.LENGTH_LONG).show()
-                        }
-
-                        binding.pbLoading.isVisible = false
-                    }
-                }
-            }
-
-            true
+        binding.btnSearch.setOnClickListener {
+            goToAddressResultActivity.launch(
+                Intent(
+                    requireContext(),
+                    AddressResultActivity::class.java
+                )
+            )
         }
 
         binding.btnGps.setOnClickListener {
