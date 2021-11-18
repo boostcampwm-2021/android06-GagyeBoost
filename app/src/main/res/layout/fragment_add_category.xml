@@ -64,7 +64,8 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_name_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_name_title"
-            app:layout_constraintTop_toTopOf="@id/tv_name_title" />
+            app:layout_constraintTop_toTopOf="@id/tv_name_title"
+            android:importantForAutofill="no" />
 
         <TextView
             android:id="@+id/tv_icon_title"

@@ -28,9 +28,10 @@ class AddressResultActivity :
     private val gpsUtils by lazy { GPSUtils(this) }
     private val adapter by lazy {
         AddressAdapter(viewModel) {
-            setResult(RESULT_OK, Intent().apply {
+            val intent = Intent().apply {
                 putExtra(INTENT_EXTRA_PLACE_DETAIL, it)
-            })
+            }
+            setResult(RESULT_OK, intent)
 
             finish()
         }
@@ -65,6 +66,10 @@ class AddressResultActivity :
                 }
             }
         })
+
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun initObserve() {
