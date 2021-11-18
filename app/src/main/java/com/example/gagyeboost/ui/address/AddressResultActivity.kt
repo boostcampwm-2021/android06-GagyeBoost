@@ -7,6 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.GPSUtils
 import com.example.gagyeboost.common.INTENT_EXTRA_PLACE_DETAIL
@@ -52,12 +53,18 @@ class AddressResultActivity :
             observable.onNext(it?.toString())
         }
 
-        binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus) {
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+        binding.rvAddress.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                when (newState) {
+                    RecyclerView.SCROLL_STATE_DRAGGING -> {
+                        val imm =
+                            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+                    }
+                }
             }
-        }
+        })
     }
 
     private fun initObserve() {
