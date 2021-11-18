@@ -1,10 +1,14 @@
 package com.example.gagyeboost.ui.map
 
+import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.BitmapUtils
 import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.GPSUtils
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
@@ -15,7 +19,8 @@ import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -32,6 +37,17 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private val viewModel: MapViewModel by sharedViewModel()
     private lateinit var clusterManager: ClusterManager<MyItem?>
     private lateinit var markerManager: MarkerManager
+    private val gpsUtils by lazy { GPSUtils(requireContext()) }
+    private val permissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+    private val requestLocation = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        moveCameraToUser()
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,6 +60,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         viewModel.setInitData()
         binding.mvMap.getMapAsync(this)
         binding.mvMap.onCreate(null)
+        binding.btnGps.setOnClickListener {
+            moveCameraToUser()
+        }
     }
 
     private fun setDialog() {
@@ -121,16 +140,15 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         setUpMap()
         addItems()
         clickListener()
+
+        requestLocation.launch(permissions)
     }
 
     private fun setUpMap() {
         markerManager = MarkerManager(googleMap)
         clusterManager = ClusterManager(context, googleMap, markerManager)
         googleMap.setOnCameraIdleListener(clusterManager)
-        // TODO 내위치 설정
-        val myLocation = LatLng(37.5642135, 127.0016985)
-        // TODO 설정된 위치로 이동
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
+
         clusterManager.renderer = MyClusterRenderer(context, googleMap, clusterManager)
     }
 
@@ -170,9 +188,30 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                 marker.position.longitude.toFloat()
             )
             val bottomSheet =
-                MapDetailFragment(marker.title ?: "주소 없음", viewModel.selectedDetailList, viewModel)
+                MapDetailFragment(
+                    marker.title ?: "주소 없음",
+                    viewModel.selectedDetailList,
+                    viewModel
+                ) {
+                    viewModel.loadFilterData()
+                }
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
             Timber.e("setOnInfoWindowClickListener click")
         }
     }
+
+    private fun moveCameraToUser() {
+        val userLocation = gpsUtils.getUserLatLng()
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f))
+
+        val marker = MarkerOptions()
+
+        ResourcesCompat.getDrawable(resources, R.drawable.ic_user_marker, null)?.let {
+            val bitmap = BitmapUtils.createBitmapFromDrawable(it)
+            marker.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+            marker.position(userLocation)
+            googleMap.addMarker(marker)
+        }
+    }
+
 }

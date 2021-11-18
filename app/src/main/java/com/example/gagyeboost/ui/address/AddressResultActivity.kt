@@ -49,6 +49,10 @@ class AddressResultActivity :
         binding.etSearch.doAfterTextChanged {
             observable.onNext(it?.toString())
         }
+
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun initObserve() {
