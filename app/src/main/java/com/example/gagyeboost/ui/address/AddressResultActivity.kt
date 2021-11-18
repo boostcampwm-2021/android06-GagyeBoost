@@ -87,6 +87,16 @@ class AddressResultActivity :
         binding.pbLoading.isVisible = isVisible
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.toggleSoftInput(
+            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.HIDE_IMPLICIT_ONLY
+        )
+    }
+
     override fun onDestroy() {
         disposable.dispose()
         super.onDestroy()
