@@ -16,12 +16,12 @@ class FilterCategoryAdapter(private val viewModel: MapViewModel) :
     ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
 
     private val initCategoryList: List<Int> = viewModel.categoryIDList.value ?: listOf()
-    val categoryList = initCategoryList.toMutableList()
+    val categorySet = initCategoryList.toMutableSet()
 
     fun setCategoryList(boolean: Boolean) {
-        categoryList.clear()
+        categorySet.clear()
         if (boolean) {
-            categoryList.addAll(initCategoryList)
+            categorySet.addAll(initCategoryList)
         }
         notifyDataSetChanged()
     }
@@ -43,14 +43,14 @@ class FilterCategoryAdapter(private val viewModel: MapViewModel) :
         private var currentItem: Category? = null
 
         init {
-            binding.cbCategory.setOnCheckedChangeListener { buttonView, isChecked ->
+            binding.cbCategory.setOnCheckedChangeListener { _, isChecked ->
                 currentItem?.let {
                     if (isChecked) {
-                        categoryList.add(it.id)
+                        categorySet.add(it.id)
                     } else {
-                        categoryList.remove(it.id)
+                        categorySet.remove(it.id)
                     }
-                    viewModel.categoryIDList.value = categoryList
+                    viewModel.categoryIDList.value = categorySet.toMutableList()
                 }
             }
         }
@@ -59,14 +59,14 @@ class FilterCategoryAdapter(private val viewModel: MapViewModel) :
             currentItem = categoryItem
             binding.category = categoryItem
             setCategoryColor()
-            binding.cbCategory.isChecked = categoryList.contains(categoryItem.id)
+            binding.cbCategory.isChecked = categorySet.contains(categoryItem.id)
         }
 
         private fun setCategoryColor() {
             with(this.itemView.context) {
                 val emojiBackground = binding.tvEmoji.background as GradientDrawable
                 val nameBackground = binding.tvCategoryName.background as GradientDrawable
-                val colorId: Int = when (adapterPosition % 10) {
+                val colorId: Int = when (bindingAdapterPosition % 10) {
                     0 -> ContextCompat.getColor(this, R.color.category1)
                     1 -> ContextCompat.getColor(this, R.color.category2)
                     2 -> ContextCompat.getColor(this, R.color.category3)

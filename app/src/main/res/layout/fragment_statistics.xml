@@ -1,13 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.statstics.StatisticsFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.statstics.StatisticsViewModel" />
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/statistics" />
+        android:layout_marginBottom="20dp"
+        android:fillViewport="true"
+        tools:context=".ui.statstics.StatisticsFragment">
 
-</FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_year_and_month"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/default_color_gradation"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@{viewModel.yearAndMonth}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/app_bar_title_text_size"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggle_group_money_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.GONE : View.VISIBLE}"
+                app:checkedButton="@id/btn_expense"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_year_and_month"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <Button
+                    android:id="@+id/btn_expense"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/expense"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_income"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/earnings"
+                    android:textSize="16sp" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <ImageView
+                android:id="@+id/iv_icon"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:alpha="0.7"
+                android:src="@drawable/app_icon3_circle"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_year_and_month"
+                app:layout_constraintWidth_percent="0.5"
+                android:contentDescription="@string/has_no_chart_data" />
+
+            <TextView
+                android:id="@+id/tv_no_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/has_no_chart_data"
+                android:textColor="@color/gray3"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_icon" />
+
+            <TextView
+                android:id="@+id/tv_monthly_stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="@string/monthly_statistics"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.GONE : View.VISIBLE}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toggle_group_money_type" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pie_chart_month_statistics"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.GONE : View.VISIBLE}"
+                app:layout_constraintTop_toBottomOf="@id/tv_monthly_stat" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_record_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:nestedScrollingEnabled="false"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.GONE : View.VISIBLE}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/pie_chart_month_statistics"
+                tools:listitem="@layout/item_stat_record" />
+
+            <Button
+                android:id="@+id/btn_show_record_list"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@{viewModel.isShowingAllData ? @string/hide : @string/show_all}"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_record_list" />
+
+            <TextView
+                android:id="@+id/tv_daily_stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/daily_statistics"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.GONE : View.VISIBLE}"
+                app:layout_constraintStart_toStartOf="@id/tv_monthly_stat"
+                app:layout_constraintTop_toBottomOf="@id/btn_show_record_list" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart_daily_stat"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                android:nestedScrollingEnabled="true"
+                android:textSize="18sp"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.GONE : View.VISIBLE}"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+                app:layout_constraintStart_toStartOf="@id/tv_monthly_stat"
+                app:layout_constraintTop_toBottomOf="@id/tv_daily_stat" />
+
+            <TextView
+                android:id="@+id/tv_total_money_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@{viewModel.selectedMoneyType == 0 ? @string/total_expense : @string/total_income}"
+                android:textColor="@color/gray3"
+                android:textSize="16sp"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.GONE : View.VISIBLE}"
+                app:layout_constraintStart_toStartOf="@id/tv_monthly_stat"
+                app:layout_constraintTop_toBottomOf="@id/chart_daily_stat" />
+
+            <TextView
+                android:id="@+id/tv_total_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@{viewModel.totalMoneyAmount.concat(@string/monetary_unit)}"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{viewModel.sortedStatRecordList.size() == 0 ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+                app:layout_constraintTop_toTopOf="@id/tv_total_money_title" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

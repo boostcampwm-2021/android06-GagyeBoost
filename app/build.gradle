@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'com.google.firebase.crashlytics'
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -71,15 +72,16 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:2.5.0'
     kapt "androidx.room:room-compiler:$room_version"
 
-    // koin
+    // Koin
     implementation "io.insert-koin:koin-android:$koin_version"
 
-    // navigation
+    // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     // Google Map
@@ -95,6 +97,9 @@ dependencies {
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
+
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     // Paging
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
