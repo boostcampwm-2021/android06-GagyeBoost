@@ -11,6 +11,7 @@ import com.example.gagyeboost.model.data.InitMoneyFilter
 import com.example.gagyeboost.ui.map.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class FilterMoneyDialog : BottomSheetDialogFragment() {
 
@@ -38,13 +39,13 @@ class FilterMoneyDialog : BottomSheetDialogFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        val initStart = viewModel.intStartMoney.value ?: InitMoneyFilter.Start.money
+        val initEnd = viewModel.intEndMoney.value ?: InitMoneyFilter.End.money
+
         with(binding.rsMoney) {
-            var start = viewModel.intStartMoney.value?.toFloat() ?: 0f
-            var end = if (viewModel.intEndMoney.value == Int.MAX_VALUE) {
-                1000000f
-            } else {
-                viewModel.intEndMoney.value?.toFloat() ?: 300000f
-            }
+            var start = initStart.toFloat()
+            var end = if (initEnd == Int.MAX_VALUE) 1000000f else initEnd.toFloat()
+
             values = listOf(start, end)
 
             addOnChangeListener { _, value, _ ->
@@ -62,8 +63,14 @@ class FilterMoneyDialog : BottomSheetDialogFragment() {
 
         binding.btnFilterApply.setOnClickListener {
             viewModel.loadFilterData()
+            viewModel.changeMoneyBackground()
             dismiss()
         }
+
+        this.dialog?.setOnCancelListener {
+            viewModel.setMoney(initStart, initEnd)
+        } ?: Timber.e("setOnCancelListener dialog is null")
+
     }
 
     override fun onDestroyView() {

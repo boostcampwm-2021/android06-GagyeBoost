@@ -109,6 +109,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
             )
             repository.addAccountBookData(data)
         }
+        money.value = 0
     }
 
     fun loadCategoryList() {
