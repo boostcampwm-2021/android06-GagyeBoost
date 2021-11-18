@@ -73,9 +73,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             dialog.show(childFragmentManager, dialog.tag)
             childFragmentManager.executePendingTransactions()
             viewModel.isMoneyBackgroundChange.observe(viewLifecycleOwner) {
-                if (it) {
-                    changeSelectedBackground(binding.btnMoney)
-                }
+
+                changeSelectedBackground(binding.btnMoney, it)
+
             }
         }
         binding.btnMoneyType.setOnClickListener {
@@ -128,11 +128,16 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         }
     }
 
-    private fun changeSelectedBackground(textView: TextView) {
-        Timber.e("change background")
-        textView.setTextColor(Color.WHITE)
-        textView.background =
-            ResourcesCompat.getDrawable(resources, R.drawable.background_filter_selected, null)
+    private fun changeSelectedBackground(textView: TextView, bool: Boolean) {
+        if (bool) {
+            textView.setTextColor(Color.WHITE)
+            textView.background =
+                ResourcesCompat.getDrawable(resources, R.drawable.background_filter_selected, null)
+        } else {
+            textView.setTextColor(ResourcesCompat.getColor(resources, R.color.gray1, null))
+            textView.background =
+                ResourcesCompat.getDrawable(resources, R.drawable.background_white_radius_20dp, null)
+        }
     }
 
     override fun onStart() {
