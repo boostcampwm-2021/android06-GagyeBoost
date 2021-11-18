@@ -64,7 +64,7 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
             val dataList = mutableListOf<Pair<Int, Int>>()
             calendar.datesInMonth.forEach { date ->
                 // include only current month date
-                if (date < 0) return@forEach
+                if (date <= 0) return@forEach
 
                 val accountDataList =
                     repository.loadDayData(
@@ -77,9 +77,9 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
                     accountDataList.fold(0) { total, record: AccountBook ->
                         total + record.money
                     } / CHART_Y_AXIS_UNIT
-                totalSum += totalMoney * CHART_Y_AXIS_UNIT
 
-                if (totalMoney > 0) dataList.add(Pair(date, totalMoney))
+                totalSum += totalMoney * CHART_Y_AXIS_UNIT
+                dataList.add(Pair(date, totalMoney))
             }
             _dailyChartData.value = dataList
             _totalMoneyAmount.value = formatter.format(totalSum)
