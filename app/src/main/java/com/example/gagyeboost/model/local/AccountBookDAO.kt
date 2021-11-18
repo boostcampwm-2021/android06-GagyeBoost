@@ -6,6 +6,8 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
+import timber.log.Timber
+import java.util.*
 
 @Dao
 interface AccountBookDAO {
@@ -56,16 +58,15 @@ interface AccountBookDAO {
     suspend fun deleteAccountBookData(id: Int)
 
     //선택한 월의 모든 데이터
-//    @Query("SELECT * FROM account_book WHERE year=:year AND month=:month")
-//    fun loadMonthData(year: Int, month: Int): List<AccountBook>
+    @Query("SELECT * FROM account_book WHERE year=:year AND month=:month")
+    suspend fun loadMonthData(year: Int, month: Int): List<AccountBook>
 
     //검색 및 지도필터 결과(키워드?)
     @Query(
         """SELECT * FROM account_book
             WHERE (money_type=:moneyType) AND
-            (year BETWEEN :startYear AND :endYear) AND
-            (month BETWEEN :startMonth AND :endMonth) AND
-            (day BETWEEN :startDay AND :endDay) AND
+            year*10000+month*100+day>=:startYear*10000+:startMonth*100+:startDay AND
+            year*10000+month*100+day<=:endYear*10000+:endMonth*100+:endDay AND
             (category IN (:categoryList)) AND
             (money BETWEEN :startMoney AND :endMoney) AND
             (latitude BETWEEN :startLatitude AND :endLatitude) AND
@@ -85,20 +86,35 @@ interface AccountBookDAO {
         startLatitude: Float,
         startLongitude: Float,
         endLatitude: Float,
-        endLongitude: Float
+        endLongitude: Float,
     ): List<AccountBook>
 
-    /*
-    //선택한 월과 위치범위에 따른 데이터(클러스터링에서 사용?)
-    @Query("SELECT *FROM account_book WHERE year=:year AND month=:month AND getDist(:center,latitude,longitude)<=:radius")
-    fun getMonthPositionData(
-        year: Int,
-        month: Int,
-        center: Pair<Float, Float>,
-        radius: Float
+    @Query(
+        """SELECT * FROM account_book
+            WHERE (money_type=:moneyType) AND
+            year*10000+month*100+day>=:startYear*10000+:startMonth*100+:startDay AND
+            year*10000+month*100+day<=:endYear*10000+:endMonth*100+:endDay AND
+            (category IN (:categoryList)) AND
+            (money BETWEEN :startMoney AND :endMoney) AND
+            (latitude BETWEEN :startLatitude AND :endLatitude) AND
+            (longitude BETWEEN :startLongitude AND :endLongitude) AND
+            content LIKE '%'||:keyword||'%'"""
+    )
+    suspend fun loadSearchDataWithKeyword(
+        moneyType: Byte,
+        startYear: Int,
+        startMonth: Int,
+        startDay: Int,
+        endYear: Int,
+        endMonth: Int,
+        endDay: Int,
+        categoryList: List<Int>,
+        startMoney: Int,
+        endMoney: Int,
+        startLatitude: Float,
+        startLongitude: Float,
+        endLatitude: Float,
+        endLongitude: Float,
+        keyword: String
     ): List<AccountBook>
-
-    private fun getDist(center: Pair<Float, Float>, latitude: Float, longitude: Float) =
-        sqrt((center.first - latitude) * (center.first - latitude) + (center.second - longitude) * (center.second - longitude))
-     */
 }

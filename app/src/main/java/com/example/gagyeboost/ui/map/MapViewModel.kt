@@ -1,16 +1,12 @@
 package com.example.gagyeboost.ui.map
 
 import androidx.lifecycle.*
-import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.INCOME
-import com.example.gagyeboost.common.formatter
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.DateDetailItem
-import com.example.gagyeboost.model.data.Filter
 import com.example.gagyeboost.model.data.*
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 
 class MapViewModel(private val repository: Repository) : ViewModel() {
@@ -19,8 +15,6 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val intMoneyType: LiveData<Int> = Transformations.map(byteMoneyType) { it.toInt() }
 
     val intStartMoney = MutableLiveData(0)
-    val startMoney: LiveData<String> =
-        Transformations.map(intStartMoney) { formatter.format(it) + "원" }
 
     val intEndMoney = MutableLiveData(300000)
     val endMoney: LiveData<String> = Transformations.map(intEndMoney) {
@@ -31,9 +25,12 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    val categoryIDList = MutableLiveData<List<Int>>()
-    val categoryExpenseList = MutableLiveData<List<Category>>()
-    val categoryIncomeList = MutableLiveData<List<Category>>()
+    // 필터로 보낼 id list
+    val categoryIDList = MutableLiveData<MutableList<Int>>()
+
+    // 화면에 보여줄 카테고리 리스트
+    private val categoryExpenseList = MutableLiveData<List<Category>>()
+    private val categoryIncomeList = MutableLiveData<List<Category>>()
 
     var startYear: Int = 1900
     var startMonth: Int = 1
@@ -46,7 +43,15 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endLatitude: Float = 200.0F
     var endLongitude: Float = 200.0F
 
-    val filterData = MutableLiveData<List<AccountBook>>()
+    val isMoneyBackgroundChange = MutableLiveData(false)
+    val isPeriodBackgroundChange = MutableLiveData(false)
+    val isCategoryBackgroundChange = MutableLiveData(false)
+
+    // category filter adapter에서 필요한 초기 카테고리 리스트
+    var incomeCategoryID: List<Int>? = null
+    var expenseCategoryID: List<Int>? = null
+
+    private val filterData = MutableLiveData<List<AccountBook>>()
 
     // HashMap<좌표, 좌표에 해당하는 내역 list>
     val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> =
@@ -71,7 +76,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
                     category.emoji,
                     category.categoryName,
                     it.content,
-                    it.money.toString(),
+                    it.money,
                     it.moneyType == INCOME
                 )
             }
@@ -105,36 +110,50 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     //viewModel 공유하면 다시 map화면 돌아왔을때 init
     fun setInitData() {
         byteMoneyType.value = EXPENSE
-        intStartMoney.value = 0
-        intEndMoney.value = 300000
-        startYear = Calendar.getInstance().get(Calendar.YEAR)
-        startMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
+        intStartMoney.value = InitMoneyFilter.Start.money
+        intEndMoney.value = InitMoneyFilter.End.money
+        startYear = NOW_YEAR
+        startMonth = NOW_MONTH
         startDay = 1
-        endYear = startYear
-        endMonth = startMonth
-        endDay = Calendar.getInstance().getActualMaximum(Calendar.DATE)
+        endYear = NOW_YEAR
+        endMonth = NOW_MONTH
+        endDay = END_DAY
         // 화면에 보이는 위도/경도로 설정 해야함
         startLatitude = 0.0f
         startLongitude = 0.0f
         endLatitude = 200.0f
         endLongitude = 200.0f
         initLoadCategory()
+
+        isMoneyBackgroundChange.value = false
+        isPeriodBackgroundChange.value = false
+        isCategoryBackgroundChange.value = false
     }
 
     private fun initLoadCategory() {
         viewModelScope.launch {
-            val expenseCategory = repository.loadCategoryList(EXPENSE)
-            val incomeCategory = repository.loadCategoryList(INCOME)
-            categoryExpenseList.postValue(expenseCategory)
-            categoryIncomeList.postValue(incomeCategory)
-            categoryIDList.postValue(expenseCategory.map { it.id })
+            val deferredExpenseCategory = async { repository.loadCategoryList(EXPENSE) }
+            val deferredIncomeCategory = async { repository.loadCategoryList(INCOME) }
+
+            val expenseCategory = deferredExpenseCategory.await()
+            val incomeCategory = deferredIncomeCategory.await()
+
+            categoryExpenseList.value = expenseCategory
+            categoryIncomeList.value = incomeCategory
+            categoryIDList.value = expenseCategory.map { it.id }.toMutableList()
+            loadFilterData()
+
+            incomeCategoryID = incomeCategory.map { it.id }
+            expenseCategoryID = expenseCategory.map { it.id }
         }
     }
 
     fun setCategoryIDList(moneyType: Byte) {
         when (moneyType) {
-            INCOME -> categoryIDList.value = categoryIncomeList.value?.map { it.id }
-            EXPENSE -> categoryIDList.value = categoryExpenseList.value?.map { it.id }
+            INCOME -> categoryIDList.value =
+                categoryIncomeList.value?.map { it.id }?.toMutableList()
+            EXPENSE -> categoryIDList.value =
+                categoryExpenseList.value?.map { it.id }?.toMutableList()
         }
     }
 
@@ -185,5 +204,32 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endYear = calendar.get(Calendar.YEAR)
         endMonth = calendar.get(Calendar.MONTH) + 1
         endDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+        isPeriodBackgroundChange.value = !(startYear == NOW_YEAR &&
+                startMonth == NOW_MONTH &&
+                startDay == 1 &&
+                endYear == NOW_YEAR &&
+                endMonth == NOW_MONTH &&
+                endDay == END_DAY)
+    }
+
+    fun changeMoneyBackground() {
+        val start = intStartMoney.value ?: InitMoneyFilter.Start.money
+        val end = intEndMoney.value ?: InitMoneyFilter.End.money
+
+        isMoneyBackgroundChange.value =
+            !(start == InitMoneyFilter.Start.money && end == InitMoneyFilter.End.money)
+    }
+
+    fun changeCategoryBackground() {
+        when (byteMoneyType.value) {
+            INCOME -> {
+                isCategoryBackgroundChange.value = incomeCategoryID != categoryIDList.value
+            }
+            EXPENSE -> {
+                isCategoryBackgroundChange.value = expenseCategoryID != categoryIDList.value
+            }
+            else -> Timber.e("changeCategoryBackground byteMoneyType is null")
+        }
     }
 }

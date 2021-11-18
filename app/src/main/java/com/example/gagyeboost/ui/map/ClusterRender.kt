@@ -5,11 +5,13 @@ import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.data.MyItem
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.ui.IconGenerator
+import timber.log.Timber
 
 
 class MyClusterRenderer(
@@ -39,5 +41,12 @@ class MyClusterRenderer(
         val icon = clusterIconGenerator.makeIcon("${formatter.format(totalMoney)}원")
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon))
 
+    }
+
+    override fun onClusterItemRendered(clusterItem: MyItem, marker: Marker) {
+        super.onClusterItemRendered(clusterItem, marker.apply{
+            title=clusterItem.title
+            snippet=clusterItem.snippet
+        })
     }
 }

@@ -5,15 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
 import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.model.data.nothingEmoji
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
@@ -24,7 +21,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     private var selectedCategoryId = -1
 
-    val money = MutableLiveData("0")
+    val money = MutableLiveData(0)
 
     private val _categoryList = MutableLiveData<List<Category>>()
     val categoryList: LiveData<List<Category>> = _categoryList
@@ -95,25 +92,24 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     fun addAccountBookData() {
         if (dateString.isEmpty()) return
         viewModelScope.launch {
-            val splitedStr = dateString.split('/')
+            val splitStr = dateString.split('/')
             val data = AccountBook(
                 moneyType = _categoryType,
-                money = if (money.value != null) money.value!!.toInt() else 0,
+                money = money.value ?: 0,
                 category = selectedCategoryId,
-                address = "${selectedLocation?.roadAddressName ?: userLocation.getAddressLine(0)} ${selectedLocation?.placeName ?: ""}",
+                address = selectedLocation?.let { "${it.roadAddressName} ${it.placeName}" } ?: "",
                 latitude = selectedLocation?.lat?.toFloat()
-                    ?: userLocation.latitude.toFloat(),
+                    ?: -1f,
                 longitude = selectedLocation?.lng?.toFloat()
-                    ?: userLocation.longitude.toFloat(),
+                    ?: -1f,
                 content = content.value ?: "",
-                year = splitedStr[0].toInt(),
-                month = splitedStr[1].toInt(),
-                day = splitedStr[2].toInt()
+                year = splitStr[0].toInt(),
+                month = splitStr[1].toInt(),
+                day = splitStr[2].toInt()
             )
-            repository.addAccountBookData(
-                data
-            )
+            repository.addAccountBookData(data)
         }
+        money.value = 0
     }
 
     fun loadCategoryList() {
@@ -121,17 +117,4 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
             _categoryList.value = repository.loadCategoryList(categoryType)
         }
     }
-
-    fun afterMoneyTextChanged() {
-        if (money.value.isNullOrEmpty()) money.value = "0"
-
-        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "")
-    }
-
-    fun getFormattedMoneyText(): String {
-        return formatter.format(money.value?.toIntOrNull() ?: 0) + "원"
-    }
-
-    fun fetchPlaceListData(input: String, latLng: LatLng, callback: () -> Unit) =
-        repository.fetchPlaceListFromKeyword(input, latLng, callback).cachedIn(viewModelScope)
 }

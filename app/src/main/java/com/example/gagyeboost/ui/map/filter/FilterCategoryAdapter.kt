@@ -10,33 +10,65 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemRvFilterCategoryBinding
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.ui.map.MapViewModel
+import timber.log.Timber
 
-class CategoryFilterAdapter : ListAdapter<Category, CategoryFilterAdapter.ViewHolder>(diffUtil) {
+class FilterCategoryAdapter(
+    private val viewModel: MapViewModel,
+    private val initCategoryList: List<Int>
+) : ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    val categorySet = viewModel.categoryIDList.value?.toMutableSet() ?: mutableSetOf()
+
+    fun setCategoryList(boolean: Boolean) {
+        categorySet.clear()
+        if (boolean) {
+            categorySet.addAll(initCategoryList)
+        }
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding =
             ItemRvFilterCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ViewHolder(binding)
+        return CategoryViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemRvFilterCategoryBinding) :
+    inner class CategoryViewHolder(private val binding: ItemRvFilterCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        private var currentItem: Category? = null
+
+        init {
+            binding.cbCategory.setOnCheckedChangeListener { _, isChecked ->
+                currentItem?.let {
+                    if (isChecked) {
+                        categorySet.add(it.id)
+                    } else {
+                        categorySet.remove(it.id)
+                    }
+                    viewModel.categoryIDList.value = categorySet.toMutableList()
+                }
+            }
+        }
+
         fun bind(categoryItem: Category) {
+            currentItem = categoryItem
             binding.category = categoryItem
             setCategoryColor()
+            binding.cbCategory.isChecked = categorySet.contains(categoryItem.id)
         }
 
         private fun setCategoryColor() {
             with(this.itemView.context) {
                 val emojiBackground = binding.tvEmoji.background as GradientDrawable
                 val nameBackground = binding.tvCategoryName.background as GradientDrawable
-                val colorId: Int = when (adapterPosition % 10) {
+                val colorId: Int = when (bindingAdapterPosition % 10) {
                     0 -> ContextCompat.getColor(this, R.color.category1)
                     1 -> ContextCompat.getColor(this, R.color.category2)
                     2 -> ContextCompat.getColor(this, R.color.category3)
@@ -68,5 +100,4 @@ class CategoryFilterAdapter : ListAdapter<Category, CategoryFilterAdapter.ViewHo
             }
         }
     }
-
 }

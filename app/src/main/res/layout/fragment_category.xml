@@ -42,8 +42,9 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
-            android:text="@{viewModel.getFormattedMoneyText()}"
+            android:textColor="@color/gray3"
             android:textSize="@dimen/app_bar_title_text_size"
+            app:intToWon="@{viewModel.money}"
             app:layout_constraintEnd_toStartOf="@id/btn_close"
             app:layout_constraintStart_toEndOf="@id/btn_back"
             app:layout_constraintTop_toTopOf="parent"
@@ -55,14 +56,17 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
+            android:autofillHints="@null"
             android:hint="@string/history"
             android:inputType="text"
             android:text="@={viewModel.content}"
             android:theme="@style/EditTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_money"
-            android:autofillHints="@null" />
+            app:layout_constraintTop_toBottomOf="@id/tv_money">
+
+            <requestFocus />
+        </EditText>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_category"

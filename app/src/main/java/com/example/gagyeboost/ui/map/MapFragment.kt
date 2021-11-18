@@ -1,22 +1,26 @@
 package com.example.gagyeboost.ui.map
 
+import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.BitmapUtils
 import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.GPSUtils
 import com.example.gagyeboost.common.INCOME
-import com.example.gagyeboost.databinding.DialogFilterCategoryBinding
 import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.MyItem
 import com.example.gagyeboost.ui.base.BaseFragment
-import com.example.gagyeboost.ui.map.filter.CategoryFilterAdapter
+import com.example.gagyeboost.ui.map.filter.FilterCategoryDialog
 import com.example.gagyeboost.ui.map.filter.FilterMoneyDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -24,6 +28,7 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.collections.MarkerManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 import java.util.*
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
@@ -32,6 +37,17 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private val viewModel: MapViewModel by sharedViewModel()
     private lateinit var clusterManager: ClusterManager<MyItem?>
     private lateinit var markerManager: MarkerManager
+    private val gpsUtils by lazy { GPSUtils(requireContext()) }
+    private val permissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+    private val requestLocation = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        moveCameraToUser()
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,9 +57,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun initView() {
         binding.viewModel = viewModel
-        viewModel.setInitData()
         binding.mvMap.getMapAsync(this)
         binding.mvMap.onCreate(null)
+        binding.btnGps.setOnClickListener {
+            moveCameraToUser()
+        }
     }
 
     private fun setDialog() {
@@ -58,20 +76,10 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             showDateRangePicker()
         }
         binding.btnCategory.setOnClickListener {
-            showCategoryDialog()
+            val dialog = FilterCategoryDialog()
+            dialog.show(childFragmentManager, dialog.tag)
+            childFragmentManager.executePendingTransactions()
         }
-    }
-
-    private fun showCategoryDialog() {
-        val categoryBinding = DialogFilterCategoryBinding.inflate(layoutInflater)
-        val adapter = CategoryFilterAdapter()
-        categoryBinding.rvFilterCategory.adapter = adapter
-        adapter.submitList(viewModel.getCategoryList())
-
-        val dialog = BottomSheetDialog(requireContext())
-        dialog.setContentView(categoryBinding.root)
-        dialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        dialog.show()
     }
 
     private fun showMoneyTypeDialog() {
@@ -129,18 +137,17 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         setUpMap()
-        addItems()
         clickListener()
+        addItems()
+        viewModel.setInitData()
+        requestLocation.launch(permissions)
     }
 
     private fun setUpMap() {
         markerManager = MarkerManager(googleMap)
         clusterManager = ClusterManager(context, googleMap, markerManager)
         googleMap.setOnCameraIdleListener(clusterManager)
-        // TODO 내위치 설정
-        val myLocation = LatLng(37.5642135, 127.0016985)
-        // TODO 설정된 위치로 이동
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15f))
+
         clusterManager.renderer = MyClusterRenderer(context, googleMap, clusterManager)
     }
 
@@ -159,30 +166,50 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                     )
                 clusterManager.addItem(offsetItem)
             }
+            clusterManager.cluster()
         }
     }
 
     private fun clickListener() {
         clusterManager.setOnClusterItemClickListener { item: MyItem? ->
             // 마커 클릭
-            Log.e("item click", "setOnClusterItemClickListener click")
+            Timber.e("setOnClusterItemClickListener click")
             false
         }
         clusterManager.setOnClusterClickListener { item: Cluster<MyItem?> ->
             //클러스터링 된 item 클릭
-            Log.e("item click", "setOnClusterClickListener click")
+            Timber.e("setOnClusterClickListener click")
             false
         }
-
         clusterManager.markerCollection.setOnInfoWindowClickListener { marker ->
             viewModel.setSelectedDetail(
                 marker.position.latitude.toFloat(),
                 marker.position.longitude.toFloat()
             )
             val bottomSheet =
-                MapDetailFragment(marker.title ?: "주소 없음", viewModel.selectedDetailList, viewModel)
+                MapDetailFragment(
+                    marker.title ?: "주소 없음",
+                    viewModel.selectedDetailList,
+                    viewModel
+                ) {
+                    viewModel.loadFilterData()
+                }
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
-            Log.e("item click", "setOnInfoWindowClickListener click")
+            Timber.e("setOnInfoWindowClickListener click")
+        }
+    }
+
+    private fun moveCameraToUser() {
+        val userLocation = gpsUtils.getUserLatLng()
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f))
+
+        val marker = MarkerOptions()
+
+        ResourcesCompat.getDrawable(resources, R.drawable.ic_user_marker, null)?.let {
+            val bitmap = BitmapUtils.createBitmapFromDrawable(it)
+            marker.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+            marker.position(userLocation)
+            googleMap.addMarker(marker)
         }
     }
 }

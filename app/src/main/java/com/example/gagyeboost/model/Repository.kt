@@ -28,6 +28,9 @@ class Repository(
         accountBookDao.addCategoryData(category)
     }
 
+    suspend fun loadMonthExpense(year: Int, month: Int) =
+        accountBookDao.loadMonthExpense(year, month)
+
     suspend fun loadCategoryList(moneyType: Byte) = accountBookDao.loadCategoryAllData(moneyType)
 
     suspend fun updateCategoryData(category: Category) = accountBookDao.updateCategoryData(category)
@@ -62,13 +65,32 @@ class Repository(
             filter.endLongitude
         )
 
+    suspend fun loadFilterDataWithKeyword(filter: Filter, keyword: String) =
+        accountBookDao.loadSearchDataWithKeyword(
+            filter.moneyType,
+            filter.startYear,
+            filter.startMonth,
+            filter.startDay,
+            filter.endYear,
+            filter.endMonth,
+            filter.endDay,
+            filter.categoryList,
+            filter.startMoney,
+            filter.endMoney,
+            filter.startLatitude,
+            filter.startLongitude,
+            filter.endLatitude,
+            filter.endLongitude,
+            keyword
+        )
+
     fun fetchPlaceListFromKeyword(
         input: String,
         latLng: LatLng,
-        callback: () -> Unit
+        callback: (Boolean) -> Unit
     ): Flow<PagingData<PlaceDetail>> {
         return Pager(PagingConfig(1)) {
-            AddressPagingSource(client.getGooglePlayService(), input, latLng, callback)
+            AddressPagingSource(client.getKakaoApiService(), input, latLng, callback)
         }.flow
     }
 
@@ -77,8 +99,10 @@ class Repository(
         val categoryList =
             accountBookDao.loadCategoryAllData(EXPENSE) + accountBookDao.loadCategoryAllData(INCOME)
         categoryList.forEach {
-            categoryMap.put(it.id, it)
+            categoryMap[it.id] = it
         }
         return categoryMap
     }
+
+    suspend fun loadMonthData(year: Int, month: Int) = accountBookDao.loadMonthData(year, month)
 }

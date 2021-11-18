@@ -5,42 +5,96 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.map.MapViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <CheckBox
-            android:id="@+id/cb_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/tv_money_type"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/expense"
-            android:textSize="16sp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@{viewModel.intMoneyType == 0 ? @string/expense : @string/earnings}"
+            android:textColor="@color/gray1"
+            android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/rv_filter_category"
-            app:layout_constraintStart_toEndOf="@id/cb_total"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/expense" />
+
+        <View
+            android:id="@+id/view_line_1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/gray2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_money_type" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_filter_category"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="450dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_line_1"
+            tools:listitem="@layout/item_rv_filter_category" />
+
+        <View
+            android:id="@+id/view_line_2"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:alpha="0.5"
+            android:layout_marginTop="5dp"
+            android:background="@color/gray2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_filter_category" />
+
+        <TextView
+            android:id="@+id/tv_select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_white_radius_20dp_stroke_green"
+            android:padding="10dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/select_all"
+            android:textColor="@color/green"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_select_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_white_radius_20dp_stroke_green"
+            android:padding="10dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/select_clear"
+            android:textColor="@color/green"
+            android:textSize="16sp" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            app:constraint_referenced_ids="tv_select_all, tv_select_clear"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cb_total"
-            tools:listitem="@layout/item_rv_filter_category" />
+            app:layout_constraintTop_toBottomOf="@id/view_line_2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
