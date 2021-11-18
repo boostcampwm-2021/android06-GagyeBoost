@@ -38,7 +38,7 @@
             style="@style/MapFilterButton"
             android:background="@{viewModel.isPeriodBackgroundChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
             android:text="@string/period"
-            android:textColor="@{viewModel.isMoneyBackgroundChange ? @color/white : @color/gray1}"
+            android:textColor="@{viewModel.isPeriodBackgroundChange ? @color/white : @color/gray1}"
             tools:background="@drawable/background_white_radius_20dp" />
 
         <TextView

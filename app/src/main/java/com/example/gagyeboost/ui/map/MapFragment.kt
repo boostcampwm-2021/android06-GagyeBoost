@@ -213,5 +213,4 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             googleMap.addMarker(marker)
         }
     }
-
 }

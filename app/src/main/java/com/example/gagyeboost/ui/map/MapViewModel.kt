@@ -46,8 +46,9 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     val isPeriodBackgroundChange = MutableLiveData(false)
     val isCategoryBackgroundChange = MutableLiveData(false)
 
-    val incomeCategoryID = categoryIncomeList.value?.map { it.id }
-    val expenseCategoryID = categoryExpenseList.value?.map { it.id }
+    // category filter adapter에서 필요한 초기 카테고리 리스트
+    var incomeCategoryID: List<Int>? = null
+    var expenseCategoryID: List<Int>? = null
 
     private val filterData = MutableLiveData<List<AccountBook>>()
 
@@ -122,6 +123,10 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endLatitude = 200.0f
         endLongitude = 200.0f
         initLoadCategory()
+
+        isMoneyBackgroundChange.value = false
+        isPeriodBackgroundChange.value = false
+        isCategoryBackgroundChange.value = false
     }
 
     private fun initLoadCategory() {
@@ -131,6 +136,8 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
             categoryExpenseList.postValue(expenseCategory)
             categoryIncomeList.postValue(incomeCategory)
             categoryIDList.postValue(expenseCategory.map { it.id }.toMutableList())
+            incomeCategoryID = incomeCategory.map { it.id }
+            expenseCategoryID = expenseCategory.map { it.id }
         }
     }
 
@@ -210,9 +217,11 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     fun changeCategoryBackground() {
         when (byteMoneyType.value) {
             INCOME -> {
+                Timber.e("incomeCategoryID: $incomeCategoryID")
                 isCategoryBackgroundChange.value = incomeCategoryID != categoryIDList.value
             }
             EXPENSE -> {
+                Timber.e("expenseCategoryID: $expenseCategoryID")
                 isCategoryBackgroundChange.value = expenseCategoryID != categoryIDList.value
             }
             else -> Timber.e("changeCategoryBackground byteMoneyType is null")
