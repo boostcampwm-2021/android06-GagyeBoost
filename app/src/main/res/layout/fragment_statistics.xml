@@ -81,7 +81,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_year_and_month"
-                app:layout_constraintWidth_percent="0.5" />
+                app:layout_constraintWidth_percent="0.5"
+                android:contentDescription="@string/has_no_chart_data" />
 
             <TextView
                 android:id="@+id/tv_no_data"

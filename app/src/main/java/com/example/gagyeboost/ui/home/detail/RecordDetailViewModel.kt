@@ -9,6 +9,7 @@ import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.DateDetailItem
+import com.example.gagyeboost.model.data.PlaceDetail
 import kotlinx.coroutines.launch
 
 class RecordDetailViewModel(private val repository: Repository, private val accountBookId: Int) :
@@ -28,16 +29,15 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category> = _category
 
-    init {
-        setAccountBookData()
-    }
+    var placeDetail: PlaceDetail? = null
 
-    private fun setAccountBookData() {
+    fun setAccountBookData(callback: () -> Unit) {
         viewModelScope.launch {
             val accountBookData = repository.loadAccountBookData(accountBookId)
             val categoryId = accountBookData.category
             val category = repository.loadCategoryData(categoryId)
             _category.value = category
+            _accountBookData.value = accountBookData
 
             dateDetailItem.value = DateDetailItem(
                 accountBookId,
@@ -49,6 +49,8 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
             )
 
             setDate(accountBookData.year, accountBookData.month, accountBookData.day)
+
+            callback()
         }
     }
 
@@ -58,7 +60,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
         }
     }
 
-    fun updateAccountBookData() {
+    fun updateAccountBookData(placeDetail: PlaceDetail? = this.placeDetail) {
         viewModelScope.launch {
             with(dateDetailItem.value) {
                 if (this == null) return@launch
@@ -69,9 +71,9 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                     if (moneyType) INCOME else EXPENSE,
                     money,
                     _category.value?.id ?: 0,
-                    DEFAULT_LAT.toFloat(),
-                    DEFAULT_LNG.toFloat(),
-                    "부스트캠프",
+                    placeDetail?.lat?.toFloat() ?: DEFAULT_LAT.toFloat(),
+                    placeDetail?.lng?.toFloat() ?: DEFAULT_LNG.toFloat(),
+                    placeDetail?.addressName ?: "부스트캠프",
                     dateDetailItem.value?.content ?: "",
                     strDate.split(".")[0].toInt(),
                     strDate.split(".")[1].toInt(),

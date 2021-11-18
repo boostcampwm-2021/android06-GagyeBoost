@@ -102,4 +102,23 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             categoryAdapter.submitList(categoryList)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        val inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.toggleSoftInput(
+            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.HIDE_IMPLICIT_ONLY
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
+    }
 }

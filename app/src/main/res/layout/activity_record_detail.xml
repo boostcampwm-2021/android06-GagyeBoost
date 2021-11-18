@@ -43,24 +43,24 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <androidx.constraintlayout.widget.Guideline
+            <View
                 android:id="@+id/gl_10percent_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintGuide_percent="0.1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.Guideline
+            <View
                 android:id="@+id/gl_90percent_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintGuide_percent="0.9"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -216,37 +216,21 @@
                 app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
                 app:layout_constraintTop_toBottomOf="@id/tv_address" />
 
-            <EditText
+            <TextView
                 android:id="@+id/et_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_white_radius_5dp"
                 android:gravity="center_vertical"
                 android:hint="@string/search_address"
-                android:imeOptions="actionSearch"
-                android:importantForAutofill="no"
-                android:inputType="textPostalAddress"
-                android:maxLines="1"
                 android:padding="10dp"
                 android:textSize="16sp"
                 app:drawableLeftCompat="@drawable/ic_search"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
                 app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
                 app:layout_constraintTop_toTopOf="@id/map" />
-
-            <ImageView
-                android:id="@+id/btn_gps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:background="@drawable/background_gradation_circle"
-                android:contentDescription="@string/find_my_location"
-                android:padding="10dp"
-                android:src="@drawable/ic_gps"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintTop_toBottomOf="@id/et_address" />
 
             <TextView
                 android:id="@+id/btn_update"

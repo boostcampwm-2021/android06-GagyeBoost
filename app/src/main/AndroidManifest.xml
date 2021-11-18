@@ -20,17 +20,22 @@
             android:value="${googleMapKey}" />
 
         <activity
-            android:name=".ui.home.detail.RecordDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.intro.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
+        <activity
+            android:name=".ui.home.detail.RecordDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true" />
 
         <activity android:name=".ui.address.AddressResultActivity" />
 
