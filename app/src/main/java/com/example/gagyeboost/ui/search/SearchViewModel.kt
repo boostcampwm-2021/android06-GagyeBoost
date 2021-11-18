@@ -76,18 +76,46 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
         _selectedType.value = type
     }
 
-    fun resetData(){
-        keyword.value=""
-        _selectedType.value=EXPENSE
-        _startYear.value=Calendar.getInstance().get(Calendar.YEAR)
-        _startMoney.value=Calendar.getInstance().get(Calendar.MONTH)+1
-        _startDay.value=1
-        _endYear.value=Calendar.getInstance().get(Calendar.YEAR)
-        _endMonth.value=Calendar.getInstance().get(Calendar.MONTH)+1
-        _endDay.value=Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
-        _startMoney.value=0
-        _endMoney.value=1000000
-        _selectedCategory.value=listOf()
+    fun resetData() {
+        keyword.value = ""
+        _selectedType.value = EXPENSE
+        _startYear.value = Calendar.getInstance().get(Calendar.YEAR)
+        _startMoney.value = Calendar.getInstance().get(Calendar.MONTH) + 1
+        _startDay.value = 1
+        _endYear.value = Calendar.getInstance().get(Calendar.YEAR)
+        _endMonth.value = Calendar.getInstance().get(Calendar.MONTH) + 1
+        _endDay.value = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
+        _startMoney.value = 0
+        _endMoney.value = 1000000
+        _selectedCategory.value = listOf()
     }
 
+    fun setStartDate(year: Int, month: Int, day: Int) {
+        val startCode = dateToDateCode(year, month, day)
+        val endCode = dateToDateCode(endYear.value ?: 2500, endMonth.value ?: 12, endDay.value ?: 1)
+        _startYear.value = year
+        _startMonth.value = month
+        _startDay.value = day
+        if (startCode > endCode) {
+            _endYear.value = year
+            _endMonth.value = month
+            _endDay.value = day
+        }
+    }
+
+    fun setEndDate(year: Int, month: Int, day: Int) {
+        val startCode =
+            dateToDateCode(startYear.value ?: 1970, startMonth.value ?: 1, startDay.value ?: 1)
+        val endCode = dateToDateCode(year, month, day)
+        _endYear.value = year
+        _endMonth.value = month
+        _endDay.value = day
+        if (startCode > endCode) {
+            _startYear.value = year
+            _startMonth.value = month
+            _startDay.value = day
+        }
+    }
+
+    private fun dateToDateCode(year: Int, month: Int, day: Int) = year * 10000 + month * 100 + day
 }

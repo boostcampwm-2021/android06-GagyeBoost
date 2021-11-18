@@ -1,5 +1,6 @@
 package com.example.gagyeboost.ui.search
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import com.example.gagyeboost.R
@@ -8,6 +9,7 @@ import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.databinding.FragmentSearchBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_search) {
     private val viewModel: SearchViewModel by viewModel()
@@ -39,10 +41,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             }
             btnReset.setOnClickListener { this@SearchFragment.viewModel.resetData() }
             btnDateStartBody.setOnClickListener {
-                // TODO DatePicker 처음 날짜 지정
+                showDatePicker(true)
             }
             btnDateEndBody.setOnClickListener {
-                // TODO DatePicker 마지막 날짜 지정
+                showDatePicker(false)
             }
             btnSelectCategory.setOnClickListener {
                 // TODO 카테고리 선택 dialog
@@ -63,5 +65,21 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
         viewModel.selectedType.observe(viewLifecycleOwner, {
             binding.toggleGroupMoneyType.check(if (it == INCOME) binding.btnIncome.id else binding.btnExpense.id)
         })
+    }
+
+    private fun showDatePicker(isStart: Boolean) {
+        val listener = { y:Int, m:Int, d:Int ->
+            if (isStart) viewModel.setStartDate(y, m, d)
+            else viewModel.setEndDate(y, m, d)
+        }
+        val year=if(isStart) viewModel.startYear.value?:1970 else viewModel.endYear.value?:2500
+        val month=if(isStart) viewModel.startMonth.value?:1 else viewModel.endMonth.value?:12
+        val day= if(isStart) viewModel.startDay.value?:1 else viewModel.endDay.value?:1
+        DatePickerDialog(
+            requireContext(), { _, y, m, d ->
+                listener(y,m+1,d)
+            },
+            year, month-1, day
+        ).show()
     }
 }
