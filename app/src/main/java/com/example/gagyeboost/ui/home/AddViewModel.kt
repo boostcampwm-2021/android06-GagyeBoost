@@ -92,7 +92,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     fun addAccountBookData() {
         if (dateString.isEmpty()) return
         viewModelScope.launch {
-            val splitedStr = dateString.split('/')
+            val splitStr = dateString.split('/')
             val data = AccountBook(
                 moneyType = _categoryType,
                 money = money.value ?: 0,
@@ -103,9 +103,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 longitude = selectedLocation?.lng?.toFloat()
                     ?: userLocation.longitude.toFloat(),
                 content = content.value ?: "",
-                year = splitedStr[0].toInt(),
-                month = splitedStr[1].toInt(),
-                day = splitedStr[2].toInt()
+                year = splitStr[0].toInt(),
+                month = splitStr[1].toInt(),
+                day = splitStr[2].toInt()
             )
             repository.addAccountBookData(data)
         }
