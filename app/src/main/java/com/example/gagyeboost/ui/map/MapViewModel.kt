@@ -5,6 +5,7 @@ import com.example.gagyeboost.common.*
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 
 class MapViewModel(private val repository: Repository) : ViewModel() {
@@ -43,6 +44,10 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
 
     val isMoneyBackgroundChange = MutableLiveData(false)
     val isPeriodBackgroundChange = MutableLiveData(false)
+    val isCategoryBackgroundChange = MutableLiveData(false)
+
+    val incomeCategoryID = categoryIncomeList.value?.map { it.id }
+    val expenseCategoryID = categoryExpenseList.value?.map { it.id }
 
     private val filterData = MutableLiveData<List<AccountBook>>()
 
@@ -200,5 +205,17 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
 
         isMoneyBackgroundChange.value =
             !(start == InitMoneyFilter.Start.money && end == InitMoneyFilter.End.money)
+    }
+
+    fun changeCategoryBackground() {
+        when (byteMoneyType.value) {
+            INCOME -> {
+                isCategoryBackgroundChange.value = incomeCategoryID != categoryIDList.value
+            }
+            EXPENSE -> {
+                isCategoryBackgroundChange.value = expenseCategoryID != categoryIDList.value
+            }
+            else -> Timber.e("changeCategoryBackground byteMoneyType is null")
+        }
     }
 }

@@ -1,10 +1,8 @@
 package com.example.gagyeboost.ui.map
 
 import android.Manifest
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import com.example.gagyeboost.R
@@ -119,22 +117,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         dateRangePicker.addOnPositiveButtonClickListener { date ->
             viewModel.setPeriod(Date(date.first), Date(date.second))
             viewModel.loadFilterData()
-        }
-    }
-
-    private fun changeSelectedBackground(textView: TextView, bool: Boolean) {
-        if (bool) {
-            textView.setTextColor(Color.WHITE)
-            textView.background =
-                ResourcesCompat.getDrawable(resources, R.drawable.background_filter_selected, null)
-        } else {
-            textView.setTextColor(ResourcesCompat.getColor(resources, R.color.gray1, null))
-            textView.background =
-                ResourcesCompat.getDrawable(
-                    resources,
-                    R.drawable.background_white_radius_20dp,
-                    null
-                )
         }
     }
 

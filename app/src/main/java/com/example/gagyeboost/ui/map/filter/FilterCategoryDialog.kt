@@ -45,7 +45,8 @@ class FilterCategoryDialog : BottomSheetDialogFragment() {
 
         this.dialog?.setOnCancelListener {
             viewModel.loadFilterData()
-        } ?: Timber.e("dialog setOnCancelListener")
+            viewModel.changeCategoryBackground()
+        } ?: Timber.e("setOnCancelListener dialog is null")
 
         clickListener()
     }
