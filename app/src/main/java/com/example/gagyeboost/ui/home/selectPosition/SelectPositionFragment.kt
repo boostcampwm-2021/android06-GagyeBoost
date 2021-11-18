@@ -73,7 +73,6 @@ class SelectPositionFragment :
 
         init()
         initMap()
-
     }
 
     private fun init() {

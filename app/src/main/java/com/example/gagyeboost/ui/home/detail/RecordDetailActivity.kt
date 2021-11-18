@@ -3,7 +3,9 @@ package com.example.gagyeboost.ui.home.detail
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.Context
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.gagyeboost.R
@@ -101,6 +103,11 @@ class RecordDetailActivity :
 
         binding.etAddress.setOnClickListener {
             goToAddressResultActivity.launch(Intent(this, AddressResultActivity::class.java))
+        }
+
+        binding.constraintDetail.setOnClickListener {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
 
         setDialogs()

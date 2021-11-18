@@ -5,6 +5,6 @@ data class DateDetailItem(
     var emoji: String,
     var category: String,
     var content: String,
-    var money: String,
+    var money: Int,
     val moneyType: Boolean,
 )

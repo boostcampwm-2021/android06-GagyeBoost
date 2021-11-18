@@ -36,8 +36,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     private val _totalMonthIncome = MutableLiveData<String>()
     val totalMonthIncome: LiveData<String> = _totalMonthIncome
 
-    private val _totalMonthExpense = MutableLiveData<String>()
-    val totalMonthExpense: LiveData<String> = _totalMonthExpense
+    private val _totalMonthExpense = MutableLiveData<Int>()
+    val totalMonthExpense: LiveData<Int> = _totalMonthExpense
 
     private val _totalMonthBalance = MutableLiveData<String>()
     val totalMonthBalance: LiveData<String> = _totalMonthBalance
@@ -128,7 +128,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
             }
             _dateItemList.postValue(dateItems)
             _totalMonthIncome.postValue(formatter.format(monthIncome) + "원")
-            _totalMonthExpense.postValue(formatter.format(monthExpense) + "원")
+            _totalMonthExpense.postValue(monthExpense)
             _totalMonthBalance.postValue(formatter.format(monthIncome - monthExpense) + "원")
         }
     }
@@ -151,7 +151,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                             category.emoji,
                             category.categoryName,
                             account.content,
-                            formatter.format(account.money) + "원",
+                            account.money,
                             account.moneyType == INCOME,
                         )
                     )
