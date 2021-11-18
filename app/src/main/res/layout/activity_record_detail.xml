@@ -15,9 +15,9 @@
         android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/constraint_detail"
             tools:context=".ui.home.detail.RecordDetailActivity">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -205,6 +205,18 @@
                 app:layout_constraintStart_toStartOf="@id/money_type"
                 app:layout_constraintTop_toBottomOf="@id/tv_content_title" />
 
+            <TextView
+                android:id="@+id/tv_address_body"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintStart_toEndOf="@id/tv_address"
+                app:layout_constraintTop_toTopOf="@id/tv_address"
+                tools:text="Address" />
+
             <com.google.android.gms.maps.MapView
                 android:id="@+id/map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -214,7 +226,7 @@
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
                 app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
-                app:layout_constraintTop_toBottomOf="@id/tv_address" />
+                app:layout_constraintTop_toBottomOf="@id/tv_address_body" />
 
             <TextView
                 android:id="@+id/et_address"
@@ -237,10 +249,10 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
+                android:background="@drawable/background_default_btn"
                 android:text="@string/update"
                 android:textSize="18sp"
                 android:theme="@style/GradationButton"
-                android:background="@drawable/background_default_btn"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
                 app:layout_constraintTop_toBottomOf="@id/map" />

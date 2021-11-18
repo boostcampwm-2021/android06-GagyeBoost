@@ -64,7 +64,6 @@
     <string name="select_clear">전체 해제</string>
     <string name="input_keyword">장소 검색어를 입력하세요.</string>
     <string name="meter">m</string>
-
     <string name="monthly_statistics">월별 통계</string>
     <string name="daily_statistics">일별 추이</string>
     <string name="chart_y_axis_unit">만원</string>
@@ -78,5 +77,8 @@
     <string name="select_category">카테고리 선택</string>
     <string name="sp_tilde">~</string>
     <string name="plz_enter_keyword">키워드를 입력해주세요</string>
+
+    <string name="select_place">장소 선택</string>
+    <string name="select_place_dialog_message">선택된 장소 없이 등록하시겠습니까?</string>
     <string name="app_icon">앱 아이콘</string>
 </resources>
