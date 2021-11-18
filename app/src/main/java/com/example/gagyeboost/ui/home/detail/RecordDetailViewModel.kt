@@ -75,7 +75,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                     ?: DEFAULT_LAT.toFloat(),
                     placeDetail?.lng?.toFloat() ?: accountBookData.value?.longitude
                     ?: DEFAULT_LNG.toFloat(),
-                    placeDetail?.addressName ?: "부스트캠프",
+                    placeDetail?.addressName ?: "",
                     dateDetailItem.value?.content ?: "",
                     strDate.split(".")[0].toInt(),
                     strDate.split(".")[1].toInt(),
