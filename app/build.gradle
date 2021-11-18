@@ -71,10 +71,10 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:2.5.0'
     kapt "androidx.room:room-compiler:$room_version"
 
-    // koin
+    // Koin
     implementation "io.insert-koin:koin-android:$koin_version"
 
-    // navigation
+    // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
@@ -95,6 +95,9 @@ dependencies {
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
+
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     // Paging
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
