@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/sfprotext</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
-        <item name="android:windowBackground">@drawable/default_color_gradation</item>
+        <item name="android:windowBackground">@drawable/default_color_gradation_app_bar</item>
         <item name="android:windowDisablePreview">true</item>
     </style>
 
