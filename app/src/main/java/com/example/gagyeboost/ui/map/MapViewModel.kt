@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.example.gagyeboost.common.*
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.*
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -131,11 +132,17 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
 
     private fun initLoadCategory() {
         viewModelScope.launch {
-            val expenseCategory = repository.loadCategoryList(EXPENSE)
-            val incomeCategory = repository.loadCategoryList(INCOME)
-            categoryExpenseList.postValue(expenseCategory)
-            categoryIncomeList.postValue(incomeCategory)
-            categoryIDList.postValue(expenseCategory.map { it.id }.toMutableList())
+            val deferredExpenseCategory = async { repository.loadCategoryList(EXPENSE) }
+            val deferredIncomeCategory = async { repository.loadCategoryList(INCOME) }
+
+            val expenseCategory = deferredExpenseCategory.await()
+            val incomeCategory = deferredIncomeCategory.await()
+
+            categoryExpenseList.value = expenseCategory
+            categoryIncomeList.value = incomeCategory
+            categoryIDList.value = expenseCategory.map { it.id }.toMutableList()
+            loadFilterData()
+
             incomeCategoryID = incomeCategory.map { it.id }
             expenseCategoryID = expenseCategory.map { it.id }
         }
@@ -217,11 +224,9 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     fun changeCategoryBackground() {
         when (byteMoneyType.value) {
             INCOME -> {
-                Timber.e("incomeCategoryID: $incomeCategoryID")
                 isCategoryBackgroundChange.value = incomeCategoryID != categoryIDList.value
             }
             EXPENSE -> {
-                Timber.e("expenseCategoryID: $expenseCategoryID")
                 isCategoryBackgroundChange.value = expenseCategoryID != categoryIDList.value
             }
             else -> Timber.e("changeCategoryBackground byteMoneyType is null")

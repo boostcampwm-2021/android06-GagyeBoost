@@ -3,6 +3,7 @@ package com.example.gagyeboost.ui.home.selectPosition
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -77,8 +78,12 @@ class SelectPositionFragment :
 
     private fun init() {
         binding.btnComplete.setOnClickListener {
-            navController.popBackStack(R.id.homeFragment, false)
-            viewModel.addAccountBookData()
+            viewModel.selectedLocation?.let {
+                viewModel.addAccountBookData()
+                navController.popBackStack(R.id.homeFragment, false)
+            } ?: run {
+                showNoPlaceDialog()
+            }
         }
 
         binding.appBarSelectPosition.setNavigationOnClickListener {
@@ -88,10 +93,7 @@ class SelectPositionFragment :
 
         binding.btnSearch.setOnClickListener {
             goToAddressResultActivity.launch(
-                Intent(
-                    requireContext(),
-                    AddressResultActivity::class.java
-                )
+                Intent(requireContext(), AddressResultActivity::class.java)
             )
         }
 
@@ -123,6 +125,19 @@ class SelectPositionFragment :
             marker.position(userLocation)
             googleMap.addMarker(marker)
         }
+    }
+
+    private fun showNoPlaceDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.select_place))
+            .setMessage(getString(R.string.select_place_dialog_message))
+            .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                viewModel.addAccountBookData()
+                navController.popBackStack(R.id.homeFragment, false)
+            }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+
+        builder.show()
     }
 
     override fun onStart() {

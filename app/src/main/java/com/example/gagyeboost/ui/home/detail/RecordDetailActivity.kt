@@ -2,8 +2,8 @@ package com.example.gagyeboost.ui.home.detail
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -33,6 +33,7 @@ class RecordDetailActivity :
 
     private var accountBookId = -1
     private val viewModel: RecordDetailViewModel by viewModel { parametersOf(accountBookId) }
+    private val gpsUtils by lazy { GPSUtils(this) }
     private lateinit var googleMap: GoogleMap
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -43,6 +44,9 @@ class RecordDetailActivity :
                     result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as PlaceDetail
 
                 viewModel.placeDetail = placeDetail
+
+                binding.tvAddressBody.text = placeDetail.roadAddressName
+
                 addMarkerToPlace(LatLng(placeDetail.lat.toDouble(), placeDetail.lng.toDouble()))
             }
         }
@@ -60,6 +64,7 @@ class RecordDetailActivity :
         accountBookId = intent.getIntExtra(DATE_DETAIL_ITEM_ID_KEY, 0)
         binding.viewModel = viewModel
         viewModel.setAccountBookData {
+            binding.tvAddressBody.text = viewModel.accountBookData.value?.address
             val latitude = viewModel.accountBookData.value?.latitude?.toDouble() ?: DEFAULT_LAT
             val longitude = viewModel.accountBookData.value?.longitude?.toDouble() ?: DEFAULT_LNG
 
@@ -203,7 +208,12 @@ class RecordDetailActivity :
 
     private fun addMarkerToPlace(latLng: LatLng) {
         googleMap.clear()
-        googleMap.addMarker(MarkerOptions().apply { position(latLng) })
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+
+        if (latLng.latitude > 0 && latLng.longitude > 0) {
+            googleMap.addMarker(MarkerOptions().apply { position(latLng) })
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+        } else {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(gpsUtils.getUserLatLng(), 15f))
+        }
     }
 }
