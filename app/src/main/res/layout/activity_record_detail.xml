@@ -17,12 +17,14 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/constraint_detail"
             tools:context=".ui.home.detail.RecordDetailActivity">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/app_bar_layout_update_record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/default_color_gradation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -119,15 +121,19 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_money_body"
                 style="@style/RecordDetailEditTheme"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@android:color/transparent"
+                android:gravity="end"
+                android:inputType="number"
                 android:maxLength="9"
                 android:maxLines="1"
-                android:text="@={viewModel.dateDetailItem.money}"
+                app:intToString="@={viewModel.dateDetailItem.money}"
                 app:layout_constraintEnd_toStartOf="@id/tv_monetary_unit"
-                app:layout_constraintTop_toBottomOf="@id/tv_category_body" />
+                app:layout_constraintStart_toEndOf="@id/tv_money_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_category_body"
+                tools:text="3,000" />
 
             <TextView
                 android:id="@+id/tv_monetary_unit"
@@ -173,10 +179,11 @@
             <EditText
                 android:id="@+id/et_content_body"
                 style="@style/RecordDetailEditTheme"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:background="@android:color/transparent"
+                android:gravity="end"
                 android:hint="@string/none"
                 android:importantForAutofill="no"
                 android:inputType="text"
@@ -185,6 +192,7 @@
                 android:text="@={viewModel.dateDetailItem.content}"
                 android:textColorHint="@color/gray3"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintStart_toEndOf="@id/tv_content_title"
                 app:layout_constraintTop_toBottomOf="@id/tv_date_body" />
 
             <TextView
@@ -248,6 +256,7 @@
                 android:text="@string/update"
                 android:textSize="18sp"
                 android:theme="@style/GradationButton"
+                android:background="@drawable/background_default_btn"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
                 app:layout_constraintTop_toBottomOf="@id/map" />

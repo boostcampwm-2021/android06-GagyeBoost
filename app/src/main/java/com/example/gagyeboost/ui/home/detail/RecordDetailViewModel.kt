@@ -1,9 +1,6 @@
 package com.example.gagyeboost.ui.home.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.gagyeboost.common.DEFAULT_LAT
 import com.example.gagyeboost.common.DEFAULT_LNG
 import com.example.gagyeboost.common.EXPENSE
@@ -13,7 +10,6 @@ import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.DateDetailItem
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 
 class RecordDetailViewModel(private val repository: Repository, private val accountBookId: Int) :
     ViewModel() {
@@ -32,8 +28,6 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category> = _category
 
-    private val formatter = DecimalFormat("###,###")
-
     init {
         setAccountBookData()
     }
@@ -50,7 +44,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                 category.emoji,
                 category.categoryName,
                 accountBookData.content,
-                formatter.format(accountBookData.money),
+                accountBookData.money,
                 accountBookData.moneyType == INCOME,
             )
 
@@ -73,7 +67,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                 val updatedAccountBookData = AccountBook(
                     accountBookId,
                     if (moneyType) INCOME else EXPENSE,
-                    money.replace(",", "").toIntOrNull() ?: 0,
+                    money,
                     _category.value?.id ?: 0,
                     DEFAULT_LAT.toFloat(),
                     DEFAULT_LNG.toFloat(),

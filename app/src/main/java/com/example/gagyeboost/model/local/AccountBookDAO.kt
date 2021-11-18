@@ -58,8 +58,8 @@ interface AccountBookDAO {
     suspend fun deleteAccountBookData(id: Int)
 
     //선택한 월의 모든 데이터
-//    @Query("SELECT * FROM account_book WHERE year=:year AND month=:month")
-//    fun loadMonthData(year: Int, month: Int): List<AccountBook>
+    @Query("SELECT * FROM account_book WHERE year=:year AND month=:month")
+    suspend fun loadMonthData(year: Int, month: Int): List<AccountBook>
 
     //검색 및 지도필터 결과(키워드?)
     @Query(

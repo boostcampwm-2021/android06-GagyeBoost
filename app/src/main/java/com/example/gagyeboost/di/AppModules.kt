@@ -12,6 +12,7 @@ import com.example.gagyeboost.model.remote.HeaderInterceptor
 import com.example.gagyeboost.ui.address.AddressResultViewModel
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.home.HomeViewModel
+import com.example.gagyeboost.ui.statstics.StatisticsViewModel
 import com.example.gagyeboost.ui.map.MapViewModel
 import okhttp3.logging.HttpLoggingInterceptor
 import com.example.gagyeboost.ui.home.detail.RecordDetailViewModel
@@ -71,6 +72,7 @@ val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { (id: Int) -> RecordDetailViewModel(get(), id) }
     viewModel { MapViewModel(get()) }
+    viewModel { StatisticsViewModel(get()) }
     viewModel { AddressResultViewModel(get()) }
     viewModel { SearchViewModel(get()) }
 }
