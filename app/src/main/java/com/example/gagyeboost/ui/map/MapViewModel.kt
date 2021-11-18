@@ -24,8 +24,12 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
             formatter.format(it) + "원"
         }
     }
+
+    val isMoneyBackgroundChange = MutableLiveData(false)
+
     // 필터로 보낼 id list
     val categoryIDList = MutableLiveData<MutableList<Int>>()
+
     // 화면에 보여줄 카테고리 리스트
     private val categoryExpenseList = MutableLiveData<List<Category>>()
     private val categoryIncomeList = MutableLiveData<List<Category>>()
@@ -182,5 +186,13 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endYear = calendar.get(Calendar.YEAR)
         endMonth = calendar.get(Calendar.MONTH) + 1
         endDay = calendar.get(Calendar.DAY_OF_MONTH)
+    }
+
+    fun changeMoneyBackground() {
+        val start = intStartMoney.value ?: InitMoneyFilter.Start.money
+        val end = intEndMoney.value ?: InitMoneyFilter.End.money
+
+        isMoneyBackgroundChange.value =
+            !(start == InitMoneyFilter.Start.money && end == InitMoneyFilter.End.money)
     }
 }
