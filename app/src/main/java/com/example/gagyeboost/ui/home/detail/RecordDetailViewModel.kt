@@ -71,8 +71,10 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                     if (moneyType) INCOME else EXPENSE,
                     money,
                     _category.value?.id ?: 0,
-                    placeDetail?.lat?.toFloat() ?: DEFAULT_LAT.toFloat(),
-                    placeDetail?.lng?.toFloat() ?: DEFAULT_LNG.toFloat(),
+                    placeDetail?.lat?.toFloat() ?: accountBookData.value?.latitude
+                    ?: DEFAULT_LAT.toFloat(),
+                    placeDetail?.lng?.toFloat() ?: accountBookData.value?.longitude
+                    ?: DEFAULT_LNG.toFloat(),
                     placeDetail?.addressName ?: "부스트캠프",
                     dateDetailItem.value?.content ?: "",
                     strDate.split(".")[0].toInt(),

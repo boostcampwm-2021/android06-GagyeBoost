@@ -97,7 +97,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 moneyType = _categoryType,
                 money = money.value ?: 0,
                 category = selectedCategoryId,
-                address = "${selectedLocation?.roadAddressName ?: userLocation.getAddressLine(0)} ${selectedLocation?.placeName ?: ""}",
+                address = selectedLocation?.let { "${it.roadAddressName} ${it.placeName}" } ?: "",
                 latitude = selectedLocation?.lat?.toFloat()
                     ?: -1f,
                 longitude = selectedLocation?.lng?.toFloat()
