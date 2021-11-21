@@ -19,7 +19,7 @@
             android:id="@+id/app_bar_layout_update_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/default_color_gradation"
+            android:background="@drawable/default_color_gradation_app_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -65,7 +65,8 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_name_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_name_title"
-            app:layout_constraintTop_toTopOf="@id/tv_name_title" />
+            app:layout_constraintTop_toTopOf="@id/tv_name_title"
+            android:importantForAutofill="no" />
 
         <TextView
             android:id="@+id/tv_icon_title"
@@ -112,7 +113,8 @@
             android:backgroundTint="@color/green"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/btn_add_description" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

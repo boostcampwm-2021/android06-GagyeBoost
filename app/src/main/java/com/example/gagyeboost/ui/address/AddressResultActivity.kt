@@ -28,9 +28,10 @@ class AddressResultActivity :
     private val gpsUtils by lazy { GPSUtils(this) }
     private val adapter by lazy {
         AddressAdapter(viewModel) {
-            setResult(RESULT_OK, Intent().apply {
+            val intent = Intent().apply {
                 putExtra(INTENT_EXTRA_PLACE_DETAIL, it)
-            })
+            }
+            setResult(RESULT_OK, intent)
 
             finish()
         }
@@ -65,6 +66,10 @@ class AddressResultActivity :
                 }
             }
         })
+
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun initObserve() {
@@ -80,6 +85,23 @@ class AddressResultActivity :
 
     private val setProgressBarVisible: (Boolean) -> Unit = { isVisible ->
         binding.pbLoading.isVisible = isVisible
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.toggleSoftInput(
+            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.HIDE_IMPLICIT_ONLY
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
 
     override fun onDestroy() {

@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.databinding.DialogFilterCategoryBinding
 import com.example.gagyeboost.ui.map.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -31,21 +33,30 @@ class FilterCategoryDialog : BottomSheetDialogFragment() {
             null,
             false
         )
-        adapter = FilterCategoryAdapter(viewModel)
+
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
+        when (viewModel.byteMoneyType.value) {
+            EXPENSE -> adapter =
+                FilterCategoryAdapter(viewModel, viewModel.expenseCategoryID ?: listOf())
+            INCOME -> adapter =
+                FilterCategoryAdapter(viewModel, viewModel.incomeCategoryID ?: listOf())
+            else -> Timber.e("viewModel byteMoneyType is null")
+        }
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
 
         binding.rvFilterCategory.adapter = adapter
         adapter.submitList(viewModel.getCategoryList())
 
         this.dialog?.setOnCancelListener {
             viewModel.loadFilterData()
-        } ?: Timber.e("dialog setOnCancelListener")
+            viewModel.changeCategoryBackground()
+        } ?: Timber.e("setOnCancelListener dialog is null")
 
         clickListener()
     }

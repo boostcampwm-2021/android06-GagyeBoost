@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/app_bar_title_text_size"
-                android:background="@drawable/default_color_gradation"
+                android:background="@drawable/default_color_gradation_app_bar"
                 app:navigationIcon="@drawable/ic_arrow_left_white"
                 app:title="@string/position"
                 app:titleCentered="true"
