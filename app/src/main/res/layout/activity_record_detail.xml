@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -9,8 +11,7 @@
 
     </data>
 
-    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -18,6 +19,7 @@
             android:id="@+id/constraint_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            tools:background="@color/white"
             tools:context=".ui.home.detail.RecordDetailActivity">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -43,25 +45,26 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <View
-                android:id="@+id/gl_10percent_vertical"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_start_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintGuide_begin="20dp" />
 
-            <View
-                android:id="@+id/gl_90percent_vertical"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_end_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintGuide_end="20dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_body_start_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintStart_toEndOf="@id/tv_category_title" />
 
             <TextView
                 android:id="@+id/money_type"
@@ -72,8 +75,9 @@
                 android:textColor="@{viewModel.dateDetailItem.moneyType ? @color/income : @color/expense}"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
-                app:layout_constraintTop_toBottomOf="@id/app_bar_layout_update_record" />
+                app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+                app:layout_constraintTop_toBottomOf="@id/app_bar_layout_update_record"
+                tools:text="@string/expense" />
 
             <TextView
                 android:id="@+id/tv_category_icon"
@@ -93,20 +97,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/category"
-                app:layout_constraintBottom_toBottomOf="@id/tv_category_body"
-                app:layout_constraintStart_toStartOf="@id/money_type"
-                app:layout_constraintTop_toTopOf="@id/tv_category_body" />
+                app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+                app:layout_constraintTop_toBottomOf="@id/money_type" />
 
             <TextView
                 android:id="@+id/tv_category_body"
                 style="@style/RecordDetailEditTheme"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:gravity="end"
                 android:maxLines="1"
                 android:text="@={viewModel.category.categoryName}"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintTop_toBottomOf="@id/money_type" />
+                app:layout_constraintBottom_toBottomOf="@id/tv_category_title"
+                app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+                app:layout_constraintStart_toStartOf="@id/gl_body_start_vertical"
+                app:layout_constraintTop_toTopOf="@id/tv_category_title"
+                tools:text="@string/category" />
 
             <TextView
                 android:id="@+id/tv_money_title"
@@ -114,25 +121,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/money_amount"
-                app:layout_constraintBottom_toBottomOf="@id/et_money_body"
-                app:layout_constraintStart_toStartOf="@id/money_type"
-                app:layout_constraintTop_toTopOf="@id/et_money_body" />
+                app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+                app:layout_constraintTop_toBottomOf="@id/tv_category_title" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_money_body"
                 style="@style/RecordDetailEditTheme"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:background="@android:color/transparent"
                 android:gravity="end"
                 android:inputType="number"
                 android:maxLength="9"
                 android:maxLines="1"
                 app:intToString="@={viewModel.dateDetailItem.money}"
+                app:layout_constraintBottom_toBottomOf="@id/tv_money_title"
                 app:layout_constraintEnd_toStartOf="@id/tv_monetary_unit"
-                app:layout_constraintStart_toEndOf="@id/tv_money_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_category_body"
+                app:layout_constraintStart_toStartOf="@id/gl_body_start_vertical"
+                app:layout_constraintTop_toTopOf="@id/tv_money_title"
                 tools:text="3,000" />
 
             <TextView
@@ -141,8 +147,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/monetary_unit"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/et_money_body"
+                app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
                 app:layout_constraintTop_toTopOf="@id/et_money_body" />
 
             <TextView
@@ -151,20 +158,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/date"
-                app:layout_constraintBottom_toBottomOf="@id/tv_date_body"
-                app:layout_constraintStart_toStartOf="@id/money_type"
-                app:layout_constraintTop_toTopOf="@id/tv_date_body" />
+                app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+                app:layout_constraintTop_toBottomOf="@id/tv_money_title" />
 
             <TextView
                 android:id="@+id/tv_date_body"
                 style="@style/RecordDetailEditTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:background="@android:color/transparent"
                 android:text="@{viewModel.date}"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintTop_toBottomOf="@id/et_money_body" />
+                app:layout_constraintBottom_toBottomOf="@id/tv_date_title"
+                app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+                app:layout_constraintTop_toTopOf="@id/tv_date_title"
+                tools:text="2021.11.19" />
 
             <TextView
                 android:id="@+id/tv_content_title"
@@ -172,48 +179,49 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/content"
-                app:layout_constraintBottom_toBottomOf="@id/et_content_body"
-                app:layout_constraintStart_toStartOf="@id/money_type"
-                app:layout_constraintTop_toTopOf="@id/et_content_body" />
+                app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
+                app:layout_constraintTop_toBottomOf="@id/tv_date_title" />
 
             <EditText
                 android:id="@+id/et_content_body"
                 style="@style/RecordDetailEditTheme"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
                 android:background="@android:color/transparent"
                 android:gravity="end"
                 android:hint="@string/none"
                 android:importantForAutofill="no"
                 android:inputType="text"
-                android:maxLength="10"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:text="@={viewModel.dateDetailItem.content}"
                 android:textColorHint="@color/gray3"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintStart_toEndOf="@id/tv_content_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_date_body" />
+                app:layout_constraintBottom_toBottomOf="@id/tv_content_title"
+                app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+                app:layout_constraintStart_toStartOf="@id/gl_body_start_vertical"
+                app:layout_constraintTop_toTopOf="@id/tv_content_title" />
 
             <TextView
                 android:id="@+id/tv_address"
                 style="@style/RecordDetailTitleTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
                 android:text="@string/address"
-                app:layout_constraintStart_toStartOf="@id/money_type"
+                app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
                 app:layout_constraintTop_toBottomOf="@id/tv_content_title" />
 
             <TextView
                 android:id="@+id/tv_address_body"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="18sp"
+                android:autoSizeMinTextSize="5sp"
+                android:autoSizeTextType="uniform"
                 android:gravity="end"
+                android:maxLines="1"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintStart_toEndOf="@id/tv_address"
+                app:layout_constraintBottom_toBottomOf="@id/tv_address"
+                app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+                app:layout_constraintStart_toStartOf="@id/gl_body_start_vertical"
                 app:layout_constraintTop_toTopOf="@id/tv_address"
                 tools:text="Address" />
 
@@ -224,8 +232,8 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="20dp"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
+                app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+                app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
                 app:layout_constraintTop_toBottomOf="@id/tv_address_body" />
 
             <TextView
@@ -240,8 +248,8 @@
                 android:padding="10dp"
                 android:textSize="16sp"
                 app:drawableLeftCompat="@drawable/ic_search"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
-                app:layout_constraintStart_toStartOf="@id/gl_10percent_vertical"
+                app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
+                app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
                 app:layout_constraintTop_toTopOf="@id/map" />
 
             <TextView
@@ -254,7 +262,7 @@
                 android:textSize="18sp"
                 android:theme="@style/GradationButton"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/gl_90percent_vertical"
+                app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
                 app:layout_constraintTop_toBottomOf="@id/map" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
