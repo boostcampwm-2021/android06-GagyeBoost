@@ -25,7 +25,6 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initClickListeners()
-        observe()
         setTextSize()
         editTextFocus()
     }
@@ -46,18 +45,6 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
     private fun setTextSize() {
         binding.etWon.setEditTextSize(binding.tvTextSize)
-    }
-
-    private fun observe() {
-        viewModel.money.observe(viewLifecycleOwner) {
-            if (it == 0) {
-                binding.btnExpense.isEnabled = false
-                binding.btnIncome.isEnabled = false
-            } else {
-                binding.btnExpense.isEnabled = true
-                binding.btnIncome.isEnabled = true
-            }
-        }
     }
 
     private fun initClickListeners() {
