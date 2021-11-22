@@ -11,12 +11,14 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemRvFilterCategoryBinding
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.ui.map.MapViewModel
+import timber.log.Timber
 
-class FilterCategoryAdapter(private val viewModel: MapViewModel) :
-    ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
+class FilterCategoryAdapter(
+    private val viewModel: MapViewModel,
+    private val initCategoryList: List<Int>
+) : ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
 
-    private val initCategoryList: List<Int> = viewModel.categoryIDList.value ?: listOf()
-    val categorySet = initCategoryList.toMutableSet()
+    val categorySet = viewModel.categoryIDList.value?.toMutableSet() ?: mutableSetOf()
 
     fun setCategoryList(boolean: Boolean) {
         categorySet.clear()

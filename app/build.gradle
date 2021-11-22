@@ -32,11 +32,11 @@ android {
         minSdk 21
         targetSdk 30
         versionCode 1
-        versionName "1.0.1"
+        versionName "1.0.3"
 
         manifestPlaceholders = [googleMapKey: googleMapKey]
-        buildConfigField "String", "google_map_key", properties["google_map_key"]
-        buildConfigField "String", "kakao_api_key", properties["kakao_api_key"]
+        buildConfigField "String", "google_map_key", properties["google_map_key"]?:"null"
+        buildConfigField "String", "kakao_api_key", properties["kakao_api_key"]?:"null"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -72,10 +72,10 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:2.5.0'
     kapt "androidx.room:room-compiler:$room_version"
 
-    // koin
+    // Koin
     implementation "io.insert-koin:koin-android:$koin_version"
 
-    // navigation
+    // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
@@ -97,6 +97,9 @@ dependencies {
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
+
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     // Paging
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"

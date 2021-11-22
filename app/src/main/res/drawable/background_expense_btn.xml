@@ -1,12 +1,6 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-
-    <corners android:radius="5dp" />
-
-    <gradient
-        android:startColor="#D96D84"
-        android:centerColor="#EBDF7676"
-        android:endColor="#ED8BAD"
-        android:angle="0"/>
-
-</shape>
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/selected_false" android:state_enabled="false" />
+    <item android:drawable="@drawable/expense_color_ripple" android:state_pressed="true" />
+    <item android:drawable="@drawable/expense_color_gradation" android:state_pressed="false" />
+</selector>

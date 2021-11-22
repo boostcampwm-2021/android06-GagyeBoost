@@ -22,7 +22,7 @@
             android:id="@+id/tv_year_and_month"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/green"
+            android:background="@drawable/default_color_gradation_app_bar"
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
@@ -230,7 +230,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:backgroundTint="@color/green"
+            android:backgroundTint="@color/expense"
             android:contentDescription="@string/btn_add_description"
             android:visibility='@{homeViewModel.selectedDate != null ? View.VISIBLE : View.GONE}'
             app:layout_constraintBottom_toBottomOf="parent"

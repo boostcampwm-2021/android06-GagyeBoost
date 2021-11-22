@@ -106,6 +106,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="30dp"
             android:text="@string/apply"
+            android:background="@drawable/background_default_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
