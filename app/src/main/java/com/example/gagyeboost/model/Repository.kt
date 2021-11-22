@@ -5,10 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.Filter
-import com.example.gagyeboost.model.data.PlaceDetail
+import com.example.gagyeboost.model.data.*
 import com.example.gagyeboost.model.local.AccountBookDAO
 import com.example.gagyeboost.model.remote.KakaoAPIClient
 import com.example.gagyeboost.ui.home.selectPosition.AddressPagingSource
@@ -87,7 +84,7 @@ class Repository(
     fun fetchPlaceListFromKeyword(
         input: String,
         latLng: LatLng,
-        callback: (Boolean) -> Unit
+        callback: (ResultType) -> Unit
     ): Flow<PagingData<PlaceDetail>> {
         return Pager(PagingConfig(1)) {
             AddressPagingSource(client.getKakaoApiService(), input, latLng, callback)

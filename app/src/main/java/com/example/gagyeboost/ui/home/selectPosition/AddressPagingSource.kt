@@ -3,6 +3,7 @@ package com.example.gagyeboost.ui.home.selectPosition
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.gagyeboost.model.data.PlaceDetail
+import com.example.gagyeboost.model.data.ResultType
 import com.example.gagyeboost.model.remote.KakaoAPIService
 import com.google.android.gms.maps.model.LatLng
 
@@ -10,7 +11,7 @@ class AddressPagingSource(
     private val service: KakaoAPIService,
     private val keyword: String,
     private val latLng: LatLng,
-    private val callback: (Boolean) -> Unit
+    private val callback: (ResultType) -> Unit
 ) : PagingSource<Int, PlaceDetail>() {
 
     override fun getRefreshKey(state: PagingState<Int, PlaceDetail>): Int? {
@@ -22,7 +23,7 @@ class AddressPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PlaceDetail> {
         return try {
-            callback(true)
+            callback(ResultType.OK)
             val next = params.key ?: 1
             val response = service.fetchPlaceListFromKeyword(
                 keyword,
@@ -32,7 +33,7 @@ class AddressPagingSource(
             )
 
             response.body()?.let {
-                callback(false)
+                callback(ResultType.OK)
                 if (it.meta.isEnd && it.documents.isEmpty()) {
                     LoadResult.Error(Exception())
                 } else if (it.meta.isEnd) {
@@ -49,11 +50,11 @@ class AddressPagingSource(
                     )
                 }
             } ?: run {
-                callback(false)
+                callback(ResultType.NullData)
                 LoadResult.Error(Exception())
             }
         } catch (e: Exception) {
-            callback(false)
+            callback(ResultType.LoadFail)
             LoadResult.Error(e)
         }
     }
