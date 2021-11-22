@@ -21,11 +21,12 @@ import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.ui.address.AddressResultActivity
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
-import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -112,10 +113,15 @@ class SelectPositionFragment :
 
     private fun moveCameraToUser() {
         val userLocation = gpsUtils.getUserLatLng()
-
         viewModel.userLocation = gpsUtils.getUserLocation()
 
-        googleMap.moveCamera(newLatLngZoom(userLocation, 15f))
+        val cameraPosition = CameraPosition.Builder()
+            .target(userLocation)
+            .zoom(15f)
+            .bearing(0f)
+            .tilt(0f)
+            .build()
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
         val marker = MarkerOptions()
 
