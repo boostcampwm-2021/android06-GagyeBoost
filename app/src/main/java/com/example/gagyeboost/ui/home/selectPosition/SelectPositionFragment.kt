@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class SelectPositionFragment :
     BaseFragment<FragmentSelectPositionBinding>(R.layout.fragment_select_position),
@@ -61,7 +62,7 @@ class SelectPositionFragment :
             if (result.resultCode == RESULT_OK && result.data != null) {
                 val place =
                     result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as PlaceDetail
-
+                    Timber.e(place.toString())
                 viewModel.selectedLocation = place
                 moveCameraToPlace(place)
             }
