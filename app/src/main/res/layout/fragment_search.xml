@@ -34,22 +34,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/app_bar_title_text_size"
+                app:menu="@menu/reset_menu"
                 app:title="@string/search"
                 app:titleCentered="true"
-                app:titleTextColor="@color/white">
-
-                <TextView
-                    android:id="@+id/btn_reset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="20dp"
-                    android:padding="5dp"
-                    android:text="@string/reset"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </com.google.android.material.appbar.MaterialToolbar>
+                app:titleTextColor="@color/white" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <View
@@ -80,7 +68,7 @@
             android:autofillHints="@null"
             android:hint="@string/plz_enter_keyword"
             android:inputType="text"
-            android:maxLength="15"
+            android:maxLength="13"
             android:text="@={viewModel.keyword}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_keyword_title"
@@ -100,20 +88,21 @@
             style="@style/RangeSelectButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
+            android:maxLength="12"
             android:text="@{String.valueOf(viewModel.startYear)+`. `+String.valueOf(viewModel.startMonth)+`. `+String.valueOf(viewModel.startDay)+`.`}"
             app:layout_constraintBottom_toBottomOf="@id/btn_date_end_body"
             app:layout_constraintEnd_toStartOf="@id/tv_date_range"
             app:layout_constraintTop_toTopOf="@id/btn_date_end_body"
-            tools:text="2021. 10. 01." />
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/tv_date_range"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
             android:text="@string/sp_tilde"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/btn_date_end_body"
             app:layout_constraintEnd_toStartOf="@id/btn_date_end_body"
             app:layout_constraintTop_toTopOf="@id/btn_date_end_body" />
@@ -123,11 +112,11 @@
             style="@style/RangeSelectButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:maxLength="12"
             android:text="@{String.valueOf(viewModel.endYear)+`. `+String.valueOf(viewModel.endMonth)+`. `+String.valueOf(viewModel.endDay)+`.`}"
             app:layout_constraintBottom_toBottomOf="@id/tv_date_title"
             app:layout_constraintEnd_toEndOf="@id/et_keyword_body"
-            app:layout_constraintTop_toTopOf="@id/tv_date_title"
-            tools:text="2021. 10. 30." />
+            app:layout_constraintTop_toTopOf="@id/tv_date_title" />
 
         <TextView
             android:id="@+id/tv_category_title"
@@ -171,47 +160,62 @@
             app:layout_constraintStart_toStartOf="@id/tv_keyword_title"
             app:layout_constraintTop_toBottomOf="@id/tv_category_title" />
 
-        <TextView
-            android:id="@+id/btn_money_start_body"
+        <EditText
+            android:id="@+id/et_money_start_body"
             style="@style/RangeSelectButton"
-            android:layout_width="0dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="@{String.valueOf(viewModel.startMoney)+`원`}"
+            android:layout_marginEnd="5dp"
+            android:inputType="numberDecimal"
+            android:text="@{String.valueOf(viewModel.startMoney)}"
+            android:maxLength="11"
             app:layout_constraintBottom_toBottomOf="@id/tv_money_title"
             app:layout_constraintEnd_toStartOf="@id/tv_money_range"
-            app:layout_constraintTop_toTopOf="@id/tv_money_title"
-            tools:text="100원" />
+            app:layout_constraintTop_toTopOf="@id/tv_money_title" />
 
         <TextView
             android:id="@+id/tv_money_range"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
             android:text="@string/sp_tilde"
+            android:textStyle="bold"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_money_title"
-            app:layout_constraintEnd_toStartOf="@id/btn_money_end_body"
+            app:layout_constraintEnd_toStartOf="@id/et_money_end_body"
+            app:layout_constraintTop_toTopOf="@id/tv_money_title" />
+
+        <EditText
+            android:id="@+id/et_money_end_body"
+            style="@style/RangeSelectButton"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
+            android:inputType="numberDecimal"
+            android:text="@{String.valueOf(viewModel.endMoney)}"
+            android:maxLength="11"
+            app:layout_constraintBottom_toBottomOf="@id/tv_money_title"
+            app:layout_constraintEnd_toStartOf="@id/tv_money_unit"
             app:layout_constraintTop_toTopOf="@id/tv_money_title" />
 
         <TextView
-            android:id="@+id/btn_money_end_body"
-            style="@style/RangeSelectButton"
-            android:layout_width="0dp"
+            android:id="@+id/tv_money_unit"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(viewModel.endMoney)+`원`}"
-            app:layout_constraintBottom_toBottomOf="@id/tv_money_title"
+            android:text="@string/monetary_unit"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/et_keyword_body"
-            app:layout_constraintTop_toTopOf="@id/tv_money_title"
-            tools:text="1000000원" />
+            app:layout_constraintTop_toTopOf="@id/tv_money_title" />
 
         <Space
             android:id="@+id/space_outline_bottom"
             android:layout_width="0dp"
-            android:layout_height="20dp"
+            android:layout_height="80dp"
             app:layout_constraintBottom_toBottomOf="@id/view_outline"
             app:layout_constraintStart_toStartOf="@id/view_outline"
-            app:layout_constraintTop_toBottomOf="@id/btn_money_start_body" />
+            app:layout_constraintTop_toBottomOf="@id/et_money_start_body" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_search"
@@ -219,10 +223,68 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/search"
             android:background="@drawable/background_default_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_outline" />
+            android:padding="10dp"
+            android:text="@string/search"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@id/view_outline"
+            app:layout_constraintStart_toStartOf="@id/view_outline"
+            app:layout_constraintTop_toBottomOf="@id/et_money_start_body" />
+
+        <TextView
+            android:id="@+id/tv_total_income_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/earnings"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tv_total_expense_title"
+            app:layout_constraintStart_toStartOf="@id/view_outline"
+            app:layout_constraintTop_toBottomOf="@id/space_outline_bottom" />
+
+        <TextView
+            android:id="@+id/tv_total_expense_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expense"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/view_outline"
+            app:layout_constraintStart_toEndOf="@id/tv_total_income_title"
+            app:layout_constraintTop_toTopOf="@id/tv_total_income_title" />
+
+        <TextView
+            android:id="@+id/tv_total_income_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/tv_total_expense_title"
+            app:layout_constraintStart_toStartOf="@id/view_outline"
+            app:layout_constraintTop_toBottomOf="@id/tv_total_expense_title" />
+
+        <TextView
+            android:id="@+id/tv_total_expense_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@id/view_outline"
+            app:layout_constraintStart_toEndOf="@id/tv_total_income_title"
+            app:layout_constraintTop_toTopOf="@id/tv_total_income_body" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search_result"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="@id/view_outline"
+            app:layout_constraintStart_toStartOf="@id/view_outline"
+            app:layout_constraintTop_toBottomOf="@id/tv_total_expense_body"
+            tools:listitem="@layout/item_rv_detail" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
