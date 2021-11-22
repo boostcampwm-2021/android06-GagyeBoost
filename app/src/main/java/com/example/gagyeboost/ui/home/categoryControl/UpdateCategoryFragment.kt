@@ -68,5 +68,4 @@ class UpdateCategoryFragment :
         super.onPause()
         inputMethodManager.hideSoftInputFromWindow(binding.etNameBody.windowToken, 0)
     }
-
 }
