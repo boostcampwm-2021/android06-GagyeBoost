@@ -14,16 +14,13 @@ import com.example.gagyeboost.common.GPSUtils
 import com.example.gagyeboost.common.INTENT_EXTRA_PLACE_DETAIL
 import com.example.gagyeboost.databinding.ActivityAddressResultBinding
 import com.example.gagyeboost.ui.base.BaseActivity
-import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.home.selectPosition.AddressAdapter
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class AddressResultActivity :
     BaseActivity<ActivityAddressResultBinding>(R.layout.activity_address_result) {
@@ -77,12 +74,10 @@ class AddressResultActivity :
         }
 
         binding.btnSearch.setOnClickListener {
-            //TODO 목록 지도에 표시하기
             setMarkerList()
         }
         binding.etSearch.setOnEditorActionListener { textView, actionId, keyEvent ->
             if (actionId == IME_ACTION_SEARCH) {
-                //TODO 목록 지도에 표시하기
                 setMarkerList()
             }
             true
@@ -90,11 +85,13 @@ class AddressResultActivity :
     }
 
     private fun setMarkerList() {
-        val intent = Intent().apply {
-            putExtra(INTENT_EXTRA_PLACE_DETAIL, adapter.snapshot().toTypedArray())
+        viewModel.loadPlaceListData( gpsUtils.getUserLatLng()) {
+            val intent = Intent().apply {
+                putExtra(INTENT_EXTRA_PLACE_DETAIL, it.toTypedArray())
+            }
+            setResult(RESULT_OK, intent)
+            finish()
         }
-        setResult(RESULT_OK, intent)
-        finish()
     }
 
     private fun initObserve() {
