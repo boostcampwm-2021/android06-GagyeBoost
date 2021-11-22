@@ -1,8 +1,10 @@
 package com.example.gagyeboost.ui.search
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
@@ -13,6 +15,7 @@ import java.util.*
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_search) {
     private val viewModel: SearchViewModel by viewModel()
+    private lateinit var inputMethodManager: InputMethodManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,6 +34,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
                     if (hasFocus) "" else resources.getString(R.string.plz_enter_keyword)
             }
         }
+        inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
     private fun initListener() {
@@ -58,6 +63,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             btnSearch.setOnClickListener {
                 // TODO 검색 - 검색결과로 이동
             }
+            root.setOnClickListener {
+                inputMethodManager.hideSoftInputFromWindow(binding.etKeywordBody.windowToken, 0)
+            }
         }
     }
 
@@ -81,5 +89,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             },
             year, month-1, day
         ).show()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        inputMethodManager.hideSoftInputFromWindow(binding.etKeywordBody.windowToken, 0)
     }
 }
