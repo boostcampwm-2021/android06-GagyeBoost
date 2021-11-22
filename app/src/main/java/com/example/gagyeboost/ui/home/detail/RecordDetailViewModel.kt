@@ -6,10 +6,7 @@ import com.example.gagyeboost.common.DEFAULT_LNG
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.DateDetailItem
-import com.example.gagyeboost.model.data.PlaceDetail
+import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 
 class RecordDetailViewModel(private val repository: Repository, private val accountBookId: Int) :
@@ -29,7 +26,14 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category> = _category
 
-    var placeDetail: PlaceDetail? = null
+    //var placeDetail: PlaceDetail? = null
+    private val _selectedLocation = MutableLiveData(MyItem(-1.0, -1.0, "", ""))
+    val selectedLocation: LiveData<MyItem> = _selectedLocation
+
+    private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
+    val selectedLocationList: LiveData<List<PlaceDetail>> = _selectedLocationList
+
+    val searchAddress = MutableLiveData<String>()
 
     fun setAccountBookData(callback: () -> Unit) {
         viewModelScope.launch {
@@ -60,7 +64,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
         }
     }
 
-    fun updateAccountBookData(placeDetail: PlaceDetail? = this.placeDetail) {
+    fun updateAccountBookData() {
         viewModelScope.launch {
             with(dateDetailItem.value) {
                 if (this == null) return@launch
@@ -71,11 +75,9 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                     if (moneyType) INCOME else EXPENSE,
                     money,
                     _category.value?.id ?: 0,
-                    placeDetail?.lat?.toFloat() ?: accountBookData.value?.latitude
-                    ?: DEFAULT_LAT.toFloat(),
-                    placeDetail?.lng?.toFloat() ?: accountBookData.value?.longitude
-                    ?: DEFAULT_LNG.toFloat(),
-                    placeDetail?.addressName ?: "",
+                    selectedLocation.value?.position?.latitude?.toFloat() ?: DEFAULT_LAT.toFloat(),
+                    selectedLocation.value?.position?.longitude?.toFloat() ?: DEFAULT_LNG.toFloat(),
+                    selectedLocation.value?.title ?: "",
                     dateDetailItem.value?.content ?: "",
                     strDate.split(".")[0].toInt(),
                     strDate.split(".")[1].toInt(),
@@ -101,5 +103,19 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
 
     fun setCategory(category: Category) {
         _category.value = category
+    }
+
+    fun setPlaceList(placeList: List<PlaceDetail>) {
+        _selectedLocationList.value = placeList
+    }
+
+    fun setSelectedPlace(location: MyItem) {
+        _selectedLocation.value = location
+    }
+
+    fun resetLocation() {
+        _selectedLocationList.value = listOf()
+        _selectedLocation.value = MyItem(-1.0, -1.0, "", "")
+        searchAddress.value = ""
     }
 }

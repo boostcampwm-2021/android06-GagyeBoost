@@ -43,7 +43,7 @@ class SelectPositionFragment :
     private val gpsUtils: GPSUtils by lazy { GPSUtils(requireContext()) }
     private val moveCameraToPlace: (PlaceDetail) -> Unit = {
         val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
-        googleMap.animateCamera(newLatLng(latLng))
+        googleMap.animateCamera(newLatLngZoom(latLng,15f))
     }
     private val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
     private val requestLocation = registerForActivityResult(
@@ -68,6 +68,7 @@ class SelectPositionFragment :
         binding.viewModel = viewModel
         init()
         initMap()
+        viewModel.resetLocation()
     }
 
     private fun init() {
@@ -99,8 +100,6 @@ class SelectPositionFragment :
         binding.btnGps.setOnClickListener {
             moveCameraToUser()
         }
-
-        viewModel.resetLocation()
     }
 
     private fun initMap() {
