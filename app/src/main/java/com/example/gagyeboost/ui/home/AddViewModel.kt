@@ -117,4 +117,15 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
             _categoryList.value = repository.loadCategoryList(categoryType)
         }
     }
+
+    fun deleteCategory(callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            if (!repository.isExistAccountBookDataByCategory(selectedCategoryId)) {
+                repository.deleteCategory(selectedCategoryId)
+                callback(true)
+            } else {
+                callback(false)
+            }
+        }
+    }
 }

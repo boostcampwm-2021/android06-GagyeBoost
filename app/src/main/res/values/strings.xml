@@ -81,4 +81,8 @@
     <string name="select_place">장소 선택</string>
     <string name="select_place_dialog_message">선택된 장소 없이 등록하시겠습니까?</string>
     <string name="app_icon">앱 아이콘</string>
+
+    <string name="category_delete_dialog_title">카테고리 삭제</string>
+    <string name="category_delete_dialog_message">카테고리를 삭제하시겠습니까?</string>
+    <string name="category_delete_complete">카테고리가 삭제됐습니다.</string>
 </resources>

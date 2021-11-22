@@ -105,4 +105,11 @@ class Repository(
     }
 
     suspend fun loadMonthData(year: Int, month: Int) = accountBookDao.loadMonthData(year, month)
+
+    suspend fun deleteCategory(selectedCategoryId: Int) {
+        accountBookDao.deleteCategoryData(selectedCategoryId)
+    }
+
+    suspend fun isExistAccountBookDataByCategory(selectedCategoryId: Int) =
+        accountBookDao.isExistAccountBookDataByCategoryId(selectedCategoryId)
 }
