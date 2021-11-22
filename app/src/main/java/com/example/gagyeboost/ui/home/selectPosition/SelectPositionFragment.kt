@@ -113,7 +113,6 @@ class SelectPositionFragment :
 
     private fun moveCameraToUser() {
         val userLocation = gpsUtils.getUserLatLng()
-        viewModel.userLocation = gpsUtils.getUserLocation()
 
         val cameraPosition = CameraPosition.Builder()
             .target(userLocation)
