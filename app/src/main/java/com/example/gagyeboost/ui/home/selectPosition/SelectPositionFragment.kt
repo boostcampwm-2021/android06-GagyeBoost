@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
+import java.io.Serializable
 
 class SelectPositionFragment :
     BaseFragment<FragmentSelectPositionBinding>(R.layout.fragment_select_position),
@@ -42,6 +43,7 @@ class SelectPositionFragment :
     private val moveCameraToPlace: (PlaceDetail) -> Unit = {
         val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
 
+        /*
         googleMap.let { map ->
             map.clear()
             map.addMarker(
@@ -49,6 +51,9 @@ class SelectPositionFragment :
             )
             map.animateCamera(newLatLng(latLng))
         }
+
+         */
+        googleMap.animateCamera(newLatLng(latLng))
     }
     private val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
     private val requestLocation = registerForActivityResult(
@@ -60,11 +65,12 @@ class SelectPositionFragment :
     private val goToAddressResultActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
-                val place =
-                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as PlaceDetail
-                    Timber.e(place.toString())
-                viewModel.selectedLocation = place
-                moveCameraToPlace(place)
+                val placeList =
+                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as Array<PlaceDetail>
+                //Timber.e(placeList.toList().toString())
+                //viewModel.selectedLocationList = place
+                viewModel.setPlaceList(placeList.toList())
+                moveCameraToPlace(placeList.firstOrNull() ?: return@registerForActivityResult)
             }
         }
 
@@ -160,6 +166,21 @@ class SelectPositionFragment :
         googleMap = map
 
         requestLocation.launch(permissions)
+        viewModel.selectedLocationList.observe(viewLifecycleOwner, { placeList ->
+            with(googleMap) {
+                clear()
+                placeList.forEach { placeDetail ->
+                    addMarker(
+                        MarkerOptions().position(
+                            LatLng(
+                                placeDetail.lat.toDouble(),
+                                placeDetail.lng.toDouble()
+                            )
+                        ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                    )
+                }
+            }
+        })
     }
 
 }

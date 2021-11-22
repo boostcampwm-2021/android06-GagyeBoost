@@ -37,6 +37,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     var selectedLocation: PlaceDetail? = null
 
+    private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
+    val selectedLocationList: LiveData<List<PlaceDetail>> = _selectedLocationList
+
     lateinit var userLocation: Address
 
     fun setSelectedIcon(icon: String) {
@@ -116,5 +119,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch {
             _categoryList.value = repository.loadCategoryList(categoryType)
         }
+    }
+
+    fun setPlaceList(placeList: List<PlaceDetail>) {
+        _selectedLocationList.value = placeList
     }
 }
