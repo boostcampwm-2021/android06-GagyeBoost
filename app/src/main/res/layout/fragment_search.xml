@@ -126,15 +126,15 @@
             app:layout_constraintStart_toStartOf="@id/tv_keyword_title"
             app:layout_constraintTop_toBottomOf="@id/tv_date_title" />
 
-        <Button
+        <TextView
             android:id="@+id/btn_select_category"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/MapFilterButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="0dp"
             android:text="@string/select_category"
             android:textColor="@color/black"
-            android:textSize="11sp"
+            android:textSize="12sp"
+            android:background="@drawable/background_white_radius_20dp"
             app:layout_constraintBottom_toBottomOf="@id/tv_category_title"
             app:layout_constraintEnd_toEndOf="@id/et_keyword_body"
             app:layout_constraintTop_toTopOf="@id/tv_category_title" />

@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.Filter
@@ -45,6 +47,23 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
 
     private val _selectedCategory = MutableLiveData<List<Category>>(listOf())
     val selectedCategory: LiveData<List<Category>> = _selectedCategory
+
+    // 필터로 보낼 id list
+    val categoryIDList = MutableLiveData<MutableList<Int>>()
+
+    // 화면에 보여줄 카테고리 리스트
+    private val categoryExpenseList = MutableLiveData<List<Category>>()
+    private val categoryIncomeList = MutableLiveData<List<Category>>()
+
+    // category adapter에서 필요한 초기 카테고리 리스트
+    var incomeCategoryID: List<Int>? = null
+    var expenseCategoryID: List<Int>? = null
+
+    val isCategoryBackgroundChange = MutableLiveData(false)
+
+    init {
+        initLoadCategory()
+    }
 
     fun loadFilterData() {
         viewModelScope.launch {
@@ -116,4 +135,32 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     }
 
     private fun dateToDateCode(year: Int, month: Int, day: Int) = year * 10000 + month * 100 + day
+
+    private fun initLoadCategory() {
+        viewModelScope.launch {
+            val deferredExpenseCategory = async { repository.loadCategoryList(EXPENSE) }
+            val deferredIncomeCategory = async { repository.loadCategoryList(INCOME) }
+
+            val expenseCategory = deferredExpenseCategory.await()
+            val incomeCategory = deferredIncomeCategory.await()
+
+            categoryExpenseList.value = expenseCategory
+            categoryIncomeList.value = incomeCategory
+            categoryIDList.value = expenseCategory.map { it.id }.toMutableList()
+
+            incomeCategoryID = incomeCategory.map { it.id }
+            expenseCategoryID = expenseCategory.map { it.id }
+        }
+    }
+
+    fun getCategoryList(moneyType: Byte): List<Category> {
+        return when (moneyType) {
+            INCOME -> categoryIncomeList.value ?: listOf()
+            else -> categoryExpenseList.value ?: listOf()
+        }
+    }
+
+    fun changeCategoryBackground() {
+        isCategoryBackgroundChange.value = categoryIDList.value?.isEmpty() ?: true
+    }
 }

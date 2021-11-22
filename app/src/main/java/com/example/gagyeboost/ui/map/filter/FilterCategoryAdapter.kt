@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,14 +12,18 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemRvFilterCategoryBinding
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.ui.map.MapViewModel
-import timber.log.Timber
+import com.example.gagyeboost.ui.search.SearchViewModel
 
 class FilterCategoryAdapter(
-    private val viewModel: MapViewModel,
+    private val viewModel: ViewModel,
     private val initCategoryList: List<Int>
 ) : ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
 
-    val categorySet = viewModel.categoryIDList.value?.toMutableSet() ?: mutableSetOf()
+    val categorySet = when (viewModel) {
+        is MapViewModel -> viewModel.categoryIDList.value?.toMutableSet() ?: mutableSetOf()
+        is SearchViewModel -> viewModel.categoryIDList.value?.toMutableSet() ?: mutableSetOf()
+        else -> mutableListOf()
+    }
 
     fun setCategoryList(boolean: Boolean) {
         categorySet.clear()
@@ -52,7 +57,10 @@ class FilterCategoryAdapter(
                     } else {
                         categorySet.remove(it.id)
                     }
-                    viewModel.categoryIDList.value = categorySet.toMutableList()
+                    when (viewModel) {
+                        is MapViewModel -> viewModel.categoryIDList.value = categorySet.toMutableList()
+                        is SearchViewModel -> viewModel.categoryIDList.value = categorySet.toMutableList()
+                    }
                 }
             }
         }

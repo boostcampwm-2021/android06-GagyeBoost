@@ -49,7 +49,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             }
 
             btnSelectCategory.setOnClickListener {
-                // TODO 카테고리 선택 dialog
+                val dialog = SearchCategoryDialog()
+                dialog.show(childFragmentManager, dialog.tag)
+                childFragmentManager.executePendingTransactions()
             }
 
             btnSearch.setOnClickListener {
