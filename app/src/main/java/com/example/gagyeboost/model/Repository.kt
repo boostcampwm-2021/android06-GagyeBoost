@@ -49,7 +49,7 @@ class Repository(
 
     suspend fun loadFilterData(filter: Filter): List<AccountBook> =
         accountBookDao.loadSearchData(
-            filter.moneyType,
+            filter.moneyType ?: EXPENSE,
             filter.startYear,
             filter.startMonth,
             filter.startDay,
@@ -67,7 +67,6 @@ class Repository(
 
     suspend fun loadFilterDataWithKeyword(filter: Filter, keyword: String) =
         accountBookDao.loadSearchDataWithKeyword(
-            filter.moneyType,
             filter.startYear,
             filter.startMonth,
             filter.startDay,

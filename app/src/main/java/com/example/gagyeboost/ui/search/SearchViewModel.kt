@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.Filter
@@ -16,8 +15,8 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
 
     val keyword = MutableLiveData("")
 
-    private val _selectedType = MutableLiveData(EXPENSE)
-    val selectedType: LiveData<Byte> = _selectedType
+    /* private val _selectedType = MutableLiveData(EXPENSE)
+    val selectedType: LiveData<Byte> = _selectedType*/
 
     private val _startYear = MutableLiveData(Calendar.getInstance().get(Calendar.YEAR))
     val startYear: LiveData<Int> = _startYear
@@ -50,7 +49,7 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     fun loadFilterData() {
         viewModelScope.launch {
             val filter = Filter(
-                selectedType.value ?: EXPENSE,
+                null,
                 startYear.value ?: 1970,
                 startMonth.value ?: 1,
                 startDay.value ?: 1,
@@ -72,13 +71,12 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun setSelectedType(type: Byte) {
+    /* fun setSelectedType(type: Byte) {
         _selectedType.value = type
-    }
+    } */
 
     fun resetData() {
         keyword.value = ""
-        _selectedType.value = EXPENSE
         _startYear.value = Calendar.getInstance().get(Calendar.YEAR)
         _startMoney.value = Calendar.getInstance().get(Calendar.MONTH) + 1
         _startDay.value = 1

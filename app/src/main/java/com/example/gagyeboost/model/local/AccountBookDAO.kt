@@ -6,8 +6,6 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
-import timber.log.Timber
-import java.util.*
 
 @Dao
 interface AccountBookDAO {
@@ -91,8 +89,7 @@ interface AccountBookDAO {
 
     @Query(
         """SELECT * FROM account_book
-            WHERE (money_type=:moneyType) AND
-            year*10000+month*100+day>=:startYear*10000+:startMonth*100+:startDay AND
+            WHERE year*10000+month*100+day>=:startYear*10000+:startMonth*100+:startDay AND
             year*10000+month*100+day<=:endYear*10000+:endMonth*100+:endDay AND
             (category IN (:categoryList)) AND
             (money BETWEEN :startMoney AND :endMoney) AND
@@ -101,7 +98,6 @@ interface AccountBookDAO {
             content LIKE '%'||:keyword||'%'"""
     )
     suspend fun loadSearchDataWithKeyword(
-        moneyType: Byte,
         startYear: Int,
         startMonth: Int,
         startDay: Int,
