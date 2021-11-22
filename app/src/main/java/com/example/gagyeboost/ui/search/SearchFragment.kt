@@ -68,18 +68,19 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
     }
 
     private fun showDatePicker(isStart: Boolean) {
-        val listener = { y:Int, m:Int, d:Int ->
+        val listener = { y: Int, m: Int, d: Int ->
             if (isStart) viewModel.setStartDate(y, m, d)
             else viewModel.setEndDate(y, m, d)
         }
-        val year=if(isStart) viewModel.startYear.value?:1970 else viewModel.endYear.value?:2500
-        val month=if(isStart) viewModel.startMonth.value?:1 else viewModel.endMonth.value?:12
-        val day= if(isStart) viewModel.startDay.value?:1 else viewModel.endDay.value?:1
+        val year =
+            if (isStart) viewModel.startYear.value ?: 1970 else viewModel.endYear.value ?: 2500
+        val month = if (isStart) viewModel.startMonth.value ?: 1 else viewModel.endMonth.value ?: 12
+        val day = if (isStart) viewModel.startDay.value ?: 1 else viewModel.endDay.value ?: 1
         DatePickerDialog(
             requireContext(), { _, y, m, d ->
-                listener(y,m+1,d)
+                listener(y, m + 1, d)
             },
-            year, month-1, day
+            year, month - 1, day
         ).show()
     }
 }
