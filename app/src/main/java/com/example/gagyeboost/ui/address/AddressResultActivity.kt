@@ -32,7 +32,6 @@ class AddressResultActivity :
                 putExtra(INTENT_EXTRA_PLACE_DETAIL, it)
             }
             setResult(RESULT_OK, intent)
-
             finish()
         }
     }
@@ -76,8 +75,8 @@ class AddressResultActivity :
         disposable = observable.debounce(400, TimeUnit.MILLISECONDS).subscribe {
             lifecycleScope.launch {
                 viewModel.fetchPlaceListData(it, gpsUtils.getUserLatLng(), setProgressBarVisible)
-                    .collectLatest {
-                        (binding.rvAddress.adapter as AddressAdapter).submitData(it)
+                    .collectLatest { data ->
+                        (binding.rvAddress.adapter as AddressAdapter).submitData(data)
                     }
             }
         }

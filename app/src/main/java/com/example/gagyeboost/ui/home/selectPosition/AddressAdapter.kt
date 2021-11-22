@@ -12,8 +12,7 @@ import com.example.gagyeboost.ui.address.AddressResultViewModel
 class AddressAdapter(
     private val viewModel: AddressResultViewModel,
     private val itemClickListener: (PlaceDetail) -> Unit
-) :
-    PagingDataAdapter<PlaceDetail, AddressAdapter.AddressViewHolder>(diffCallback) {
+) : PagingDataAdapter<PlaceDetail, AddressAdapter.AddressViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -52,7 +51,7 @@ class AddressAdapter(
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<PlaceDetail>() {
             override fun areItemsTheSame(oldItem: PlaceDetail, newItem: PlaceDetail) =
-                oldItem == newItem
+                oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: PlaceDetail, newItem: PlaceDetail) =
                 oldItem == newItem

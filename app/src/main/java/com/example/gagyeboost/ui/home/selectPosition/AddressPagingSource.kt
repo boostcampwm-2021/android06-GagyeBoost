@@ -11,14 +11,12 @@ class AddressPagingSource(
     private val keyword: String,
     private val latLng: LatLng,
     private val callback: (Boolean) -> Unit
-) :
-    PagingSource<Int, PlaceDetail>() {
+) : PagingSource<Int, PlaceDetail>() {
 
     override fun getRefreshKey(state: PagingState<Int, PlaceDetail>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(
-                anchorPosition
-            )?.prevKey?.plus(1) ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
@@ -40,13 +38,13 @@ class AddressPagingSource(
                 } else if (it.meta.isEnd) {
                     LoadResult.Page(
                         data = it.documents,
-                        prevKey = if (next == 1) null; else next - 1,
+                        prevKey = if (next == 1) null else next - 1,
                         nextKey = null
                     )
                 } else {
                     LoadResult.Page(
                         data = it.documents,
-                        prevKey = if (next == 1) null; else next - 1,
+                        prevKey = if (next == 1) null else next - 1,
                         nextKey = next + 1
                     )
                 }
