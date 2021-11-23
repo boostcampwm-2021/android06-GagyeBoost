@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gagyeboost.common.DEFAULT_END_YEAR
+import com.example.gagyeboost.common.DEFAULT_START_YEAR
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
@@ -69,10 +71,10 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch {
             val filter = Filter(
                 null,
-                startYear.value ?: 1970,
+                startYear.value ?: DEFAULT_START_YEAR,
                 startMonth.value ?: 1,
                 startDay.value ?: 1,
-                endYear.value ?: 2500,
+                endYear.value ?: DEFAULT_END_YEAR,
                 endMonth.value ?: 12,
                 endDay.value ?: 31,
                 0f,
@@ -117,7 +119,7 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
 
         val tempCategoryId = mutableListOf<Int>()
         incomeCategoryID?.forEach {
-           tempCategoryId.add(it)
+            tempCategoryId.add(it)
         }
         expenseCategoryID?.forEach {
             tempCategoryId.add(it)
@@ -127,7 +129,11 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
 
     fun setStartDate(year: Int, month: Int, day: Int) {
         val startCode = dateToDateCode(year, month, day)
-        val endCode = dateToDateCode(endYear.value ?: 2500, endMonth.value ?: 12, endDay.value ?: 1)
+        val endCode = dateToDateCode(
+            endYear.value ?: DEFAULT_END_YEAR,
+            endMonth.value ?: 12,
+            endDay.value ?: 1
+        )
         _startYear.value = year
         _startMonth.value = month
         _startDay.value = day
@@ -140,7 +146,11 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
 
     fun setEndDate(year: Int, month: Int, day: Int) {
         val startCode =
-            dateToDateCode(startYear.value ?: 1970, startMonth.value ?: 1, startDay.value ?: 1)
+            dateToDateCode(
+                startYear.value ?: DEFAULT_START_YEAR,
+                startMonth.value ?: 1,
+                startDay.value ?: 1
+            )
         val endCode = dateToDateCode(year, month, day)
         _endYear.value = year
         _endMonth.value = month
@@ -179,8 +189,10 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun changeCategoryBackground() {
-        val totalSize = (categoryExpenseList.value?.size ?: 0) + (categoryIncomeList.value?.size ?: 0)
+        val totalSize =
+            (categoryExpenseList.value?.size ?: 0) + (categoryIncomeList.value?.size ?: 0)
         val categoryIdListSize = categoryIDList.value?.size ?: 0
-        isCategoryBackgroundChange.value = categoryIdListSize != 0 && categoryIdListSize != totalSize
+        isCategoryBackgroundChange.value =
+            categoryIdListSize != 0 && categoryIdListSize != totalSize
     }
 }

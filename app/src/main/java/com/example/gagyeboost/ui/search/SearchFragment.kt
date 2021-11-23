@@ -8,6 +8,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.DEFAULT_END_YEAR
+import com.example.gagyeboost.common.DEFAULT_START_YEAR
 import com.example.gagyeboost.databinding.FragmentSearchBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
@@ -95,7 +97,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             else viewModel.setEndDate(y, m, d)
         }
         val year =
-            if (isStart) viewModel.startYear.value ?: 1970 else viewModel.endYear.value ?: 2500
+            if (isStart) viewModel.startYear.value ?: DEFAULT_START_YEAR else viewModel.endYear.value ?: DEFAULT_END_YEAR
         val month = if (isStart) viewModel.startMonth.value ?: 1 else viewModel.endMonth.value ?: 12
         val day = if (isStart) viewModel.startDay.value ?: 1 else viewModel.endDay.value ?: 1
 
