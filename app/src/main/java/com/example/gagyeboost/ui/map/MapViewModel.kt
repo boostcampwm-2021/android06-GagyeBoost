@@ -43,8 +43,10 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endLatitude: Float = 200.0F
     var endLongitude: Float = 200.0F
 
-    val isMoneyBackgroundChange = MutableLiveData(false)
-    val isPeriodBackgroundChange = MutableLiveData(false)
+    val isMoneyFilterChange = MutableLiveData(false)
+    var moneyFilterBtnText = ""
+    val isPeriodFilterChange = MutableLiveData(false)
+    var periodFilterBtnText = ""
     val isCategoryBackgroundChange = MutableLiveData(false)
 
     // category filter adapter에서 필요한 초기 카테고리 리스트
@@ -125,8 +127,8 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endLongitude = 200.0f
         initLoadCategory()
 
-        isMoneyBackgroundChange.value = false
-        isPeriodBackgroundChange.value = false
+        isMoneyFilterChange.value = false
+        isPeriodFilterChange.value = false
         isCategoryBackgroundChange.value = false
     }
 
@@ -205,20 +207,29 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endMonth = calendar.get(Calendar.MONTH) + 1
         endDay = calendar.get(Calendar.DAY_OF_MONTH)
 
-        isPeriodBackgroundChange.value = !(startYear == NOW_YEAR &&
+        isPeriodFilterChange.value = !(startYear == NOW_YEAR &&
                 startMonth == NOW_MONTH &&
                 startDay == 1 &&
                 endYear == NOW_YEAR &&
                 endMonth == NOW_MONTH &&
                 endDay == END_DAY)
+
+        periodFilterBtnText =
+            "${intToStringDate(startYear, startMonth, startDay)} ~ ${
+                intToStringDate(endYear, endMonth, endDay)
+            }"
     }
 
-    fun changeMoneyBackground() {
+    fun changeMoneyFilterBtn() {
         val start = intStartMoney.value ?: InitMoneyFilter.Start.money
         val end = intEndMoney.value ?: InitMoneyFilter.End.money
 
-        isMoneyBackgroundChange.value =
+        isMoneyFilterChange.value =
             !(start == InitMoneyFilter.Start.money && end == InitMoneyFilter.End.money)
+
+        moneyFilterBtnText = "${formatter.format(start)} ~ ${
+            if (end == Int.MAX_VALUE) "1,000,000 이상" else formatter.format(end)
+        }"
     }
 
     fun changeCategoryBackground() {
