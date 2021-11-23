@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -201,7 +202,14 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun moveCameraToUser() {
         val userLocation = gpsUtils.getUserLatLng()
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f))
+        val cameraPosition = CameraPosition.Builder()
+            .target(userLocation)
+            .zoom(15f)
+            .bearing(0f)
+            .tilt(0f)
+            .build()
+
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
         val marker = MarkerOptions()
 
