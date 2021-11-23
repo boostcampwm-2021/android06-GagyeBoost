@@ -7,6 +7,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.core.view.isVisible
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.DEFAULT_END_YEAR
 import com.example.gagyeboost.common.DEFAULT_START_YEAR
@@ -88,6 +89,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
                 LENGTH_SHORT
             ).show()
             adapter.submitList(it)
+            setResultVisibility(it.isNotEmpty())
         }
     }
 
@@ -107,5 +109,13 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             },
             year, month - 1, day
         ).show()
+    }
+
+    private fun setResultVisibility(visibility: Boolean) {
+        with(binding) {
+            listOf(tvTotalExpenseTitle, tvTotalExpenseBody, tvTotalIncomeTitle, tvTotalIncomeBody).forEach {
+                it.isVisible = visibility
+            }
+        }
     }
 }

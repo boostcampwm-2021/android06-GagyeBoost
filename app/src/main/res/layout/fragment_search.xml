@@ -245,6 +245,7 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@id/tv_total_expense_title"
             app:layout_constraintStart_toStartOf="@id/view_outline"
             app:layout_constraintTop_toBottomOf="@id/space_outline_bottom" />
@@ -257,6 +258,7 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@id/view_outline"
             app:layout_constraintStart_toEndOf="@id/tv_total_income_title"
             app:layout_constraintTop_toTopOf="@id/tv_total_income_title" />
@@ -268,6 +270,8 @@
             android:layout_marginTop="5dp"
             android:textSize="16sp"
             android:textColor="@color/income"
+            intToWon="@{viewModel.filteredIncomeSum}"
+            android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@id/tv_total_expense_title"
             app:layout_constraintStart_toStartOf="@id/view_outline"
             app:layout_constraintTop_toBottomOf="@id/tv_total_expense_title" />
@@ -278,6 +282,8 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/expense"
+            intToWon="@{viewModel.filteredExpenseSum}"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@id/view_outline"
             app:layout_constraintStart_toEndOf="@id/tv_total_income_title"
             app:layout_constraintTop_toTopOf="@id/tv_total_income_body" />

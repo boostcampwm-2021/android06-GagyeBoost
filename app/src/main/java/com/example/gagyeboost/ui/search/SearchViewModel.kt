@@ -63,6 +63,12 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     private val _filteredResult = MutableLiveData<List<DateDetailItem>>()
     val filteredResult: LiveData<List<DateDetailItem>> = _filteredResult
 
+    private val _filteredExpenseSum = MutableLiveData<Int>()
+    val filteredExpenseSum: LiveData<Int> = _filteredExpenseSum
+
+    private val _filteredIncomeSum = MutableLiveData<Int>()
+    val filteredIncomeSum: LiveData<Int> = _filteredIncomeSum
+
     init {
         initLoadCategory()
     }
@@ -90,7 +96,10 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
             }
             val dataList = deferredDataList.await()
 
-            _filteredResult.postValue(dataList.map {
+            _filteredExpenseSum.value = dataList.filter { it.moneyType == EXPENSE }.sumOf { it.money }
+            _filteredIncomeSum.value = dataList.filter { it.moneyType == INCOME }.sumOf { it.money }
+
+            _filteredResult.value = dataList.map {
                 val categoryId = it.category
                 val category = repository.loadCategoryData(categoryId)
                 DateDetailItem(
@@ -101,7 +110,7 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
                     it.money,
                     it.moneyType == INCOME
                 )
-            })
+            }
         }
     }
 
