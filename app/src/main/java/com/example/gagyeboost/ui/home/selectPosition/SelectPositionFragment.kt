@@ -42,10 +42,21 @@ class SelectPositionFragment :
     private val moveCameraToPlace: (PlaceDetail) -> Unit = {
         val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
 
+        val markerOptions = MarkerOptions()
+
+        ResourcesCompat.getDrawable(
+            resources,
+            R.drawable.ic_default_marker,
+            null
+        )?.let {
+            val bitmap = BitmapUtils.createBitmapFromDrawable(it)
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+        }
+
         googleMap.let { map ->
             map.clear()
             map.addMarker(
-                MarkerOptions().position(latLng).title("${it.roadAddressName} ${it.placeName}")
+                markerOptions.position(latLng).title("${it.roadAddressName} ${it.placeName}")
             )
             map.animateCamera(newLatLng(latLng))
         }

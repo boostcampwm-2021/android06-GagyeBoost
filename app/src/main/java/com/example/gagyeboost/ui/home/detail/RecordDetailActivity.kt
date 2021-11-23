@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.ActivityRecordDetailBinding
@@ -20,6 +21,7 @@ import com.example.gagyeboost.ui.home.category.CategoryAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -210,7 +212,18 @@ class RecordDetailActivity :
         googleMap.clear()
 
         if (latLng.latitude > 0 && latLng.longitude > 0) {
-            googleMap.addMarker(MarkerOptions().apply { position(latLng) })
+            val markerOptions = MarkerOptions().apply { position(latLng) }
+
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_default_marker,
+                null
+            )?.let {
+                val bitmap = BitmapUtils.createBitmapFromDrawable(it)
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+            }
+
+            googleMap.addMarker(markerOptions)
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
         } else {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(gpsUtils.getUserLatLng(), 15f))
