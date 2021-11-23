@@ -12,8 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bottom_sheet_background">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_money_title"
@@ -30,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            android:id="@+id/view_line"
+            android:id="@+id/view_line_1"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="@color/gray2"
@@ -44,14 +43,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:padding="10dp"
-            android:text="@{viewModel.startMoney}"
             android:textColor="@color/gray1"
             android:textSize="20sp"
             android:textStyle="bold"
+            app:intToWon="@{viewModel.intStartMoney}"
             app:layout_constraintEnd_toStartOf="@id/tv_dash_money"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_line"
+            app:layout_constraintTop_toBottomOf="@id/view_line_1"
             tools:text="1,000원" />
 
         <TextView
@@ -107,6 +106,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="30dp"
             android:text="@string/apply"
+            android:background="@drawable/background_default_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

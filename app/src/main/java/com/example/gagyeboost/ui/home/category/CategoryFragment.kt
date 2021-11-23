@@ -1,7 +1,9 @@
 package com.example.gagyeboost.ui.home.category
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -24,7 +26,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-
         initView()
         initClickListeners()
         setObservers()
@@ -80,10 +81,12 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     private fun initClickListeners() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
+            viewModel.resetCategoryFragmentData()
         }
 
         binding.btnClose.setOnClickListener {
             findNavController().popBackStack(R.id.homeFragment, false)
+            viewModel.resetAllData()
         }
     }
 
@@ -94,5 +97,24 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             categoryList.add(Category(-1, getString(R.string.add), "➕", viewModel.categoryType))
             categoryAdapter.submitList(categoryList)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.toggleSoftInput(
+            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.HIDE_IMPLICIT_ONLY
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
     }
 }

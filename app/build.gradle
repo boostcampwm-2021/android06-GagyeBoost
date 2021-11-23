@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'com.google.firebase.crashlytics'
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -31,10 +32,11 @@ android {
         minSdk 21
         targetSdk 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.3"
 
         manifestPlaceholders = [googleMapKey: googleMapKey]
-        buildConfigField "String", "google_map_key", properties["google_map_key"]
+        buildConfigField "String", "google_map_key", properties["google_map_key"]?:"null"
+        buildConfigField "String", "kakao_api_key", properties["kakao_api_key"]?:"null"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -66,29 +68,46 @@ dependencies {
     // Room DB
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-maps:18.0.0'
     implementation 'com.google.android.libraries.places:places:2.5.0'
     kapt "androidx.room:room-compiler:$room_version"
 
-    // koin
+    // Koin
     implementation "io.insert-koin:koin-android:$koin_version"
 
-    // navigation
+    // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     // Google Map
     implementation "com.google.android.gms:play-services-maps:$google_map_version"
     implementation "com.google.android.gms:play-services-location:$google_map_version"
+    implementation 'com.google.maps.android:android-maps-utils:2.2.3'
+    implementation 'com.google.maps.android:maps-utils-ktx:3.2.0'
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor_version"
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // Paging
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+
+    // RxJava3
+    implementation "io.reactivex.rxjava3:rxandroid:$rxandroid_version"
+    implementation "io.reactivex.rxjava3:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava3:rxkotlin:$rxkotlin_version"
 
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'

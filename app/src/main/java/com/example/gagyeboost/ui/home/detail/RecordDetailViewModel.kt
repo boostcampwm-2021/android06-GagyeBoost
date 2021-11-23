@@ -1,20 +1,19 @@
 package com.example.gagyeboost.ui.home.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.example.gagyeboost.common.DEFAULT_LAT
+import com.example.gagyeboost.common.DEFAULT_LNG
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.DateDetailItem
+import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 
 class RecordDetailViewModel(private val repository: Repository, private val accountBookId: Int) :
     ViewModel() {
+
+    private val _accountBookData = MutableLiveData<AccountBook>()
+    val accountBookData: LiveData<AccountBook> = _accountBookData
 
     val dateDetailItem = MutableLiveData<DateDetailItem>()
 
@@ -27,29 +26,35 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category> = _category
 
-    private val formatter = DecimalFormat("###,###")
+    //var placeDetail: PlaceDetail? = null
+    private val _selectedLocation = MutableLiveData(MyItem(-1.0, -1.0, "", ""))
+    val selectedLocation: LiveData<MyItem> = _selectedLocation
 
-    init {
-        setAccountBookData()
-    }
+    private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
+    val selectedLocationList: LiveData<List<PlaceDetail>> = _selectedLocationList
 
-    private fun setAccountBookData() {
+    val searchAddress = MutableLiveData<String>()
+
+    fun setAccountBookData(callback: () -> Unit) {
         viewModelScope.launch {
             val accountBookData = repository.loadAccountBookData(accountBookId)
             val categoryId = accountBookData.category
             val category = repository.loadCategoryData(categoryId)
             _category.value = category
+            _accountBookData.value = accountBookData
 
             dateDetailItem.value = DateDetailItem(
                 accountBookId,
                 category.emoji,
                 category.categoryName,
                 accountBookData.content,
-                formatter.format(accountBookData.money),
+                accountBookData.money,
                 accountBookData.moneyType == INCOME,
             )
 
             setDate(accountBookData.year, accountBookData.month, accountBookData.day)
+
+            callback()
         }
     }
 
@@ -68,11 +73,11 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                 val updatedAccountBookData = AccountBook(
                     accountBookId,
                     if (moneyType) INCOME else EXPENSE,
-                    money.replace(",", "").toIntOrNull() ?: 0,
+                    money,
                     _category.value?.id ?: 0,
-                    0.0f,
-                    0.0f,
-                    "",
+                    selectedLocation.value?.position?.latitude?.toFloat() ?: DEFAULT_LAT.toFloat(),
+                    selectedLocation.value?.position?.longitude?.toFloat() ?: DEFAULT_LNG.toFloat(),
+                    selectedLocation.value?.title ?: "",
                     dateDetailItem.value?.content ?: "",
                     strDate.split(".")[0].toInt(),
                     strDate.split(".")[1].toInt(),
@@ -98,5 +103,19 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
 
     fun setCategory(category: Category) {
         _category.value = category
+    }
+
+    fun setPlaceList(placeList: List<PlaceDetail>) {
+        _selectedLocationList.value = placeList
+    }
+
+    fun setSelectedPlace(location: MyItem) {
+        _selectedLocation.value = location
+    }
+
+    fun resetLocation() {
+        _selectedLocationList.value = listOf()
+        _selectedLocation.value = MyItem(-1.0, -1.0, "", "")
+        searchAddress.value = ""
     }
 }

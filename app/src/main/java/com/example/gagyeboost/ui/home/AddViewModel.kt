@@ -1,18 +1,13 @@
 package com.example.gagyeboost.ui.home
 
 import android.location.Address
-import android.location.Geocoder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.PlaceDetail
-import com.example.gagyeboost.model.data.nothingEmoji
+import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
@@ -23,7 +18,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     private var selectedCategoryId = -1
 
-    val money = MutableLiveData("0")
+    val money = MutableLiveData(0)
 
     private val _categoryList = MutableLiveData<List<Category>>()
     val categoryList: LiveData<List<Category>> = _categoryList
@@ -37,7 +32,12 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     val searchAddress = MutableLiveData<String>()
 
-    val selectedAddress = MutableLiveData<PlaceDetail>()
+    //var selectedLocation: PlaceDetail? = null
+    private val _selectedLocation = MutableLiveData(MyItem(-1.0, -1.0, "", ""))
+    val selectedLocation: LiveData<MyItem> = _selectedLocation
+
+    private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
+    val selectedLocationList: LiveData<List<PlaceDetail>> = _selectedLocationList
 
     lateinit var userLocation: Address
 
@@ -91,29 +91,25 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    //TODO 데이터 추가 : MoneyType, latitude, longitude, address, content
     fun addAccountBookData() {
         if (dateString.isEmpty()) return
         viewModelScope.launch {
-            val splitedStr = dateString.split('/')
-            repository.addAccountBookData(
-                AccountBook(
-                    moneyType = _categoryType,
-                    money = if (money.value != null) money.value!!.toInt() else 0,
-                    category = selectedCategoryId,
-                    address = "${selectedAddress.value?.formattedAddress} ${selectedAddress.value?.name}",
-                    latitude = selectedAddress.value?.geometry?.location?.lat?.toFloat()
-                        ?: userLocation.latitude.toFloat(),
-                    longitude = selectedAddress.value?.geometry?.location?.lng?.toFloat()
-                        ?: userLocation.longitude.toFloat(),
-                    content = content.value ?: "",
-                    year = splitedStr[0].toInt(),
-                    month = splitedStr[1].toInt(),
-                    day = splitedStr[2].toInt()
-                )
+            val splitStr = dateString.split('/')
+            val data = AccountBook(
+                moneyType = _categoryType,
+                money = money.value ?: 0,
+                category = selectedCategoryId,
+                address = selectedLocation.value?.title ?: "",
+                latitude = selectedLocation.value?.position?.latitude?.toFloat() ?: -1f,
+                longitude = selectedLocation.value?.position?.longitude?.toFloat() ?: -1f,
+                content = content.value ?: "",
+                year = splitStr[0].toInt(),
+                month = splitStr[1].toInt(),
+                day = splitStr[2].toInt()
             )
-            //TODO 달력 데이터 갱신
+            repository.addAccountBookData(data)
         }
+        money.value = 0
     }
 
     fun loadCategoryList() {
@@ -122,41 +118,31 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun afterMoneyTextChanged() {
-        if (money.value.isNullOrEmpty()) money.value = "0"
-
-        money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "")
+    fun setPlaceList(placeList: List<PlaceDetail>) {
+        _selectedLocationList.value = placeList
     }
 
-    fun getFormattedMoneyText(): String {
-        return formatter.format(money.value?.toIntOrNull() ?: 0) + "원"
+    fun setSelectedPlace(location: MyItem) {
+        _selectedLocation.value = location
     }
 
-    fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
+    fun resetLocation() {
+        _selectedLocationList.value = listOf()
+        _selectedLocation.value = MyItem(-1.0, -1.0, "", "")
+        searchAddress.value = ""
+    }
 
-    fun getAddress(geocoder: Geocoder): List<Address> =
-        geocoder.getFromLocationName(searchAddress.value, 20)
+    fun resetCategoryFragmentData(){
+        content.value=""
+        _categoryList.value=listOf()
+        _categoryType=EXPENSE
+    }
 
-    fun getPlaceListData(input: String): LiveData<Result<List<PlaceDetail>>> {
-        val data = MutableLiveData<Result<List<PlaceDetail>>>()
-
-        viewModelScope.launch {
-            val response = repository.getPlaceListFromKeyword(input)
-            if (response.isSuccessful) {
-                val body = response.body()
-
-                body?.let {
-                    if (it.status == "OK") {
-                        data.postValue(Result.success(body.results))
-                    } else {
-                        data.postValue(Result.failure(Throwable()))
-                    }
-                }
-            } else {
-                data.postValue(Result.failure(Throwable()))
-            }
-        }
-
-        return data
+    fun resetAllData() {
+        resetSelectedCategory()
+        money.value = 0
+        resetCategoryFragmentData()
+        dateString = ""
+        resetLocation()
     }
 }

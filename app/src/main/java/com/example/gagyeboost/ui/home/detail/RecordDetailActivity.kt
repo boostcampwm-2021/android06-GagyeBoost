@@ -1,36 +1,107 @@
 package com.example.gagyeboost.ui.home.detail
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
+import androidx.activity.result.contract.ActivityResultContracts
+import com.example.gagyeboost.R
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.ActivityRecordDetailBinding
 import com.example.gagyeboost.databinding.BottomSheetCategoryBinding
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.MyItem
+import com.example.gagyeboost.model.data.PlaceDetail
+import com.example.gagyeboost.ui.address.AddressResultActivity
 import com.example.gagyeboost.ui.base.BaseActivity
 import com.example.gagyeboost.ui.home.category.CategoryAdapter
+import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class RecordDetailActivity :
-    BaseActivity<ActivityRecordDetailBinding>(com.example.gagyeboost.R.layout.activity_record_detail) {
+    BaseActivity<ActivityRecordDetailBinding>(R.layout.activity_record_detail),
+    OnMapReadyCallback {
+
     private var accountBookId = -1
     private val viewModel: RecordDetailViewModel by viewModel { parametersOf(accountBookId) }
+    private val gpsUtils by lazy { GPSUtils(this) }
+    private lateinit var googleMap: GoogleMap
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var bottomSheetDialog: BottomSheetDialog
+    private val moveCameraToPlace: (PlaceDetail) -> Unit = {
+        val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
+        googleMap.animateCamera(newLatLngZoom(latLng, 15f))
+    }
+    private val goToAddressResultActivity =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                /*
+                val placeDetail =
+                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as PlaceDetail
+
+                viewModel.placeDetail = placeDetail
+
+                binding.tvAddressBody.text = placeDetail.roadAddressName
+
+                addMarkerToPlace(LatLng(placeDetail.lat.toDouble(), placeDetail.lng.toDouble()))
+
+                 */
+                val placeList =
+                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as Array<PlaceDetail>
+                viewModel.setPlaceList(placeList.toList())
+                moveCameraToPlace(placeList.firstOrNull() ?: return@registerForActivityResult)
+            }
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initMap()
         initView()
         setListeners()
         setObserver()
+        viewModel.resetLocation()
     }
 
     private fun initView() {
         accountBookId = intent.getIntExtra(DATE_DETAIL_ITEM_ID_KEY, 0)
         binding.viewModel = viewModel
+        viewModel.setAccountBookData {
+            binding.tvAddressBody.text = viewModel.accountBookData.value?.address
+            val latitude = viewModel.accountBookData.value?.latitude?.toDouble() ?: DEFAULT_LAT
+            val longitude = viewModel.accountBookData.value?.longitude?.toDouble() ?: DEFAULT_LNG
+            val address = viewModel.accountBookData.value?.address
+            //val latLng = LatLng(latitude, longitude)
+            val placeDetail = PlaceDetail(
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                roadAddressName = address ?: "",
+                lat = latitude.toString(),
+                lng = longitude.toString()
+            )
+            viewModel.setPlaceList(listOf(placeDetail))
+            moveCameraToPlace(placeDetail)
+            //addMarkerToPlace(latLng)
+        }
+
         categoryAdapter =
             CategoryAdapter({ category -> categoryOnClickListener(category) }, { true })
     }
@@ -43,8 +114,8 @@ class RecordDetailActivity :
 
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    com.example.gagyeboost.R.id.delete -> {
-                        deleteAccountBookData()
+                    R.id.delete -> {
+                        showDeleteDialog()
                         true
                     }
                     else -> false
@@ -56,7 +127,7 @@ class RecordDetailActivity :
             if (binding.tvCategoryBody.text.isEmpty()) {
                 Toast.makeText(
                     this,
-                    getString(com.example.gagyeboost.R.string.must_enter_category_name),
+                    getString(R.string.must_enter_category_name),
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -65,13 +136,37 @@ class RecordDetailActivity :
             }
         }
 
+        binding.etAddress.setOnClickListener {
+            goToAddressResultActivity.launch(Intent(this, AddressResultActivity::class.java))
+        }
+
+        binding.constraintDetail.setOnClickListener {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        }
+
         setDialogs()
+    }
+
+    private fun initMap() {
+        binding.map.getMapAsync(this)
+        binding.map.onCreate(null)
+    }
+
+    private fun showDeleteDialog() {
+        val builder = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.delete_record))
+            .setMessage(getString(R.string.record_delete_dialog_message))
+            .setPositiveButton(getString(R.string.confirm)) { _, _ -> deleteAccountBookData() }
+            .setNegativeButton(R.string.cancel) { _, _ -> }
+
+        builder.show()
     }
 
     private fun deleteAccountBookData() {
         viewModel.deleteAccountBookData(accountBookId)
         Toast.makeText(
-            this, getString(com.example.gagyeboost.R.string.record_delete_success),
+            this, getString(R.string.record_delete_success),
             Toast.LENGTH_SHORT
         ).show()
         finish()
@@ -120,5 +215,79 @@ class RecordDetailActivity :
         viewModel.setCategory(category)
         bottomSheetDialog.dismiss()
         return true
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.map.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.map.onResume()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.map.onStop()
+    }
+
+    @SuppressLint("PotentialBehaviorOverride")
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
+
+        googleMap.setOnMarkerClickListener {
+            selectLocation(it)
+            true
+        }
+
+        googleMap.setOnInfoWindowCloseListener {
+            viewModel.setSelectedPlace(MyItem(DEFAULT_LAT, DEFAULT_LNG, "", ""))
+        }
+
+        viewModel.selectedLocationList.observe(this, { placeList ->
+            with(googleMap) {
+                clear()
+                placeList.forEachIndexed { idx, placeDetail ->
+                    addMarker(
+                        MarkerOptions().position(
+                            LatLng(
+                                placeDetail.lat.toDouble(),
+                                placeDetail.lng.toDouble()
+                            )
+                        ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                    )?.let {
+                        if (idx == 0) selectLocation(it)
+                    }
+                }
+            }
+        })
+
+        viewModel.selectedLocation.observe(this, { location ->
+            binding.etAddress.text = location.title
+        })
+    }
+
+    private fun addMarkerToPlace(latLng: LatLng) {
+        googleMap.clear()
+
+        if (latLng.latitude > 0 && latLng.longitude > 0) {
+            googleMap.addMarker(MarkerOptions().apply { position(latLng) })
+            googleMap.moveCamera(newLatLngZoom(latLng, 15f))
+        } else {
+            googleMap.moveCamera(newLatLngZoom(gpsUtils.getUserLatLng(), 15f))
+        }
+    }
+
+    private fun selectLocation(marker: Marker) {
+        marker.showInfoWindow()
+        viewModel.setSelectedPlace(
+            MyItem(
+                marker.position.latitude,
+                marker.position.longitude,
+                marker.title ?: "",
+                marker.snippet ?: ""
+            )
+        )
     }
 }

@@ -1,13 +1,266 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.search.SearchFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.search.SearchViewModel" />
+
+        <variable
+            name="constValues"
+            type="com.example.gagyeboost.common.ConstKt" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/search" />
+        tools:context=".ui.search.SearchFragment">
 
-</FrameLayout>
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/default_color_gradation_app_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/app_bar_search"
+                style="@style/CategoryControlTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/app_bar_title_text_size"
+                app:title="@string/search"
+                app:titleCentered="true"
+                app:titleTextColor="@color/white">
+
+                <TextView
+                    android:id="@+id/btn_reset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20dp"
+                    android:padding="5dp"
+                    android:text="@string/reset"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <View
+            android:id="@+id/view_outline"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_outline_radius_20dp"
+            app:layout_constraintBottom_toBottomOf="@id/space_outline_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar_layout_search" />
+
+        <TextView
+            android:id="@+id/tv_type_title"
+            style="@style/SearchTitle"
+            android:layout_marginTop="0dp"
+            android:text="@string/money_type"
+            app:layout_constraintBottom_toBottomOf="@id/toggle_group_money_type"
+            app:layout_constraintEnd_toStartOf="@id/toggle_group_money_type"
+            app:layout_constraintStart_toStartOf="@id/view_outline"
+            app:layout_constraintTop_toTopOf="@id/toggle_group_money_type" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggle_group_money_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="@id/view_outline"
+            app:layout_constraintStart_toEndOf="@id/tv_type_title"
+            app:layout_constraintTop_toTopOf="@id/view_outline"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <Button
+                android:id="@+id/btn_expense"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expense"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btn_income"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/earnings"
+                android:textSize="16sp" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/tv_keyword_title"
+            style="@style/SearchTitle"
+            android:text="@string/content"
+            app:layout_constraintStart_toStartOf="@id/tv_type_title"
+            app:layout_constraintTop_toBottomOf="@id/toggle_group_money_type" />
+
+        <EditText
+            android:id="@+id/et_keyword_body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autofillHints="@null"
+            android:gravity="end"
+            android:hint="@string/content"
+            android:inputType="text"
+            android:text="@={viewModel.keyword}"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+            app:layout_constraintStart_toStartOf="@id/tv_type_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_keyword_title" />
+
+        <TextView
+            android:id="@+id/tv_date_title"
+            style="@style/SearchTitle"
+            android:text="@string/period"
+            app:layout_constraintStart_toStartOf="@id/tv_type_title"
+            app:layout_constraintTop_toBottomOf="@id/et_keyword_body" />
+
+        <TextView
+            android:id="@+id/btn_date_start_body"
+            style="@style/RangeSelectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@{String.valueOf(viewModel.startYear)+`. `+String.valueOf(viewModel.startMonth)+`. `+String.valueOf(viewModel.startDay)+`.`}"
+            app:layout_constraintEnd_toStartOf="@id/tv_date_range"
+            app:layout_constraintStart_toStartOf="@id/tv_date_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_date_title"
+            tools:text="2021. 11. 1." />
+
+        <TextView
+            android:id="@+id/tv_date_range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/sp_tilde"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_date_start_body"
+            app:layout_constraintEnd_toStartOf="@id/btn_date_end_body"
+            app:layout_constraintStart_toEndOf="@id/btn_date_start_body"
+            app:layout_constraintTop_toTopOf="@id/btn_date_start_body" />
+
+        <TextView
+            android:id="@+id/btn_date_end_body"
+            style="@style/RangeSelectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(viewModel.endYear)+`. `+String.valueOf(viewModel.endMonth)+`. `+String.valueOf(viewModel.endDay)+`.`}"
+            app:layout_constraintBottom_toBottomOf="@id/btn_date_start_body"
+            app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+            app:layout_constraintStart_toEndOf="@id/tv_date_range"
+            app:layout_constraintTop_toTopOf="@id/btn_date_start_body"
+            tools:text="2021. 11. 30." />
+
+        <TextView
+            android:id="@+id/tv_category_title"
+            style="@style/SearchTitle"
+            android:text="@string/category"
+            app:layout_constraintStart_toStartOf="@id/tv_type_title"
+            app:layout_constraintTop_toBottomOf="@id/btn_date_start_body" />
+
+        <Button
+            android:id="@+id/btn_select_category"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:text="@string/select_category"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_category_title"
+            app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+            app:layout_constraintTop_toTopOf="@id/tv_category_title" />
+
+        <TextView
+            android:id="@+id/tv_selected_category"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+            app:layout_constraintStart_toStartOf="@id/tv_type_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_category_title" />
+
+        <TextView
+            android:id="@+id/tv_money_title"
+            style="@style/SearchTitle"
+            android:text="@string/money"
+            app:layout_constraintBottom_toTopOf="@id/btn_money_start_body"
+            app:layout_constraintStart_toStartOf="@id/tv_type_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_selected_category" />
+
+        <TextView
+            android:id="@+id/btn_money_start_body"
+            style="@style/RangeSelectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@{String.valueOf(viewModel.startMoney)+`원`}"
+            app:layout_constraintEnd_toStartOf="@id/tv_money_range"
+            app:layout_constraintStart_toStartOf="@id/tv_date_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_money_title"
+            tools:text="100원" />
+
+        <TextView
+            android:id="@+id/tv_money_range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/sp_tilde"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_money_start_body"
+            app:layout_constraintEnd_toStartOf="@id/btn_money_end_body"
+            app:layout_constraintStart_toEndOf="@id/btn_money_start_body"
+            app:layout_constraintTop_toTopOf="@id/btn_money_start_body" />
+
+        <TextView
+            android:id="@+id/btn_money_end_body"
+            style="@style/RangeSelectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(viewModel.endMoney)+`원`}"
+            app:layout_constraintBottom_toBottomOf="@id/btn_money_start_body"
+            app:layout_constraintEnd_toEndOf="@id/toggle_group_money_type"
+            app:layout_constraintStart_toEndOf="@id/tv_money_range"
+            app:layout_constraintTop_toTopOf="@id/btn_money_start_body"
+            tools:text="1000000원" />
+
+        <Space
+            android:id="@+id/space_outline_bottom"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            app:layout_constraintBottom_toBottomOf="@id/view_outline"
+            app:layout_constraintStart_toStartOf="@id/view_outline"
+            app:layout_constraintTop_toBottomOf="@id/btn_money_start_body" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_search"
+            style="@style/GradationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_outline" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

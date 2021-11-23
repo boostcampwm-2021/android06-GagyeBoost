@@ -2,25 +2,34 @@ package com.example.gagyeboost.ui.home.selectPosition
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isVisible
+import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.BitmapUtils
 import com.example.gagyeboost.common.GPSUtils
+import com.example.gagyeboost.common.INTENT_EXTRA_PLACE_DETAIL
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
+import com.example.gagyeboost.model.data.MyItem
+import com.example.gagyeboost.model.data.PlaceDetail
+import com.example.gagyeboost.ui.address.AddressResultActivity
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -32,6 +41,10 @@ class SelectPositionFragment :
     private lateinit var navController: NavController
     private lateinit var googleMap: GoogleMap
     private val gpsUtils: GPSUtils by lazy { GPSUtils(requireContext()) }
+    private val moveCameraToPlace: (PlaceDetail) -> Unit = {
+        val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
+        googleMap.animateCamera(newLatLngZoom(latLng,15f))
+    }
     private val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
     private val requestLocation = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -39,20 +52,39 @@ class SelectPositionFragment :
         moveCameraToUser()
     }
 
+    private val goToAddressResultActivity =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                val placeList =
+                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as Array<PlaceDetail>
+                viewModel.setPlaceList(placeList.toList())
+                moveCameraToPlace(placeList.firstOrNull() ?: return@registerForActivityResult)
+            }
+        }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         binding.viewModel = viewModel
-
         init()
         initMap()
-        requestLocation.launch(permissions)
+        viewModel.resetLocation()
     }
 
     private fun init() {
         binding.btnComplete.setOnClickListener {
-            navController.popBackStack(R.id.homeFragment, false)
-            viewModel.addAccountBookData()
+            viewModel.selectedLocation.value?.let {
+                if (it.position.latitude == -1.0) {
+                    showNoPlaceDialog()
+                } else {
+                    viewModel.addAccountBookData()
+                    navController.popBackStack(R.id.homeFragment, false)
+                    viewModel.resetAllData()
+                }
+            } ?: run {
+                showNoPlaceDialog()
+            }
+
         }
 
         binding.appBarSelectPosition.setNavigationOnClickListener {
@@ -60,40 +92,14 @@ class SelectPositionFragment :
             findNavController().popBackStack()
         }
 
-        binding.etAddress.setOnEditorActionListener { view, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                if (viewModel.searchAddress.value!!.isNotEmpty()) {
-                    binding.pbLoading.isVisible = true
-
-                    viewModel.getPlaceListData(view.text.toString()).observe(viewLifecycleOwner) {
-                        it.getOrNull()?.let { list ->
-                            val bottom = AddressResultFragment(list, viewModel)
-                            bottom.show(childFragmentManager, bottom.tag)
-                        } ?: run {
-                            Toast.makeText(requireContext(), "결과가 없습니다.", Toast.LENGTH_LONG).show()
-                        }
-
-                        binding.pbLoading.isVisible = false
-                    }
-                }
-            }
-
-            true
+        binding.btnSearch.setOnClickListener {
+            goToAddressResultActivity.launch(
+                Intent(requireContext(), AddressResultActivity::class.java)
+            )
         }
 
         binding.btnGps.setOnClickListener {
             moveCameraToUser()
-        }
-
-        viewModel.searchAddress.value = ""
-
-        viewModel.selectedAddress.observe(viewLifecycleOwner) {
-            val latLng = LatLng(it.geometry.location.lat, it.geometry.location.lng)
-            googleMap.addMarker(
-                MarkerOptions().position(latLng).title(it.formattedAddress)
-            )
-
-            googleMap.animateCamera(newLatLng(latLng))
         }
     }
 
@@ -103,12 +109,34 @@ class SelectPositionFragment :
     }
 
     private fun moveCameraToUser() {
-        val userLocation = gpsUtils.getUserLocation()
-        val latLng = LatLng(userLocation.latitude, userLocation.longitude)
+        val userLocation = gpsUtils.getUserLatLng()
 
-        viewModel.userLocation = userLocation
+        viewModel.userLocation = gpsUtils.getUserLocation()
 
-        googleMap.animateCamera(newLatLngZoom(latLng, 15f))
+        googleMap.moveCamera(newLatLngZoom(userLocation, 15f))
+
+        val marker = MarkerOptions()
+
+        ResourcesCompat.getDrawable(resources, R.drawable.ic_user_marker, null)?.let {
+            val bitmap = BitmapUtils.createBitmapFromDrawable(it)
+            marker.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+            marker.position(userLocation)
+            googleMap.addMarker(marker)
+        }
+    }
+
+    private fun showNoPlaceDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.select_place))
+            .setMessage(getString(R.string.select_place_dialog_message))
+            .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                viewModel.addAccountBookData()
+                navController.popBackStack(R.id.homeFragment, false)
+                viewModel.resetAllData()
+            }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+
+        builder.show()
     }
 
     override fun onStart() {
@@ -126,13 +154,52 @@ class SelectPositionFragment :
         binding.map.onStop()
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        requestLocation.launch(permissions)
 
-        val userLocation = gpsUtils.getUserLocation()
-        val latLng = LatLng(userLocation.latitude, userLocation.longitude)
+        googleMap.setOnMarkerClickListener {
+            selectLocation(it)
+            true
+        }
 
-        googleMap.moveCamera(newLatLngZoom(latLng, 15f))
+        googleMap.setOnInfoWindowCloseListener {
+            viewModel.setSelectedPlace(MyItem(-1.0, -1.0, "", ""))
+        }
+
+        viewModel.selectedLocationList.observe(viewLifecycleOwner, { placeList ->
+            with(googleMap) {
+                clear()
+                placeList.forEachIndexed { idx, placeDetail ->
+                    addMarker(
+                        MarkerOptions().position(
+                            LatLng(
+                                placeDetail.lat.toDouble(),
+                                placeDetail.lng.toDouble()
+                            )
+                        ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                    )?.let {
+                        if (idx == 0) selectLocation(it)
+                    }
+                }
+            }
+        })
+
+        viewModel.selectedLocation.observe(viewLifecycleOwner, { location ->
+            binding.btnSearch.text = location.title
+        })
     }
 
+    private fun selectLocation(marker: Marker) {
+        marker.showInfoWindow()
+        viewModel.setSelectedPlace(
+            MyItem(
+                marker.position.latitude,
+                marker.position.longitude,
+                marker.title ?: "",
+                marker.snippet ?: ""
+            )
+        )
+    }
 }

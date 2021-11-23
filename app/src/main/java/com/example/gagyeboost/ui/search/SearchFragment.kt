@@ -1,60 +1,85 @@
 package com.example.gagyeboost.ui.search
 
+import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.databinding.FragmentSearchBinding
+import com.example.gagyeboost.ui.base.BaseFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_search) {
+    private val viewModel: SearchViewModel by viewModel()
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        initListener()
+        initObserver()
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private fun initView() {
+        with(binding) {
+            viewModel = this@SearchFragment.viewModel
+            toggleGroupMoneyType.check(btnExpense.id)
+            etKeywordBody.hint = resources.getString(R.string.plz_enter_keyword)
+            etKeywordBody.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+                etKeywordBody.hint =
+                    if (hasFocus) "" else resources.getString(R.string.plz_enter_keyword)
+            }
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+    private fun initListener() {
+        with(binding) {
+            toggleGroupMoneyType.addOnButtonCheckedListener { _, checkedId, isChecked ->
+                if (!isChecked) return@addOnButtonCheckedListener
+                this@SearchFragment.viewModel.setSelectedType(if (checkedId == btnExpense.id) EXPENSE else INCOME)
+            }
+            btnReset.setOnClickListener { this@SearchFragment.viewModel.resetData() }
+            btnDateStartBody.setOnClickListener {
+                showDatePicker(true)
+            }
+            btnDateEndBody.setOnClickListener {
+                showDatePicker(false)
+            }
+            btnSelectCategory.setOnClickListener {
+                // TODO 카테고리 선택 dialog
+            }
+            btnMoneyStartBody.setOnClickListener {
+                // TODO 최소금액 지정
+            }
+            btnMoneyEndBody.setOnClickListener {
+                // TODO 최대금액 지정
+            }
+            btnSearch.setOnClickListener {
+                // TODO 검색 - 검색결과로 이동
+            }
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun initObserver() {
+        viewModel.selectedType.observe(viewLifecycleOwner, {
+            binding.toggleGroupMoneyType.check(if (it == INCOME) binding.btnIncome.id else binding.btnExpense.id)
+        })
+    }
+
+    private fun showDatePicker(isStart: Boolean) {
+        val listener = { y:Int, m:Int, d:Int ->
+            if (isStart) viewModel.setStartDate(y, m, d)
+            else viewModel.setEndDate(y, m, d)
+        }
+        val year=if(isStart) viewModel.startYear.value?:1970 else viewModel.endYear.value?:2500
+        val month=if(isStart) viewModel.startMonth.value?:1 else viewModel.endMonth.value?:12
+        val day= if(isStart) viewModel.startDay.value?:1 else viewModel.endDay.value?:1
+        DatePickerDialog(
+            requireContext(), { _, y, m, d ->
+                listener(y,m+1,d)
+            },
+            year, month-1, day
+        ).show()
     }
 }

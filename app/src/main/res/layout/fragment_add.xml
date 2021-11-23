@@ -12,7 +12,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:theme="@style/WhiteStatusBarTheme">
 
         <TextView
             android:id="@+id/tv_date"
@@ -48,29 +49,30 @@
             app:layout_constraintStart_toStartOf="@id/tv_date"
             app:layout_constraintTop_toBottomOf="@id/tv_date" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_won"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="130dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:afterTextChanged="@{()->viewModel.afterMoneyTextChanged()}"
             android:background="@null"
-            android:gravity="end"
+            android:gravity="center_vertical|end"
             android:hint="@null"
+            android:importantForAutofill="no"
             android:inputType="numberDecimal"
             android:maxLength="9"
             android:maxLines="1"
-            android:text="@={viewModel.money}"
             android:textColor="@color/money_input_color"
             android:textSize="80sp"
             android:theme="@style/EditTheme"
+            app:intToString="@={viewModel.money}"
             app:layout_constraintBottom_toBottomOf="@id/tv_won_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_won_title"
-            app:layout_constraintTop_toTopOf="@id/tv_won_title" />
+            app:layout_constraintTop_toTopOf="@id/tv_won_title"
+            tools:text="50000" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <TextView
             android:id="@+id/btn_income"
             style="@style/GradationButton"
             android:layout_width="0dp"
@@ -78,23 +80,41 @@
             android:layout_marginStart="60dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="10dp"
+            android:background="@drawable/background_default_btn"
             android:text="@string/earnings"
             app:layout_constraintEnd_toStartOf="@id/btn_expense"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_won_title" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <TextView
             android:id="@+id/btn_expense"
             style="@style/GradationButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="60dp"
-            android:backgroundTint="@color/expense"
+            android:background="@drawable/background_expense_btn"
+            android:enabled="false"
             android:text="@string/expense"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btn_income"
             app:layout_constraintTop_toTopOf="@id/btn_income" />
+
+        <TextView
+            android:id="@+id/tv_text_size"
+            android:layout_width="0dp"
+            android:layout_height="130dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:autoSizeMaxTextSize="80sp"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
+            android:textSize="80sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/tv_won_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_won_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

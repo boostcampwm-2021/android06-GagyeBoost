@@ -1,58 +1,80 @@
 package com.example.gagyeboost.ui.map.filter
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.DialogFilterMoneyBinding
+import com.example.gagyeboost.model.data.InitMoneyFilter
 import com.example.gagyeboost.ui.map.MapViewModel
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
-class FilterMoneyDialog(context: Context, val viewModel: MapViewModel) :
-    BottomSheetDialog(context) {
+class FilterMoneyDialog : BottomSheetDialogFragment() {
 
-    lateinit var binding: DialogFilterMoneyBinding
+    private var _binding: DialogFilterMoneyBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: MapViewModel by sharedViewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.inflate(
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+        _binding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
             R.layout.dialog_filter_money,
             null,
             false
         )
-        setContentView(binding.root)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        var left = binding.rsMoney.valueFrom.toInt()
-        var right = binding.rsMoney.valueTo.toInt()
+        val initStart = viewModel.intStartMoney.value ?: InitMoneyFilter.Start.money
+        val initEnd = viewModel.intEndMoney.value ?: InitMoneyFilter.End.money
 
         with(binding.rsMoney) {
-            val start = viewModel.intStartMoney.value?.toFloat() ?: 0f
-            val end = if (viewModel.intEndMoney.value == Int.MAX_VALUE) {
-                1000000f
-            } else {
-                viewModel.intEndMoney.value?.toFloat() ?: 300000f
-            }
+            var start = initStart.toFloat()
+            var end = if (initEnd == Int.MAX_VALUE) 1000000f else initEnd.toFloat()
 
             values = listOf(start, end)
+
             addOnChangeListener { _, value, _ ->
                 when (focusedThumbIndex) {
-                    0 -> left = value.toInt()
-                    1 -> right = value.toInt()
+                    0 -> start = value
+                    1 -> end = value
                 }
-                if (left == valueFrom.toInt() && right == valueTo.toInt()) {
-                    viewModel.setMoney(left, Int.MAX_VALUE)
+                if (right == InitMoneyFilter.End.money) {
+                    viewModel.setMoney(start.toInt(), Int.MAX_VALUE)
                 } else {
-                    viewModel.setMoney(left, right)
+                    viewModel.setMoney(start.toInt(), end.toInt())
                 }
             }
         }
 
         binding.btnFilterApply.setOnClickListener {
             viewModel.loadFilterData()
+            viewModel.changeMoneyBackground()
             dismiss()
         }
+
+        this.dialog?.setOnCancelListener {
+            viewModel.setMoney(initStart, initEnd)
+        } ?: Timber.e("setOnCancelListener dialog is null")
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
