@@ -62,6 +62,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.btnGps.setOnClickListener {
             moveCameraToUser()
         }
+        binding.btnFilterRefresh.setOnClickListener{
+            viewModel.setInitData()
+        }
     }
 
     private fun setDialog() {

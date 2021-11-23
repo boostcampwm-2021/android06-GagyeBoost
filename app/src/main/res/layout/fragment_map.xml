@@ -69,6 +69,19 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/btn_filter_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/background_gradation_circle"
+            android:contentDescription="@string/find_my_location"
+            android:padding="10dp"
+            android:src="@drawable/ic_refresh"
+            app:layout_constraintEnd_toStartOf="@id/btn_gps"
+            app:layout_constraintTop_toTopOf="@id/btn_gps"
+            app:layout_constraintBottom_toBottomOf="@id/btn_gps"/>
+
+        <ImageView
             android:id="@+id/btn_gps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
