@@ -39,11 +39,9 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
         MutableLiveData(Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH))
     val endDay: LiveData<Int> = _endDay
 
-    private val _startMoney = MutableLiveData(0)
-    val startMoney: LiveData<Int> = _startMoney
+    val startMoney = MutableLiveData(0)
 
-    private val _endMoney = MutableLiveData(1000000)
-    val endMoney: LiveData<Int> = _endMoney
+    val endMoney = MutableLiveData(1000000)
 
     // 필터로 보낼 id list
     val categoryIDList = MutableLiveData<MutableList<Int>>()
@@ -91,13 +89,13 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     fun resetData() {
         keyword.value = ""
         _startYear.value = Calendar.getInstance().get(Calendar.YEAR)
-        _startMoney.value = Calendar.getInstance().get(Calendar.MONTH) + 1
+        _startMonth.value = Calendar.getInstance().get(Calendar.MONTH) + 1
         _startDay.value = 1
         _endYear.value = Calendar.getInstance().get(Calendar.YEAR)
         _endMonth.value = Calendar.getInstance().get(Calendar.MONTH) + 1
         _endDay.value = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
-        _startMoney.value = 0
-        _endMoney.value = 1000000
+        startMoney.value = 0
+        endMoney.value = 1000000
         categoryIDList.value = mutableListOf()
     }
 

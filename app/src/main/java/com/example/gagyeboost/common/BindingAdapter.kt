@@ -51,4 +51,11 @@ object BindingAdapter {
     fun TextInputEditText.stringToInt(): Int {
         return text.toString().replace(",", "").replace(" ", "").toIntOrNull() ?: 0
     }
+
+    @BindingAdapter("year", "month", "date")
+    @JvmStatic
+    fun intToDate(textView: TextView, year: Int, month: Int, date: Int) {
+        val str = "$year.$month.${"##".format(date)}"
+        textView.text = str
+    }
 }
