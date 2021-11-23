@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemRvFilterCategoryBinding
 import com.example.gagyeboost.model.data.Category
-import timber.log.Timber
 
 class SearchCategoryAdapter(
     private val viewModel: SearchViewModel,
@@ -23,7 +22,6 @@ class SearchCategoryAdapter(
         if (selectAll) {
             if (isExpense) {
                 categorySet.addAll(viewModel.expenseCategoryID ?: listOf())
-                Timber.d("hi ${viewModel.expenseCategoryID}")
             } else {
                 categorySet.addAll(viewModel.incomeCategoryID ?: listOf())
             }

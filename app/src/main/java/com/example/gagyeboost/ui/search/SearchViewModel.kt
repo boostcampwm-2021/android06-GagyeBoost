@@ -8,6 +8,7 @@ import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.model.data.Filter
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -41,7 +42,7 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
 
     val startMoney = MutableLiveData(0)
 
-    val endMoney = MutableLiveData(1000000)
+    val endMoney = MutableLiveData(100000000)
 
     // 필터로 보낼 id list
     val categoryIDList = MutableLiveData<MutableList<Int>>()
@@ -56,6 +57,9 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     var expenseCategoryID: List<Int>? = null
 
     val isCategoryBackgroundChange = MutableLiveData(false)
+
+    private val _filteredResult = MutableLiveData<List<DateDetailItem>>()
+    val filteredResult: LiveData<List<DateDetailItem>> = _filteredResult
 
     init {
         initLoadCategory()
@@ -83,6 +87,19 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
                 repository.loadFilterDataWithKeyword(filter, keyword.value ?: "")
             }
             val dataList = deferredDataList.await()
+
+            _filteredResult.postValue(dataList.map {
+                val categoryId = it.category
+                val category = repository.loadCategoryData(categoryId)
+                DateDetailItem(
+                    it.id,
+                    category.emoji,
+                    category.categoryName,
+                    it.content,
+                    it.money,
+                    it.moneyType == INCOME
+                )
+            })
         }
     }
 
@@ -96,7 +113,16 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
         _endDay.value = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
         startMoney.value = 0
         endMoney.value = 1000000
-        categoryIDList.value = mutableListOf()
+
+
+        val tempCategoryId = mutableListOf<Int>()
+        incomeCategoryID?.forEach {
+           tempCategoryId.add(it)
+        }
+        expenseCategoryID?.forEach {
+            tempCategoryId.add(it)
+        }
+        categoryIDList.value = tempCategoryId
     }
 
     fun setStartDate(year: Int, month: Int, day: Int) {
@@ -153,6 +179,8 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun changeCategoryBackground() {
-        isCategoryBackgroundChange.value = categoryIDList.value?.isNotEmpty() ?: true
+        val totalSize = (categoryExpenseList.value?.size ?: 0) + (categoryIncomeList.value?.size ?: 0)
+        val categoryIdListSize = categoryIDList.value?.size ?: 0
+        isCategoryBackgroundChange.value = categoryIdListSize != 0 && categoryIdListSize != totalSize
     }
 }

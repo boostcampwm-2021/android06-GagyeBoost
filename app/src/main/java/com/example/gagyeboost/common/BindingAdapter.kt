@@ -55,7 +55,7 @@ object BindingAdapter {
     @BindingAdapter("year", "month", "date")
     @JvmStatic
     fun intToDate(textView: TextView, year: Int, month: Int, date: Int) {
-        val str = "$year.$month.${"##".format(date)}"
+        val str = "$year.$month.${String.format("%02d", date)}"
         textView.text = str
     }
 }

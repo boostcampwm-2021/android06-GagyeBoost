@@ -6,11 +6,13 @@ import android.view.View
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentSearchBinding
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_search) {
     private val viewModel: SearchViewModel by viewModel()
+    private lateinit var adapter: DateDetailAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,6 +27,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
 
             etKeywordBody.requestFocus()
 
+            adapter = DateDetailAdapter { true }
+            rvSearchResult.adapter = adapter
         }
     }
 
@@ -55,13 +59,15 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             }
 
             btnSearch.setOnClickListener {
-                // TODO 검색 - 검색결과로 이동
+                viewModel?.loadFilterData()
             }
         }
     }
 
     private fun initObserver() {
-
+        viewModel.filteredResult.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
     }
 
     private fun showDatePicker(isStart: Boolean) {
