@@ -45,14 +45,12 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     private val _endMoney = MutableLiveData(1000000)
     val endMoney: LiveData<Int> = _endMoney
 
-    private val _selectedCategory = MutableLiveData<List<Category>>(listOf())
-    val selectedCategory: LiveData<List<Category>> = _selectedCategory
-
     // 필터로 보낼 id list
     val categoryIDList = MutableLiveData<MutableList<Int>>()
 
     // 화면에 보여줄 카테고리 리스트
-    private val categoryExpenseList = MutableLiveData<List<Category>>()
+    private val _categoryExpenseList = MutableLiveData<List<Category>>()
+    val categoryExpenseList: LiveData<List<Category>> = _categoryExpenseList
     private val categoryIncomeList = MutableLiveData<List<Category>>()
 
     // category adapter에서 필요한 초기 카테고리 리스트
@@ -81,7 +79,7 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
                 200f,
                 startMoney.value ?: 0,
                 endMoney.value ?: 1000000,
-                (selectedCategory.value ?: listOf()).map { it.id }
+                categoryIDList.value ?: listOf()
             )
             val deferredDataList = async {
                 repository.loadFilterDataWithKeyword(filter, keyword.value ?: "")
@@ -89,10 +87,6 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
             val dataList = deferredDataList.await()
         }
     }
-
-    /* fun setSelectedType(type: Byte) {
-        _selectedType.value = type
-    } */
 
     fun resetData() {
         keyword.value = ""
@@ -104,7 +98,7 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
         _endDay.value = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
         _startMoney.value = 0
         _endMoney.value = 1000000
-        _selectedCategory.value = listOf()
+        categoryIDList.value = mutableListOf()
     }
 
     fun setStartDate(year: Int, month: Int, day: Int) {
@@ -144,9 +138,9 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
             val expenseCategory = deferredExpenseCategory.await()
             val incomeCategory = deferredIncomeCategory.await()
 
-            categoryExpenseList.value = expenseCategory
+            _categoryExpenseList.value = expenseCategory
             categoryIncomeList.value = incomeCategory
-            categoryIDList.value = expenseCategory.map { it.id }.toMutableList()
+            categoryIDList.value = (expenseCategory + incomeCategory).map { it.id }.toMutableList()
 
             incomeCategoryID = incomeCategory.map { it.id }
             expenseCategoryID = expenseCategory.map { it.id }
@@ -156,11 +150,11 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     fun getCategoryList(moneyType: Byte): List<Category> {
         return when (moneyType) {
             INCOME -> categoryIncomeList.value ?: listOf()
-            else -> categoryExpenseList.value ?: listOf()
+            else -> _categoryExpenseList.value ?: listOf()
         }
     }
 
     fun changeCategoryBackground() {
-        isCategoryBackgroundChange.value = categoryIDList.value?.isEmpty() ?: true
+        isCategoryBackgroundChange.value = categoryIDList.value?.isNotEmpty() ?: true
     }
 }

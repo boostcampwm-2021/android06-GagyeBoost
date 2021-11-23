@@ -132,9 +132,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select_category"
-            android:textColor="@color/black"
+            android:textColor="@{viewModel.isCategoryBackgroundChange ? @color/white : @color/black}"
             android:textSize="12sp"
-            android:background="@drawable/background_white_radius_20dp"
+            android:background="@{viewModel.isCategoryBackgroundChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
             app:layout_constraintBottom_toBottomOf="@id/tv_category_title"
             app:layout_constraintEnd_toEndOf="@id/et_keyword_body"
             app:layout_constraintTop_toTopOf="@id/tv_category_title" />

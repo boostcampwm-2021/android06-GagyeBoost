@@ -9,17 +9,14 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.databinding.DialogSearchCategoryBinding
-import com.example.gagyeboost.ui.map.filter.FilterCategoryAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class SearchCategoryDialog : BottomSheetDialogFragment() {
+class SearchCategoryDialog(private val viewModel: SearchViewModel) : BottomSheetDialogFragment() {
 
     private var _binding: DialogSearchCategoryBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: SearchViewModel by viewModel()
-    private lateinit var adapter: FilterCategoryAdapter
+    private lateinit var adapter: SearchCategoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,26 +41,31 @@ class SearchCategoryDialog : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = FilterCategoryAdapter(viewModel, viewModel.expenseCategoryID ?: listOf())
+        adapter = SearchCategoryAdapter(viewModel)
         binding.rvCategoryList.adapter = adapter
-        adapter.submitList(viewModel.getCategoryList(EXPENSE))
 
         this.dialog?.setOnCancelListener {
-            viewModel.loadFilterData()
             viewModel.changeCategoryBackground()
         } ?: Timber.e("setOnCancelListener dialog is null")
 
         setClickListeners()
+        setObservers()
     }
 
     private fun setClickListeners() {
         with(binding) {
             tvSelectAll.setOnClickListener {
-                adapter.setCategoryList(true)
+                adapter.setCategoryList(
+                    true,
+                    toggleGroupMoneyType.checkedButtonId == R.id.btn_expense
+                )
             }
 
             tvSelectClear.setOnClickListener {
-                adapter.setCategoryList(false)
+                adapter.setCategoryList(
+                    false,
+                    toggleGroupMoneyType.checkedButtonId == R.id.btn_expense
+                )
             }
 
             toggleGroupMoneyType.addOnButtonCheckedListener { _, checkedId, isChecked ->
@@ -75,6 +77,12 @@ class SearchCategoryDialog : BottomSheetDialogFragment() {
                     adapter.submitList(viewModel!!.getCategoryList(INCOME))
                 }
             }
+        }
+    }
+
+    private fun setObservers() {
+        viewModel.categoryExpenseList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
         }
     }
 

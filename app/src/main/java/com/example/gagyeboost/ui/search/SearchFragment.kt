@@ -49,7 +49,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             }
 
             btnSelectCategory.setOnClickListener {
-                val dialog = SearchCategoryDialog()
+                val dialog = SearchCategoryDialog(viewModel!!)
                 dialog.show(childFragmentManager, dialog.tag)
                 childFragmentManager.executePendingTransactions()
             }
