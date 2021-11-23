@@ -149,7 +149,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         clusterManager = ClusterManager(context, googleMap, markerManager)
         googleMap.setOnCameraIdleListener(clusterManager)
 
-        clusterManager.renderer = MyClusterRenderer(context, googleMap, clusterManager)
+        clusterManager.renderer =
+            MyClusterRenderer(requireContext(), googleMap, clusterManager, viewModel.intMoneyType)
     }
 
     private fun addItems() {
