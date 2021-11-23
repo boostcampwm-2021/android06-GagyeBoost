@@ -20,6 +20,8 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
 
     val dateDetailItem = MutableLiveData<DateDetailItem>()
 
+    val dateDetailItemMoney = MutableLiveData<Int>()
+
     private val _date = MutableLiveData<String>()
     val date: LiveData<String> = _date
 
@@ -47,6 +49,8 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                 accountBookData.money,
                 accountBookData.moneyType == INCOME,
             )
+
+            dateDetailItemMoney.value = accountBookData.money
 
             setDate(accountBookData.year, accountBookData.month, accountBookData.day)
 

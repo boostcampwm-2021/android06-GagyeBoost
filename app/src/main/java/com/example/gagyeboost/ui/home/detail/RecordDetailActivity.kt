@@ -181,6 +181,12 @@ class RecordDetailActivity :
         viewModel.categoryList.observe(this) {
             categoryAdapter.submitList(it)
         }
+
+        viewModel.dateDetailItemMoney.observe(this) {
+            viewModel.dateDetailItem.value?.let { item ->
+                item.money = it
+            }
+        }
     }
 
     private fun categoryOnClickListener(category: Category): Boolean {
