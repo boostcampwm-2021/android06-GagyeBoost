@@ -1,6 +1,5 @@
 package com.example.gagyeboost.ui.home
 
-import android.location.Address
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -96,10 +95,10 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 money = money.value ?: 0,
                 category = selectedCategoryId,
                 address = selectedLocation?.let { "${it.roadAddressName} ${it.placeName}" } ?: "",
-                latitude = selectedLocation?.lat?.toFloat()
-                    ?: -1f,
-                longitude = selectedLocation?.lng?.toFloat()
-                    ?: -1f,
+                latitude = selectedLocation?.lat?.toDouble()
+                    ?: -1.0,
+                longitude = selectedLocation?.lng?.toDouble()
+                    ?: -1.0,
                 content = content.value ?: "",
                 year = splitStr[0].toInt(),
                 month = splitStr[1].toInt(),

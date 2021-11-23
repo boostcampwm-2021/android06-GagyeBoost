@@ -134,7 +134,7 @@
                 android:inputType="number"
                 android:maxLength="9"
                 android:maxLines="1"
-                app:intToString="@={viewModel.dateDetailItem.money}"
+                app:intToString="@={viewModel.dateDetailItemMoney}"
                 app:layout_constraintBottom_toBottomOf="@id/tv_money_title"
                 app:layout_constraintEnd_toStartOf="@id/tv_monetary_unit"
                 app:layout_constraintStart_toStartOf="@id/gl_body_start_vertical"
