@@ -5,6 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentSearchBinding
 import com.example.gagyeboost.ui.base.BaseFragment
@@ -40,6 +42,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
                 when (menuItem.itemId) {
                     R.id.refresh -> {
                         this@SearchFragment.viewModel.resetData()
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.filter_has_been_reset),
+                            LENGTH_SHORT
+                        ).show()
                         true
                     }
                     else -> false
@@ -73,6 +80,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
 
     private fun initObserver() {
         viewModel.filteredResult.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) Toast.makeText(
+                requireActivity(),
+                R.string.has_no_filtered_data,
+                LENGTH_SHORT
+            ).show()
             adapter.submitList(it)
         }
     }

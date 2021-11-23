@@ -77,8 +77,10 @@
     <string name="select_category">카테고리 선택</string>
     <string name="sp_tilde">~</string>
     <string name="plz_enter_keyword">키워드를 입력해주세요</string>
+    <string name="has_no_filtered_data">조회된 데이터가 없습니다.</string>
 
     <string name="select_place">장소 선택</string>
     <string name="select_place_dialog_message">선택된 장소 없이 등록하시겠습니까?</string>
     <string name="app_icon">앱 아이콘</string>
+    <string name="filter_has_been_reset">검색 조건이 초기화되었습니다.</string>
 </resources>
