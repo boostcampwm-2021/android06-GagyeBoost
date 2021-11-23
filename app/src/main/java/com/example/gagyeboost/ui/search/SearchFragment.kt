@@ -23,14 +23,21 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
         with(binding) {
             viewModel = this@SearchFragment.viewModel
 
+            etKeywordBody.requestFocus()
 
         }
     }
 
     private fun initListener() {
         with(binding) {
-            btnReset.setOnClickListener {
-                this@SearchFragment.viewModel.resetData()
+            appBarSearch.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.refresh -> {
+                        this@SearchFragment.viewModel.resetData()
+                        true
+                    }
+                    else -> false
+                }
             }
 
             btnDateStartBody.setOnClickListener {
@@ -42,15 +49,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             }
 
             btnSelectCategory.setOnClickListener {
-                // TODO 카테고리 선택 dialog
-            }
-
-            btnMoneyStartBody.setOnClickListener {
-                // TODO 최소금액 지정
-            }
-
-            btnMoneyEndBody.setOnClickListener {
-                // TODO 최대금액 지정
+                val dialog = SearchCategoryDialog()
+                dialog.show(childFragmentManager, dialog.tag)
+                childFragmentManager.executePendingTransactions()
             }
 
             btnSearch.setOnClickListener {
@@ -72,6 +73,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             if (isStart) viewModel.startYear.value ?: 1970 else viewModel.endYear.value ?: 2500
         val month = if (isStart) viewModel.startMonth.value ?: 1 else viewModel.endMonth.value ?: 12
         val day = if (isStart) viewModel.startDay.value ?: 1 else viewModel.endDay.value ?: 1
+
         DatePickerDialog(
             requireContext(), { _, y, m, d ->
                 listener(y, m + 1, d)

@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.gagyeboost.ui.map.MapViewModel" />
+            type="com.example.gagyeboost.ui.search.SearchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,21 +15,35 @@
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
 
-        <TextView
-            android:id="@+id/tv_money_type"
-            android:layout_width="0dp"
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggle_group_money_type"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@{viewModel.intMoneyType == 0 ? @string/expense : @string/earnings}"
-            android:textColor="@color/gray1"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:layout_margin="20dp"
+            app:checkedButton="@id/btn_expense"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/expense" />
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <Button
+                android:id="@+id/btn_expense"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expense"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btn_income"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/earnings"
+                android:textSize="16sp" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
         <View
             android:id="@+id/view_line_1"
@@ -38,10 +52,10 @@
             android:background="@color/gray2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_money_type" />
+            app:layout_constraintTop_toBottomOf="@id/toggle_group_money_type" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_filter_category"
+            android:id="@+id/rv_category_list"
             android:layout_width="match_parent"
             android:layout_height="450dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -54,12 +68,12 @@
             android:id="@+id/view_line_2"
             android:layout_width="0dp"
             android:layout_height="5dp"
-            android:alpha="0.5"
             android:layout_marginTop="5dp"
+            android:alpha="0.5"
             android:background="@color/gray2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_filter_category" />
+            app:layout_constraintTop_toBottomOf="@id/rv_category_list" />
 
         <TextView
             android:id="@+id/tv_select_all"
