@@ -1,8 +1,10 @@
 package com.example.gagyeboost.ui.search
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentSearchBinding
 import com.example.gagyeboost.ui.base.BaseFragment
@@ -60,6 +62,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
 
             btnSearch.setOnClickListener {
                 viewModel?.loadFilterData()
+
+                // 키보드 내리기
+                val inputMethodManager =
+                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(binding.etKeywordBody.windowToken, 0)
             }
         }
     }
