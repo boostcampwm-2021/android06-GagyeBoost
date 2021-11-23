@@ -63,7 +63,7 @@ class FilterMoneyDialog : BottomSheetDialogFragment() {
 
         binding.btnFilterApply.setOnClickListener {
             viewModel.loadFilterData()
-            viewModel.changeMoneyBackground()
+            viewModel.changeMoneyFilterBtn()
             dismiss()
         }
 

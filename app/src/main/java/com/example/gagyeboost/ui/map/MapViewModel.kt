@@ -43,7 +43,8 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endLatitude: Float = 200.0F
     var endLongitude: Float = 200.0F
 
-    val isMoneyBackgroundChange = MutableLiveData(false)
+    val isMoneyFilterChange = MutableLiveData(false)
+    var moneyFilterText = ""
     val isPeriodBackgroundChange = MutableLiveData(false)
     val isCategoryBackgroundChange = MutableLiveData(false)
 
@@ -125,7 +126,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endLongitude = 200.0f
         initLoadCategory()
 
-        isMoneyBackgroundChange.value = false
+        isMoneyFilterChange.value = false
         isPeriodBackgroundChange.value = false
         isCategoryBackgroundChange.value = false
     }
@@ -213,12 +214,16 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
                 endDay == END_DAY)
     }
 
-    fun changeMoneyBackground() {
+    fun changeMoneyFilterBtn() {
         val start = intStartMoney.value ?: InitMoneyFilter.Start.money
         val end = intEndMoney.value ?: InitMoneyFilter.End.money
 
-        isMoneyBackgroundChange.value =
+        isMoneyFilterChange.value =
             !(start == InitMoneyFilter.Start.money && end == InitMoneyFilter.End.money)
+
+        moneyFilterText = "${formatter.format(start)} ~ ${
+            if (end == Int.MAX_VALUE) "1,000,000 이상" else formatter.format(end)
+        }"
     }
 
     fun changeCategoryBackground() {

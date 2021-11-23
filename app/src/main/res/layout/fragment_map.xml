@@ -28,10 +28,11 @@
         <TextView
             android:id="@+id/btn_money"
             style="@style/MapFilterButton"
-            android:background="@{viewModel.isMoneyBackgroundChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
-            android:text="@string/money"
-            android:textColor="@{viewModel.isMoneyBackgroundChange ? @color/white : @color/gray1}"
-            tools:background="@drawable/background_white_radius_20dp" />
+            android:background="@{viewModel.isMoneyFilterChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
+            android:text="@{viewModel.isMoneyFilterChange ? viewModel.moneyFilterText : @string/money}"
+            android:textColor="@{viewModel.isMoneyFilterChange ? @color/white : @color/gray1}"
+            tools:background="@drawable/background_white_radius_20dp"
+            tools:text="@string/money" />
 
         <TextView
             android:id="@+id/btn_period"
