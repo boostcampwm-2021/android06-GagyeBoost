@@ -201,7 +201,6 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
         val totalSize =
             (categoryExpenseList.value?.size ?: 0) + (categoryIncomeList.value?.size ?: 0)
         val categoryIdListSize = categoryIDList.value?.size ?: 0
-        isCategoryBackgroundChange.value =
-            categoryIdListSize != 0 && categoryIdListSize != totalSize
+        isCategoryBackgroundChange.value = categoryIdListSize != totalSize
     }
 }
