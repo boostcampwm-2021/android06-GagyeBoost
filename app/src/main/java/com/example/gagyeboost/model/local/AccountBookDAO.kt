@@ -89,12 +89,10 @@ interface AccountBookDAO {
 
     @Query(
         """SELECT * FROM account_book
-            WHERE year * 10000 + month * 100 + day >= :startYear * 10000 + :startMonth * 100+ :startDay AND
+            WHERE year * 10000 + month * 100 + day >= :startYear * 10000 + :startMonth * 100 + :startDay AND
             year * 10000 + month * 100 + day <= :endYear * 10000 + :endMonth * 100 + :endDay AND
             (category IN (:categoryList)) AND
             (money BETWEEN :startMoney AND :endMoney) AND
-            (latitude BETWEEN :startLatitude AND :endLatitude) AND
-            (longitude BETWEEN :startLongitude AND :endLongitude) AND
             content LIKE '%'||:keyword||'%'"""
     )
     suspend fun loadSearchDataWithKeyword(
@@ -107,10 +105,6 @@ interface AccountBookDAO {
         categoryList: List<Int>,
         startMoney: Int,
         endMoney: Int,
-        startLatitude: Float,
-        startLongitude: Float,
-        endLatitude: Float,
-        endLongitude: Float,
         keyword: String
     ): List<AccountBook>
 }

@@ -1,16 +1,25 @@
 package com.example.gagyeboost.ui.search
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
+import androidx.core.view.isVisible
 import com.example.gagyeboost.R
+import com.example.gagyeboost.common.DEFAULT_END_YEAR
+import com.example.gagyeboost.common.DEFAULT_START_YEAR
 import com.example.gagyeboost.databinding.FragmentSearchBinding
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_search) {
     private val viewModel: SearchViewModel by viewModel()
+    private lateinit var adapter: DateDetailAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,6 +34,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
 
             etKeywordBody.requestFocus()
 
+            adapter = DateDetailAdapter { true }
+            rvSearchResult.adapter = adapter
         }
     }
 
@@ -34,6 +45,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
                 when (menuItem.itemId) {
                     R.id.refresh -> {
                         this@SearchFragment.viewModel.resetData()
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.filter_has_been_reset),
+                            LENGTH_SHORT
+                        ).show()
                         true
                     }
                     else -> false
@@ -49,19 +65,32 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             }
 
             btnSelectCategory.setOnClickListener {
-                val dialog = SearchCategoryDialog()
+                val dialog = SearchCategoryDialog(viewModel!!)
                 dialog.show(childFragmentManager, dialog.tag)
                 childFragmentManager.executePendingTransactions()
             }
 
             btnSearch.setOnClickListener {
-                // TODO 검색 - 검색결과로 이동
+                viewModel?.loadFilterData()
+
+                // 키보드 내리기
+                val inputMethodManager =
+                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(binding.etKeywordBody.windowToken, 0)
             }
         }
     }
 
     private fun initObserver() {
-
+        viewModel.filteredResult.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) Toast.makeText(
+                requireActivity(),
+                R.string.has_no_filtered_data,
+                LENGTH_SHORT
+            ).show()
+            adapter.submitList(it)
+            setResultVisibility(it.isNotEmpty())
+        }
     }
 
     private fun showDatePicker(isStart: Boolean) {
@@ -70,7 +99,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             else viewModel.setEndDate(y, m, d)
         }
         val year =
-            if (isStart) viewModel.startYear.value ?: 1970 else viewModel.endYear.value ?: 2500
+            if (isStart) viewModel.startYear.value ?: DEFAULT_START_YEAR else viewModel.endYear.value ?: DEFAULT_END_YEAR
         val month = if (isStart) viewModel.startMonth.value ?: 1 else viewModel.endMonth.value ?: 12
         val day = if (isStart) viewModel.startDay.value ?: 1 else viewModel.endDay.value ?: 1
 
@@ -80,5 +109,13 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             },
             year, month - 1, day
         ).show()
+    }
+
+    private fun setResultVisibility(visibility: Boolean) {
+        with(binding) {
+            listOf(tvTotalExpenseTitle, tvTotalExpenseBody, tvTotalIncomeTitle, tvTotalIncomeBody).forEach {
+                it.isVisible = visibility
+            }
+        }
     }
 }

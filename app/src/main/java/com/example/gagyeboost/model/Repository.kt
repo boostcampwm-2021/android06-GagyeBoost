@@ -76,10 +76,6 @@ class Repository(
             filter.categoryList,
             filter.startMoney,
             filter.endMoney,
-            filter.startLatitude,
-            filter.startLongitude,
-            filter.endLatitude,
-            filter.endLongitude,
             keyword
         )
 
