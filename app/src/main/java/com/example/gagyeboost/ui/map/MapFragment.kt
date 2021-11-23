@@ -113,9 +113,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             .dateRangePicker()
             .setSelection(Pair(start, end))
             .setTitleText("Select Date").build()
-
         dateRangePicker.show(parentFragmentManager, "date_range_picker")
-        Timber.e("datepicker arguments ${dateRangePicker.arguments}")
+
         dateRangePicker.addOnPositiveButtonClickListener { date ->
             viewModel.setPeriod(Date(date.first), Date(date.second))
             viewModel.loadFilterData()
