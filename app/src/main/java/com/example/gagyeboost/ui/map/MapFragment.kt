@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.util.Pair
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.BitmapUtils
-import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.GPSUtils
-import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.MyItem
@@ -108,12 +106,16 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     private fun showDateRangePicker() {
+        val start = dateToLong(viewModel.startYear, viewModel.startMonth, viewModel.startDay)
+        val end = dateToLong(viewModel.endYear, viewModel.endMonth, viewModel.endDay)
+
         val dateRangePicker = MaterialDatePicker.Builder
             .dateRangePicker()
+            .setSelection(Pair(start, end))
             .setTitleText("Select Date").build()
 
         dateRangePicker.show(parentFragmentManager, "date_range_picker")
-
+        Timber.e("datepicker arguments ${dateRangePicker.arguments}")
         dateRangePicker.addOnPositiveButtonClickListener { date ->
             viewModel.setPeriod(Date(date.first), Date(date.second))
             viewModel.loadFilterData()
