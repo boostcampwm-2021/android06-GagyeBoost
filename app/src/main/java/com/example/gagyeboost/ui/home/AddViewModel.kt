@@ -1,17 +1,19 @@
 package com.example.gagyeboost.ui.home
 
+import android.location.Address
+import android.location.Geocoder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.model.data.nothingEmoji
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
-import java.text.SimpleDateFormat
-import java.util.*
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedCategoryIcon = MutableLiveData("🍚")
@@ -21,31 +23,23 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     private var selectedCategoryId = -1
 
-    private val _income = MutableLiveData<String>()
-    val income: LiveData<String> get() = _income
-
-    private val _expense = MutableLiveData<String>()
-    val expense: LiveData<String> get() = _expense
-
-    private val _result = MutableLiveData<String>()
-    val result: LiveData<String> get() = _result
-
     val money = MutableLiveData("0")
-
-    private val formatter = DecimalFormat("###,###")
-
-    private val dateFormatter = SimpleDateFormat("yyyy MM dd", Locale.getDefault())
-    private val date =
-        dateFormatter.format(Date(System.currentTimeMillis())).split(" ").map { it.toInt() }
 
     private val _categoryList = MutableLiveData<List<Category>>()
     val categoryList: LiveData<List<Category>> = _categoryList
 
     val content = MutableLiveData("")
 
-    private var _categoryType = 0.toByte()
+    private var _categoryType = EXPENSE
     val categoryType get() = _categoryType
+
     var dateString = ""
+
+    val searchAddress = MutableLiveData<String>()
+
+    val selectedAddress = MutableLiveData<PlaceDetail>()
+
+    lateinit var userLocation: Address
 
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
@@ -61,7 +55,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 )
             )
             loadCategoryList()
-            selectedCategoryReset()
+            resetSelectedCategory()
         }
     }
 
@@ -69,7 +63,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         _categoryType = type
     }
 
-    fun selectedCategoryReset() {
+    fun resetSelectedCategory() {
         categoryName.value = ""
         _selectedCategoryIcon.value = "\uD83C\uDF5A"
         selectedCategoryId = -1
@@ -93,7 +87,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 )
             )
             loadCategoryList()
-            selectedCategoryReset()
+            resetSelectedCategory()
         }
     }
 
@@ -104,12 +98,14 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
             val splitedStr = dateString.split('/')
             repository.addAccountBookData(
                 AccountBook(
-                    moneyType = 1.toByte(),
+                    moneyType = _categoryType,
                     money = if (money.value != null) money.value!!.toInt() else 0,
                     category = selectedCategoryId,
-                    address = "",
-                    latitude = 0.0f,
-                    longitude = 0.0f,
+                    address = "${selectedAddress.value?.formattedAddress} ${selectedAddress.value?.name}",
+                    latitude = selectedAddress.value?.geometry?.location?.lat?.toFloat()
+                        ?: userLocation.latitude.toFloat(),
+                    longitude = selectedAddress.value?.geometry?.location?.lng?.toFloat()
+                        ?: userLocation.longitude.toFloat(),
                     content = content.value ?: "",
                     year = splitedStr[0].toInt(),
                     month = splitedStr[1].toInt(),
@@ -126,40 +122,41 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun loadMonthIncome() {
-        viewModelScope.launch {
-            repository.loadMonthIncome(date[0], date[1])?.let {
-                _income.postValue(formatter.format(it) + "원")
-            } ?: _income.postValue("0")
-        }
-    }
-
-    fun loadMonthExpense() {
-        viewModelScope.launch {
-            repository.loadMonthExpense(date[0], date[1])?.let {
-                _expense.postValue(formatter.format(it) + "원")
-            } ?: _expense.postValue("0원")
-        }
-    }
-
-    fun setTotalMoney() {
-        viewModelScope.launch {
-            val income = repository.loadMonthIncome(date[0], date[1])
-            val expense = repository.loadMonthExpense(date[0], date[1])
-
-            val result = expense?.let {
-                formatter.format(income?.minus(it) ?: 0) + "원"
-            } ?: formatter.format(income ?: 0) + "원"
-
-            _result.postValue(result)
-        }
-    }
-
     fun afterMoneyTextChanged() {
         if (money.value.isNullOrEmpty()) money.value = "0"
 
         money.value = money.value?.replaceFirst("^0+(?!$)".toRegex(), "")
     }
 
+    fun getFormattedMoneyText(): String {
+        return formatter.format(money.value?.toIntOrNull() ?: 0) + "원"
+    }
+
     fun getFormattedMoneyText(money: Int) = formatter.format(money) + "원"
+
+    fun getAddress(geocoder: Geocoder): List<Address> =
+        geocoder.getFromLocationName(searchAddress.value, 20)
+
+    fun getPlaceListData(input: String): LiveData<Result<List<PlaceDetail>>> {
+        val data = MutableLiveData<Result<List<PlaceDetail>>>()
+
+        viewModelScope.launch {
+            val response = repository.getPlaceListFromKeyword(input)
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                body?.let {
+                    if (it.status == "OK") {
+                        data.postValue(Result.success(body.results))
+                    } else {
+                        data.postValue(Result.failure(Throwable()))
+                    }
+                }
+            } else {
+                data.postValue(Result.failure(Throwable()))
+            }
+        }
+
+        return data
+    }
 }

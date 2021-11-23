@@ -24,54 +24,68 @@ interface AccountBookDAO {
     @Query("SELECT * FROM category WHERE money_type=:moneyType")
     suspend fun loadCategoryAllData(moneyType: Byte): List<Category>
 
+    @Query("SELECT id FROM category")
+    suspend fun loadAllCategoryID(): List<Int>
+
     @Insert
     suspend fun addCategoryData(category: Category)
 
     @Update
     suspend fun updateCategoryData(category: Category)
 
-    @Query("DELETE FROM category WHERE  category_name=:categoryName")
-    fun deleteCategoryData(categoryName: String)
+//    @Query("DELETE FROM category WHERE  category_name=:categoryName")
+//    fun deleteCategoryData(categoryName: String)
 
     //카테고리 이름으로 존재하는지 검사
-    @Query("SELECT EXISTS (SELECT * FROM category WHERE category_name=:categoryName) as isExist")
-    fun isExistCategoryName(categoryName: String): Boolean
+//    @Query("SELECT EXISTS (SELECT * FROM category WHERE category_name=:categoryName) as isExist")
+//    fun isExistCategoryName(categoryName: String): Boolean
 
     @Query("SELECT * FROM category WHERE id=:id")
     suspend fun loadCategoryData(id: Int): Category
+
+    @Query("SELECT * FROM account_book WHERE id=:id")
+    suspend fun loadAccountBookData(id: Int): AccountBook
 
     @Insert
     suspend fun addAccountBookData(accountBook: AccountBook)
 
     @Update
-    fun updateAccountBookData(accountBook: AccountBook)
+    suspend fun updateAccountBookData(accountBook: AccountBook)
 
     @Query("DELETE FROM account_book WHERE id=:id")
-    fun deleteAccountBookData(id: Int)
+    suspend fun deleteAccountBookData(id: Int)
 
     //선택한 월의 모든 데이터
-    @Query("SELECT * FROM account_book WHERE year=:year AND month=:month")
-    fun loadMonthData(year: Int, month: Int): List<AccountBook>
+//    @Query("SELECT * FROM account_book WHERE year=:year AND month=:month")
+//    fun loadMonthData(year: Int, month: Int): List<AccountBook>
 
     //검색 및 지도필터 결과(키워드?)
     @Query(
-        """SELECT * FROM account_book 
-        WHERE (year BETWEEN :startYear AND :endYear) AND 
-        (month BETWEEN :startMonth AND :endMonth) AND 
-        (day BETWEEN :startDay AND :endDay) AND
-         category IN(:categoryList) AND
-         (money BETWEEN :startMoney AND :endMoney)"""
+        """SELECT * FROM account_book
+            WHERE (money_type=:moneyType) AND
+            (year BETWEEN :startYear AND :endYear) AND
+            (month BETWEEN :startMonth AND :endMonth) AND
+            (day BETWEEN :startDay AND :endDay) AND
+            (category IN (:categoryList)) AND
+            (money BETWEEN :startMoney AND :endMoney) AND
+            (latitude BETWEEN :startLatitude AND :endLatitude) AND
+            (longitude BETWEEN :startLongitude AND :endLongitude)"""
     )
-    fun loadSearchData(
-        startYear: Int = 1900,
-        startMonth: Int = 1,
-        startDay: Int = 1,
-        endYear: Int = 2500,
-        endMonth: Int = 12,
-        endDay: Int = 31,
+    suspend fun loadSearchData(
+        moneyType: Byte,
+        startYear: Int,
+        startMonth: Int,
+        startDay: Int,
+        endYear: Int,
+        endMonth: Int,
+        endDay: Int,
         categoryList: List<Int>,
-        startMoney: Int = 0,
-        endMoney: Int = (1 shl 30)
+        startMoney: Int,
+        endMoney: Int,
+        startLatitude: Float,
+        startLongitude: Float,
+        endLatitude: Float,
+        endLongitude: Float
     ): List<AccountBook>
 
     /*

@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".ui.map.MapFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/map" />
+    <data>
 
-</FrameLayout>
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.map.MapViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mv_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/btn_money"
+            style="@style/MapFilterButton"
+            android:text="@string/money" />
+
+        <TextView
+            android:id="@+id/btn_period"
+            style="@style/MapFilterButton"
+            android:text="@string/period" />
+
+        <TextView
+            android:id="@+id/btn_category"
+            style="@style/MapFilterButton"
+            android:text="@string/category" />
+
+        <TextView
+            android:id="@+id/btn_money_type"
+            style="@style/MapFilterButton"
+            android:text="@string/money_type" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow_filter_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:constraint_referenced_ids="btn_money_type,btn_money,btn_period,btn_category"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
