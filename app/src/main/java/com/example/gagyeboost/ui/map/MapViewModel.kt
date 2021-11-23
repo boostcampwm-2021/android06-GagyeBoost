@@ -44,8 +44,9 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endLongitude: Float = 200.0F
 
     val isMoneyFilterChange = MutableLiveData(false)
-    var moneyFilterText = ""
-    val isPeriodBackgroundChange = MutableLiveData(false)
+    var moneyFilterBtnText = ""
+    val isPeriodFilterChange = MutableLiveData(false)
+    var periodFilterBtnText = ""
     val isCategoryBackgroundChange = MutableLiveData(false)
 
     // category filter adapter에서 필요한 초기 카테고리 리스트
@@ -127,7 +128,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         initLoadCategory()
 
         isMoneyFilterChange.value = false
-        isPeriodBackgroundChange.value = false
+        isPeriodFilterChange.value = false
         isCategoryBackgroundChange.value = false
     }
 
@@ -206,12 +207,17 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endMonth = calendar.get(Calendar.MONTH) + 1
         endDay = calendar.get(Calendar.DAY_OF_MONTH)
 
-        isPeriodBackgroundChange.value = !(startYear == NOW_YEAR &&
+        isPeriodFilterChange.value = !(startYear == NOW_YEAR &&
                 startMonth == NOW_MONTH &&
                 startDay == 1 &&
                 endYear == NOW_YEAR &&
                 endMonth == NOW_MONTH &&
                 endDay == END_DAY)
+
+        periodFilterBtnText =
+            "${intToStringDate(startYear, startMonth, startDay)} ~ ${
+                intToStringDate(endYear, endMonth, endDay)
+            }"
     }
 
     fun changeMoneyFilterBtn() {
@@ -221,7 +227,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         isMoneyFilterChange.value =
             !(start == InitMoneyFilter.Start.money && end == InitMoneyFilter.End.money)
 
-        moneyFilterText = "${formatter.format(start)} ~ ${
+        moneyFilterBtnText = "${formatter.format(start)} ~ ${
             if (end == Int.MAX_VALUE) "1,000,000 이상" else formatter.format(end)
         }"
     }

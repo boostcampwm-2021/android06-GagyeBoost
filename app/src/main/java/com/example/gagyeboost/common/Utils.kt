@@ -23,11 +23,15 @@ fun TextInputEditText.setEditTextSize(textView: TextView) {
 }
 
 fun dateToLong(year: Int, month: Int, day: Int): Long {
+    val stringDate = intToStringDate(year, month, day)
+    val sdf = SimpleDateFormat("yyyy/MM/dd", Locale.KOREA)
+
+    return sdf.parse(stringDate).time
+}
+
+fun intToStringDate(year: Int, month: Int, day: Int): String {
     val m = if (month < 10) "0$month" else "$month"
     val d = if (day < 10) "0$day" else "$day"
 
-    val stringDate = "$year-$m-$d"
-    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
-
-    return sdf.parse(stringDate).time
+    return "$year/$m/$d"
 }

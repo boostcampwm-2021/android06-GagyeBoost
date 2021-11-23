@@ -25,49 +25,61 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/btn_money"
-            style="@style/MapFilterButton"
-            android:background="@{viewModel.isMoneyFilterChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
-            android:text="@{viewModel.isMoneyFilterChange ? viewModel.moneyFilterText : @string/money}"
-            android:textColor="@{viewModel.isMoneyFilterChange ? @color/white : @color/gray1}"
-            tools:background="@drawable/background_white_radius_20dp"
-            tools:text="@string/money" />
-
-        <TextView
-            android:id="@+id/btn_period"
-            style="@style/MapFilterButton"
-            android:background="@{viewModel.isPeriodBackgroundChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
-            android:text="@string/period"
-            android:textColor="@{viewModel.isPeriodBackgroundChange ? @color/white : @color/gray1}"
-            tools:background="@drawable/background_white_radius_20dp" />
-
-        <TextView
-            android:id="@+id/btn_category"
-            style="@style/MapFilterButton"
-            android:background="@{viewModel.isCategoryBackgroundChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
-            android:text="@string/category"
-            android:textColor="@{viewModel.isCategoryBackgroundChange ? @color/white : @color/gray1}"
-            tools:background="@drawable/background_white_radius_20dp" />
-
-        <TextView
-            android:id="@+id/btn_money_type"
-            style="@style/MapFilterButton"
-            android:background="@{viewModel.intMoneyType == 0 ? @drawable/background_white_radius_20dp : @drawable/background_filter_selected}"
-            android:text="@{viewModel.intMoneyType == 0 ? @string/expense : @string/earnings}"
-            android:textColor="@{viewModel.intMoneyType == 0 ? @color/gray1 : @color/white}"
-            tools:background="@drawable/background_white_radius_20dp"
-            tools:text="@string/expense" />
-
-        <androidx.constraintlayout.helper.widget.Flow
-            android:id="@+id/flow_filter_btn"
-            android:layout_width="0dp"
+        <HorizontalScrollView
+            android:id="@+id/hsv_filter"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:constraint_referenced_ids="btn_money_type,btn_money,btn_period,btn_category"
+            android:layout_marginTop="10dp"
+            android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/btn_money_type"
+                    style="@style/MapFilterButton"
+                    android:background="@{viewModel.intMoneyType == 0 ? @drawable/background_white_radius_20dp : @drawable/background_filter_selected}"
+                    android:text="@{viewModel.intMoneyType == 0 ? @string/expense : @string/earnings}"
+                    android:textColor="@{viewModel.intMoneyType == 0 ? @color/gray1 : @color/white}"
+                    tools:background="@drawable/background_white_radius_20dp"
+                    tools:text="@string/expense" />
+
+                <TextView
+                    android:id="@+id/btn_money"
+                    style="@style/MapFilterButton"
+                    android:background="@{viewModel.isMoneyFilterChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
+                    android:text="@{viewModel.isMoneyFilterChange ? viewModel.moneyFilterBtnText : @string/money}"
+                    android:textColor="@{viewModel.isMoneyFilterChange ? @color/white : @color/gray1}"
+                    tools:background="@drawable/background_white_radius_20dp"
+                    tools:text="@string/money" />
+
+                <TextView
+                    android:id="@+id/btn_period"
+                    style="@style/MapFilterButton"
+                    android:background="@{viewModel.isPeriodFilterChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
+                    android:text="@{viewModel.isPeriodFilterChange ? viewModel.periodFilterBtnText : @string/period}"
+                    android:textColor="@{viewModel.isPeriodFilterChange ? @color/white : @color/gray1}"
+                    tools:background="@drawable/background_white_radius_20dp" />
+
+                <TextView
+                    android:id="@+id/btn_category"
+                    style="@style/MapFilterButton"
+                    android:background="@{viewModel.isCategoryBackgroundChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
+                    android:text="@string/category"
+                    android:textColor="@{viewModel.isCategoryBackgroundChange ? @color/white : @color/gray1}"
+                    tools:background="@drawable/background_white_radius_20dp" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
 
         <ImageView
             android:id="@+id/btn_gps"
@@ -79,8 +91,7 @@
             android:padding="10dp"
             android:src="@drawable/ic_gps"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/flow_filter_btn" />
-
+            app:layout_constraintTop_toBottomOf="@id/hsv_filter" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
