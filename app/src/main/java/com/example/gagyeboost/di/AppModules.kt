@@ -16,6 +16,7 @@ import com.example.gagyeboost.ui.statstics.StatisticsViewModel
 import com.example.gagyeboost.ui.map.MapViewModel
 import okhttp3.logging.HttpLoggingInterceptor
 import com.example.gagyeboost.ui.home.detail.RecordDetailViewModel
+import com.example.gagyeboost.ui.search.SearchViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -73,4 +74,5 @@ val viewModelModule = module {
     viewModel { MapViewModel(get()) }
     viewModel { StatisticsViewModel(get()) }
     viewModel { AddressResultViewModel(get()) }
+    viewModel { SearchViewModel(get()) }
 }

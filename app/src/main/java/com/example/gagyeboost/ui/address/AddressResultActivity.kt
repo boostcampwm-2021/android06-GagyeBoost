@@ -3,6 +3,7 @@ package com.example.gagyeboost.ui.address
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -25,11 +26,12 @@ class AddressResultActivity :
     BaseActivity<ActivityAddressResultBinding>(R.layout.activity_address_result) {
 
     private val viewModel by viewModel<AddressResultViewModel>()
+
     private val gpsUtils by lazy { GPSUtils(this) }
     private val adapter by lazy {
         AddressAdapter(viewModel) {
             val intent = Intent().apply {
-                putExtra(INTENT_EXTRA_PLACE_DETAIL, it)
+                putExtra(INTENT_EXTRA_PLACE_DETAIL, arrayOf(it))
             }
             setResult(RESULT_OK, intent)
 
@@ -70,6 +72,26 @@ class AddressResultActivity :
         binding.btnBack.setOnClickListener {
             finish()
         }
+
+        binding.btnSearch.setOnClickListener {
+            setMarkerList()
+        }
+        binding.etSearch.setOnEditorActionListener { textView, actionId, keyEvent ->
+            if (actionId == IME_ACTION_SEARCH) {
+                setMarkerList()
+            }
+            true
+        }
+    }
+
+    private fun setMarkerList() {
+        viewModel.loadPlaceListData( gpsUtils.getUserLatLng()) {
+            val intent = Intent().apply {
+                putExtra(INTENT_EXTRA_PLACE_DETAIL, it.toTypedArray())
+            }
+            setResult(RESULT_OK, intent)
+            finish()
+        }
     }
 
     private fun initObserve() {
@@ -85,6 +107,25 @@ class AddressResultActivity :
 
     private val setProgressBarVisible: (Boolean) -> Unit = { isVisible ->
         binding.pbLoading.isVisible = isVisible
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.toggleSoftInput(
+            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.HIDE_IMPLICIT_ONLY
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
 
     override fun onDestroy() {

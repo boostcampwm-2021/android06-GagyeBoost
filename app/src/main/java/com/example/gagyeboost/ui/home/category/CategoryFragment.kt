@@ -61,11 +61,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
         viewModel.loadCategoryList()
         viewModel.content.value = ""
-
-        binding.etHistory.requestFocus()
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(binding.etHistory, InputMethodManager.SHOW_IMPLICIT)
-
     }
 
     private fun categoryOnClick(category: Category): Boolean {

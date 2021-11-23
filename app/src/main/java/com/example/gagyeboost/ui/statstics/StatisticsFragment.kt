@@ -62,7 +62,7 @@ class StatisticsFragment :
     private fun setObservers() {
         with(viewModel) {
             sortedStatRecordList.observe(viewLifecycleOwner, {
-                binding.btnShowRecordList.isGone = it.size < MAX_LIST_ITEMS
+                binding.btnShowRecordList.isGone = it.size <= MAX_LIST_ITEMS
                 when (viewModel.isShowingAllData.value) {
                     true -> statResultAdapter.submitList(it)
                     false -> {

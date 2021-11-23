@@ -22,7 +22,7 @@
             android:id="@+id/tv_year_and_month"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/default_color_gradation"
+            android:background="@drawable/default_color_gradation_app_bar"
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"

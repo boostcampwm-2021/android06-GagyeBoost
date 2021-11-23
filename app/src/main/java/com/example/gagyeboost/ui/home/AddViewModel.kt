@@ -7,10 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.PlaceDetail
-import com.example.gagyeboost.model.data.nothingEmoji
+import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
@@ -35,7 +32,12 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     val searchAddress = MutableLiveData<String>()
 
-    var selectedLocation: PlaceDetail? = null
+    //var selectedLocation: PlaceDetail? = null
+    private val _selectedLocation = MutableLiveData(MyItem(-1.0, -1.0, "", ""))
+    val selectedLocation: LiveData<MyItem> = _selectedLocation
+
+    private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
+    val selectedLocationList: LiveData<List<PlaceDetail>> = _selectedLocationList
 
     lateinit var userLocation: Address
 
@@ -92,28 +94,41 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     fun addAccountBookData() {
         if (dateString.isEmpty()) return
         viewModelScope.launch {
-            val splitedStr = dateString.split('/')
+            val splitStr = dateString.split('/')
             val data = AccountBook(
                 moneyType = _categoryType,
                 money = money.value ?: 0,
                 category = selectedCategoryId,
-                address = "${selectedLocation?.roadAddressName ?: userLocation.getAddressLine(0)} ${selectedLocation?.placeName ?: ""}",
-                latitude = selectedLocation?.lat?.toFloat()
-                    ?: userLocation.latitude.toFloat(),
-                longitude = selectedLocation?.lng?.toFloat()
-                    ?: userLocation.longitude.toFloat(),
+                address = selectedLocation.value?.title ?: "",
+                latitude = selectedLocation.value?.position?.latitude?.toFloat() ?: -1f,
+                longitude = selectedLocation.value?.position?.longitude?.toFloat() ?: -1f,
                 content = content.value ?: "",
-                year = splitedStr[0].toInt(),
-                month = splitedStr[1].toInt(),
-                day = splitedStr[2].toInt()
+                year = splitStr[0].toInt(),
+                month = splitStr[1].toInt(),
+                day = splitStr[2].toInt()
             )
             repository.addAccountBookData(data)
         }
+        money.value = 0
     }
 
     fun loadCategoryList() {
         viewModelScope.launch {
             _categoryList.value = repository.loadCategoryList(categoryType)
         }
+    }
+
+    fun setPlaceList(placeList: List<PlaceDetail>) {
+        _selectedLocationList.value = placeList
+    }
+
+    fun setSelectedPlace(location: MyItem) {
+        _selectedLocation.value = location
+    }
+
+    fun resetLocation(){
+        _selectedLocationList.value=listOf()
+        _selectedLocation.value=MyItem(-1.0,-1.0,"","")
+        searchAddress.value = ""
     }
 }
