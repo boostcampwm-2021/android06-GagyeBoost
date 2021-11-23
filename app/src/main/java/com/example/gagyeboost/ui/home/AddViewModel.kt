@@ -37,8 +37,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     var selectedLocation: PlaceDetail? = null
 
-    lateinit var userLocation: Address
-
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
     }
