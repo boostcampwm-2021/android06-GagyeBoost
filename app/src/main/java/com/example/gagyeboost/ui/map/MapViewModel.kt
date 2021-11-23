@@ -54,13 +54,13 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     private val filterData = MutableLiveData<List<AccountBook>>()
 
     // HashMap<좌표, 좌표에 해당하는 내역 list>
-    val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> =
+    val dataMap: LiveData<HashMap<Pair<Double, Double>, List<AccountBook>>> =
         Transformations.map(filterData) { listToHashMap(it) }
 
     private var _selectedDetailList = MutableLiveData<List<DateDetailItem>>()
     val selectedDetailList: LiveData<List<DateDetailItem>> = _selectedDetailList
 
-    fun setSelectedDetail(latitude: Float, longitude: Float) {
+    fun setSelectedDetail(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             val categoryMap = repository.loadCategoryMap()
             val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
@@ -83,21 +83,21 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    private fun listToHashMap(dataList: List<AccountBook>): HashMap<Pair<Float, Float>, List<AccountBook>> {
-        val nowMap = HashMap<Pair<Float, Float>, MutableList<AccountBook>>()
+    private fun listToHashMap(dataList: List<AccountBook>): HashMap<Pair<Double, Double>, List<AccountBook>> {
+        val nowMap = HashMap<Pair<Double, Double>, MutableList<AccountBook>>()
         dataList.forEach {
             val latLng = Pair(it.latitude, it.longitude)
             nowMap.getOrPut(latLng) { mutableListOf() }.add(it)
         }
-        val retMap = HashMap<Pair<Float, Float>, List<AccountBook>>()
+        val retMap = HashMap<Pair<Double, Double>, List<AccountBook>>()
         nowMap.forEach {
             retMap[it.key] = it.value
         }
         return retMap
     }
 
-    fun hashMapToMarkerMap(dataMap: HashMap<Pair<Float, Float>, List<AccountBook>>): HashMap<Pair<Float, Float>, Pair<String, String>> {
-        val markerMap = HashMap<Pair<Float, Float>, Pair<String, String>>()
+    fun hashMapToMarkerMap(dataMap: HashMap<Pair<Double, Double>, List<AccountBook>>): HashMap<Pair<Double, Double>, Pair<String, String>> {
+        val markerMap = HashMap<Pair<Double, Double>, Pair<String, String>>()
         dataMap.forEach {
             markerMap[it.key] = Pair(
                 it.value[0].address,

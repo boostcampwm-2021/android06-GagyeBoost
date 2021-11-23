@@ -75,10 +75,10 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                     if (moneyType) INCOME else EXPENSE,
                     money,
                     _category.value?.id ?: 0,
-                    placeDetail?.lat?.toFloat() ?: accountBookData.value?.latitude
-                    ?: DEFAULT_LAT.toFloat(),
-                    placeDetail?.lng?.toFloat() ?: accountBookData.value?.longitude
-                    ?: DEFAULT_LNG.toFloat(),
+                    placeDetail?.lat?.toDouble() ?: accountBookData.value?.latitude
+                    ?: DEFAULT_LAT,
+                    placeDetail?.lng?.toDouble() ?: accountBookData.value?.longitude
+                    ?: DEFAULT_LNG,
                     placeDetail?.let { "${it.roadAddressName} ${it.placeName}" }
                         ?: accountBookData.value?.address ?: "",
                     dateDetailItem.value?.content ?: "",

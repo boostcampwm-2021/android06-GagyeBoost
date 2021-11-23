@@ -161,8 +161,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             markerMap.forEach { (latLng, addrMoney) ->
                 val offsetItem =
                     MyItem(
-                        latLng.first.toDouble(),
-                        latLng.second.toDouble(),
+                        latLng.first,
+                        latLng.second,
                         addrMoney.first,
                         addrMoney.second
                     )
@@ -185,8 +185,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         }
         clusterManager.markerCollection.setOnInfoWindowClickListener { marker ->
             viewModel.setSelectedDetail(
-                marker.position.latitude.toFloat(),
-                marker.position.longitude.toFloat()
+                marker.position.latitude,
+                marker.position.longitude
             )
             val bottomSheet =
                 MapDetailFragment(
