@@ -18,12 +18,20 @@ class SearchCategoryAdapter(
     val categorySet = viewModel.categoryIDList.value?.toMutableSet() ?: mutableSetOf()
 
     fun setCategoryList(selectAll: Boolean, isExpense: Boolean) {
-        categorySet.clear()
-        if (selectAll) {
-            if (isExpense) {
-                categorySet.addAll(viewModel.expenseCategoryID ?: listOf())
-            } else {
-                categorySet.addAll(viewModel.incomeCategoryID ?: listOf())
+        when (selectAll) {
+            true -> {
+                if (isExpense) {
+                    categorySet.addAll(viewModel.expenseCategoryID ?: listOf())
+                } else {
+                    categorySet.addAll(viewModel.incomeCategoryID ?: listOf())
+                }
+            }
+            false -> {
+                if (isExpense) {
+                    categorySet.removeAll(viewModel.expenseCategoryID ?: listOf())
+                } else {
+                    categorySet.removeAll(viewModel.incomeCategoryID ?: listOf())
+                }
             }
         }
         notifyDataSetChanged()
