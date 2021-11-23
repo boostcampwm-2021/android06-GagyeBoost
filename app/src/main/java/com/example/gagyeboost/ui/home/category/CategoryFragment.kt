@@ -60,7 +60,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         }
 
         viewModel.loadCategoryList()
-        viewModel.content.value = ""
     }
 
     private fun categoryOnClick(category: Category): Boolean {
@@ -82,10 +81,12 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     private fun initClickListeners() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
+            viewModel.resetCategoryFragmentData()
         }
 
         binding.btnClose.setOnClickListener {
             findNavController().popBackStack(R.id.homeFragment, false)
+            viewModel.resetAllData()
         }
     }
 

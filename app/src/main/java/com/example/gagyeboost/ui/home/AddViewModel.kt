@@ -126,9 +126,23 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         _selectedLocation.value = location
     }
 
-    fun resetLocation(){
-        _selectedLocationList.value=listOf()
-        _selectedLocation.value=MyItem(-1.0,-1.0,"","")
+    fun resetLocation() {
+        _selectedLocationList.value = listOf()
+        _selectedLocation.value = MyItem(-1.0, -1.0, "", "")
         searchAddress.value = ""
+    }
+
+    fun resetCategoryFragmentData(){
+        content.value=""
+        _categoryList.value=listOf()
+        _categoryType=EXPENSE
+    }
+
+    fun resetAllData() {
+        resetSelectedCategory()
+        money.value = 0
+        resetCategoryFragmentData()
+        dateString = ""
+        resetLocation()
     }
 }
