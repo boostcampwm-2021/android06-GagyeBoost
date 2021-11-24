@@ -7,10 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.PlaceDetail
-import com.example.gagyeboost.model.data.nothingEmoji
+import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
@@ -35,7 +32,12 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     val searchAddress = MutableLiveData<String>()
 
-    var selectedLocation: PlaceDetail? = null
+    //var selectedLocation: PlaceDetail? = null
+    private val _selectedLocation = MutableLiveData(MyItem(-1.0, -1.0, "", ""))
+    val selectedLocation: LiveData<MyItem> = _selectedLocation
+
+    private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
+    val selectedLocationList: LiveData<List<PlaceDetail>> = _selectedLocationList
 
     lateinit var userLocation: Address
 
@@ -97,11 +99,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 moneyType = _categoryType,
                 money = money.value ?: 0,
                 category = selectedCategoryId,
-                address = selectedLocation?.let { "${it.roadAddressName} ${it.placeName}" } ?: "",
-                latitude = selectedLocation?.lat?.toFloat()
-                    ?: -1f,
-                longitude = selectedLocation?.lng?.toFloat()
-                    ?: -1f,
+                address = selectedLocation.value?.title ?: "",
+                latitude = selectedLocation.value?.position?.latitude?.toFloat() ?: -1f,
+                longitude = selectedLocation.value?.position?.longitude?.toFloat() ?: -1f,
                 content = content.value ?: "",
                 year = splitStr[0].toInt(),
                 month = splitStr[1].toInt(),
@@ -116,5 +116,33 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch {
             _categoryList.value = repository.loadCategoryList(categoryType)
         }
+    }
+
+    fun setPlaceList(placeList: List<PlaceDetail>) {
+        _selectedLocationList.value = placeList
+    }
+
+    fun setSelectedPlace(location: MyItem) {
+        _selectedLocation.value = location
+    }
+
+    fun resetLocation() {
+        _selectedLocationList.value = listOf()
+        _selectedLocation.value = MyItem(-1.0, -1.0, "", "")
+        searchAddress.value = ""
+    }
+
+    fun resetCategoryFragmentData(){
+        content.value=""
+        _categoryList.value=listOf()
+        _categoryType=EXPENSE
+    }
+
+    fun resetAllData() {
+        resetSelectedCategory()
+        money.value = 0
+        resetCategoryFragmentData()
+        dateString = ""
+        resetLocation()
     }
 }
