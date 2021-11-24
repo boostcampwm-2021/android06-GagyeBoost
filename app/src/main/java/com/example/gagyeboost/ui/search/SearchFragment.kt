@@ -19,6 +19,7 @@ import java.util.*
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_search) {
     private val viewModel: SearchViewModel by viewModel()
+    private lateinit var inputMethodManager: InputMethodManager
     private lateinit var adapter: DateDetailAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,6 +38,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             adapter = DateDetailAdapter { true }
             rvSearchResult.adapter = adapter
         }
+        inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
     private fun initListener() {
@@ -73,9 +76,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             btnSearch.setOnClickListener {
                 viewModel?.loadFilterData()
 
-                // 키보드 내리기
-                val inputMethodManager =
-                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(binding.etKeywordBody.windowToken, 0)
+            }
+            root.setOnClickListener {
                 inputMethodManager.hideSoftInputFromWindow(binding.etKeywordBody.windowToken, 0)
             }
         }
@@ -99,7 +102,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             else viewModel.setEndDate(y, m, d)
         }
         val year =
-            if (isStart) viewModel.startYear.value ?: DEFAULT_START_YEAR else viewModel.endYear.value ?: DEFAULT_END_YEAR
+            if (isStart) viewModel.startYear.value
+                ?: DEFAULT_START_YEAR else viewModel.endYear.value ?: DEFAULT_END_YEAR
         val month = if (isStart) viewModel.startMonth.value ?: 1 else viewModel.endMonth.value ?: 12
         val day = if (isStart) viewModel.startDay.value ?: 1 else viewModel.endDay.value ?: 1
 
@@ -111,9 +115,19 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
         ).show()
     }
 
+    override fun onPause() {
+        super.onPause()
+        inputMethodManager.hideSoftInputFromWindow(binding.etKeywordBody.windowToken, 0)
+    }
+
     private fun setResultVisibility(visibility: Boolean) {
         with(binding) {
-            listOf(tvTotalExpenseTitle, tvTotalExpenseBody, tvTotalIncomeTitle, tvTotalIncomeBody).forEach {
+            listOf(
+                tvTotalExpenseTitle,
+                tvTotalExpenseBody,
+                tvTotalIncomeTitle,
+                tvTotalIncomeBody
+            ).forEach {
                 it.isVisible = visibility
             }
         }

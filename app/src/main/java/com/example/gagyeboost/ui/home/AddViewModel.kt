@@ -1,6 +1,5 @@
 package com.example.gagyeboost.ui.home
 
-import android.location.Address
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,8 +37,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
     val selectedLocationList: LiveData<List<PlaceDetail>> = _selectedLocationList
-
-    lateinit var userLocation: Address
 
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
@@ -100,8 +97,8 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 money = money.value ?: 0,
                 category = selectedCategoryId,
                 address = selectedLocation.value?.title ?: "",
-                latitude = selectedLocation.value?.position?.latitude?.toFloat() ?: -1f,
-                longitude = selectedLocation.value?.position?.longitude?.toFloat() ?: -1f,
+                latitude = selectedLocation.value?.position?.latitude ?: -1.0,
+                longitude = selectedLocation.value?.position?.longitude ?: -1.0,
                 content = content.value ?: "",
                 year = splitStr[0].toInt(),
                 month = splitStr[1].toInt(),
@@ -144,5 +141,16 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         resetCategoryFragmentData()
         dateString = ""
         resetLocation()
+    }
+
+    fun deleteCategory(callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            if (!repository.isExistAccountBookDataByCategory(selectedCategoryId)) {
+                repository.deleteCategory(selectedCategoryId)
+                callback(true)
+            } else {
+                callback(false)
+            }
+        }
     }
 }

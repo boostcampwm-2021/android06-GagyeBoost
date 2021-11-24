@@ -12,7 +12,6 @@ interface KakaoAPIService {
         @Query("query") input: String,
         @Query("page") page: Int,
         @Query("y") lat: String,
-        @Query("x") lng: String,
-        @Query("radius") radius: Int = 20000
+        @Query("x") lng: String
     ): Response<PlaceDetailResponse>
 }

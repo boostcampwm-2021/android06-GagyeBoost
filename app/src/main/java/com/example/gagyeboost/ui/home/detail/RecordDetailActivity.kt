@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.ActivityRecordDetailBinding
@@ -22,6 +23,7 @@ import com.example.gagyeboost.ui.home.category.CategoryAdapter
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -80,8 +82,8 @@ class RecordDetailActivity :
         binding.viewModel = viewModel
         viewModel.setAccountBookData {
             binding.tvAddressBody.text = viewModel.accountBookData.value?.address
-            val latitude = viewModel.accountBookData.value?.latitude?.toDouble() ?: DEFAULT_LAT
-            val longitude = viewModel.accountBookData.value?.longitude?.toDouble() ?: DEFAULT_LNG
+            val latitude = viewModel.accountBookData.value?.latitude ?: DEFAULT_LAT
+            val longitude = viewModel.accountBookData.value?.longitude ?: DEFAULT_LNG
             val address = viewModel.accountBookData.value?.address
             //val latLng = LatLng(latitude, longitude)
             val placeDetail = PlaceDetail(
@@ -209,6 +211,12 @@ class RecordDetailActivity :
         viewModel.categoryList.observe(this) {
             categoryAdapter.submitList(it)
         }
+
+        viewModel.dateDetailItemMoney.observe(this) {
+            viewModel.dateDetailItem.value?.let { item ->
+                item.money = it
+            }
+        }
     }
 
     private fun categoryOnClickListener(category: Category): Boolean {
@@ -272,7 +280,18 @@ class RecordDetailActivity :
         googleMap.clear()
 
         if (latLng.latitude > 0 && latLng.longitude > 0) {
-            googleMap.addMarker(MarkerOptions().apply { position(latLng) })
+            val markerOptions = MarkerOptions().apply { position(latLng) }
+
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_default_marker,
+                null
+            )?.let {
+                val bitmap = BitmapUtils.createBitmapFromDrawable(it)
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+            }
+
+            googleMap.addMarker(markerOptions)
             googleMap.moveCamera(newLatLngZoom(latLng, 15f))
         } else {
             googleMap.moveCamera(newLatLngZoom(gpsUtils.getUserLatLng(), 15f))

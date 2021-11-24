@@ -17,6 +17,8 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
 
     val dateDetailItem = MutableLiveData<DateDetailItem>()
 
+    val dateDetailItemMoney = MutableLiveData<Int>()
+
     private val _date = MutableLiveData<String>()
     val date: LiveData<String> = _date
 
@@ -52,6 +54,8 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                 accountBookData.moneyType == INCOME,
             )
 
+            dateDetailItemMoney.value = accountBookData.money
+
             setDate(accountBookData.year, accountBookData.month, accountBookData.day)
 
             callback()
@@ -75,8 +79,8 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
                     if (moneyType) INCOME else EXPENSE,
                     money,
                     _category.value?.id ?: 0,
-                    selectedLocation.value?.position?.latitude?.toFloat() ?: DEFAULT_LAT.toFloat(),
-                    selectedLocation.value?.position?.longitude?.toFloat() ?: DEFAULT_LNG.toFloat(),
+                    selectedLocation.value?.position?.latitude ?: DEFAULT_LAT,
+                    selectedLocation.value?.position?.longitude ?: DEFAULT_LNG,
                     selectedLocation.value?.title ?: "",
                     dateDetailItem.value?.content ?: "",
                     strDate.split(".")[0].toInt(),

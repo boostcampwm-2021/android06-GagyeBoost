@@ -7,12 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.databinding.ItemAddressBinding
 import com.example.gagyeboost.model.data.PlaceDetail
-import com.example.gagyeboost.ui.address.AddressResultViewModel
 
-class AddressAdapter(
-    private val viewModel: AddressResultViewModel,
-    private val itemClickListener: (PlaceDetail) -> Unit
-) :
+class AddressAdapter(private val itemClickListener: (PlaceDetail) -> Unit) :
     PagingDataAdapter<PlaceDetail, AddressAdapter.AddressViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(
@@ -39,7 +35,6 @@ class AddressAdapter(
             itemView.setOnClickListener {
                 getItem(bindingAdapterPosition)?.let { item ->
                     itemClickListener(item)
-//                    viewModel.selectedLocation = item
                 }
             }
         }
@@ -52,7 +47,7 @@ class AddressAdapter(
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<PlaceDetail>() {
             override fun areItemsTheSame(oldItem: PlaceDetail, newItem: PlaceDetail) =
-                oldItem == newItem
+                oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: PlaceDetail, newItem: PlaceDetail) =
                 oldItem == newItem
