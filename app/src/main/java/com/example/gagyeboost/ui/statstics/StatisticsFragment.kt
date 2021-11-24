@@ -181,11 +181,13 @@ class StatisticsFragment :
 
             val resultData = BarData(chartDataSet)
 
+            // 막대 굵기 지정하기 -> 막대 겹침현상 발생해 주석 처리
+            /*
             val barWidth = resources.getDimensionPixelSize(R.dimen.chart_bar_width)
             val count = chartDataSet.entryCount.toFloat()
             val totalWidth = binding.chartDailyStat.width
             val ratio = barWidth * count / totalWidth
-            resultData.barWidth = ratio
+            resultData.barWidth = ratio */
 
             data = resultData
             notifyDataSetChanged()
