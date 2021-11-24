@@ -60,7 +60,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.btnGps.setOnClickListener {
             moveCameraToUser()
         }
-        binding.btnFilterRefresh.setOnClickListener{
+        binding.btnFilterRefresh.setOnClickListener {
             viewModel.setInitData()
         }
     }
@@ -151,7 +151,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         markerManager = MarkerManager(googleMap)
         clusterManager = ClusterManager(context, googleMap, markerManager)
         googleMap.setOnCameraIdleListener(clusterManager)
-
         clusterManager.renderer =
             MyClusterRenderer(requireContext(), googleMap, clusterManager, viewModel.intMoneyType)
     }
@@ -213,7 +212,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             .tilt(0f)
             .build()
 
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
         val marker = MarkerOptions()
 

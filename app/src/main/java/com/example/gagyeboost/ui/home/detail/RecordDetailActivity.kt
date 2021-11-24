@@ -44,7 +44,7 @@ class RecordDetailActivity :
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private val moveCameraToPlace: (PlaceDetail) -> Unit = {
         val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
-        googleMap.animateCamera(newLatLngZoom(latLng, 15f))
+        googleMap.moveCamera(newLatLngZoom(latLng, 15f))
     }
     private val goToAddressResultActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
