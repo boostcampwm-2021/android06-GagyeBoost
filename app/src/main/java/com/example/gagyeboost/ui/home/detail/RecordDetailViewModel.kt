@@ -26,7 +26,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
     val category: LiveData<Category> = _category
 
     //var placeDetail: PlaceDetail? = null
-    private val _selectedLocation = MutableLiveData(MyItem(MAX_LAT + 1, MAX_LNG + 1, "", ""))
+    private val _selectedLocation = MutableLiveData(MyItem(MAX_LAT, MAX_LNG, "", ""))
     val selectedLocation: LiveData<MyItem> = _selectedLocation
 
     private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
@@ -116,7 +116,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
 
     fun resetLocation() {
         _selectedLocationList.value = listOf()
-        _selectedLocation.value = MyItem(MAX_LAT + 1, MAX_LAT + 1, "", "")
+        _selectedLocation.value = MyItem(MAX_LAT, MAX_LAT, "", "")
         searchAddress.value = ""
     }
 }

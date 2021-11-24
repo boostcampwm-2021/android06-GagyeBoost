@@ -38,7 +38,7 @@ fun intToStringDate(year: Int, month: Int, day: Int): String {
 }
 
 fun isValidPosition(lat: Double?, lng: Double?) =
-    lat != null && lat in (MIN_LAT..MAX_LAT) && lng != null && lng in (MIN_LNG..MAX_LNG)
+    lat != null && lat > MIN_LAT && lat < MAX_LAT && lng != null && lng > MIN_LNG && lng < MAX_LNG
 
 fun isValidPosition(latLng: LatLng?) =
     latLng != null && isValidPosition(latLng.latitude, latLng.longitude)

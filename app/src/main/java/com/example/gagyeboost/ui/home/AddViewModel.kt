@@ -34,7 +34,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     val searchAddress = MutableLiveData<String>()
 
     //var selectedLocation: PlaceDetail? = null
-    private val _selectedLocation = MutableLiveData(MyItem(MAX_LAT + 1, MAX_LNG + 1, "", ""))
+    private val _selectedLocation = MutableLiveData(MyItem(MAX_LAT, MAX_LNG, "", ""))
     val selectedLocation: LiveData<MyItem> = _selectedLocation
 
     private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
@@ -99,8 +99,8 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 money = money.value ?: 0,
                 category = selectedCategoryId,
                 address = selectedLocation.value?.title ?: "",
-                latitude = selectedLocation.value?.position?.latitude ?: MAX_LAT + 1,
-                longitude = selectedLocation.value?.position?.longitude ?: MAX_LNG + 1,
+                latitude = selectedLocation.value?.position?.latitude ?: MAX_LAT,
+                longitude = selectedLocation.value?.position?.longitude ?: MAX_LNG,
                 content = content.value ?: "",
                 year = splitStr[0].toInt(),
                 month = splitStr[1].toInt(),
@@ -127,7 +127,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     fun resetLocation() {
         _selectedLocationList.value = listOf()
-        _selectedLocation.value = MyItem(MAX_LAT + 1, MAX_LNG + 1, "", "")
+        _selectedLocation.value = MyItem(MAX_LAT, MAX_LNG, "", "")
         searchAddress.value = ""
     }
 

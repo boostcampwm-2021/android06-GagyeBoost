@@ -14,9 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.BitmapUtils
-import com.example.gagyeboost.common.GPSUtils
-import com.example.gagyeboost.common.INTENT_EXTRA_PLACE_DETAIL
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
 import com.example.gagyeboost.model.data.MyItem
 import com.example.gagyeboost.model.data.PlaceDetail
@@ -29,6 +27,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class SelectPositionFragment :
     BaseFragment<FragmentSelectPositionBinding>(R.layout.fragment_select_position),
@@ -90,12 +89,13 @@ class SelectPositionFragment :
     private fun init() {
         binding.btnComplete.setOnClickListener {
             viewModel.selectedLocation.value?.let {
-                if (it.position.latitude == -1.0) {
-                    showNoPlaceDialog()
-                } else {
+                if (isValidPosition(it.position)) {
                     viewModel.addAccountBookData()
                     navController.popBackStack(R.id.homeFragment, false)
                     viewModel.resetAllData()
+
+                } else {
+                    showNoPlaceDialog()
                 }
             } ?: run {
                 showNoPlaceDialog()
