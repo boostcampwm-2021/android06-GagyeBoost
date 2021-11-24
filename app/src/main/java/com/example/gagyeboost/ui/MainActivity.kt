@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui
 
 import android.os.Bundle
+import androidx.core.view.forEach
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -28,7 +29,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fg_navigation_host) as NavHostFragment
         navController = navHostFragment.findNavController()
-
         binding.mainBottomNavigation.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            with(binding.mainBottomNavigation) {
+                menu.forEach { it.isEnabled = false }
+                postDelayed({
+                    menu.forEach { it.isEnabled = true }
+                }, 500)
+            }
+        }
     }
 }

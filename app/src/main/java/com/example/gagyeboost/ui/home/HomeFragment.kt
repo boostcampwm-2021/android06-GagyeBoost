@@ -113,7 +113,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     override fun onStop() {
-        Timber.e("STOP")
         super.onStop()
         dialog.dismiss()
     }
