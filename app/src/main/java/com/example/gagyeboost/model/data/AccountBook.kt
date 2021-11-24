@@ -33,10 +33,10 @@ data class AccountBook(
     var category: Int,
 
     @ColumnInfo(name = "latitude")
-    var latitude: Float,
+    var latitude: Double,
 
     @ColumnInfo(name = "longitude")
-    var longitude: Float,
+    var longitude: Double,
 
     @ColumnInfo(name = "address")
     var address: String,
@@ -53,5 +53,5 @@ data class AccountBook(
     @ColumnInfo(name = "day")
     var day: Int
 ) {
-    constructor() : this(0, EXPENSE, 0, 0, 0f, 0f, "", "", 0, 0, 0)
+    constructor() : this(0, EXPENSE, 0, 0, 0.0, 0.0, "", "", 0, 0, 0)
 }

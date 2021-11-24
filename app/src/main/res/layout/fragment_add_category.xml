@@ -13,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:background="@color/white"
         tools:context=".ui.home.categoryControl.AddCategoryFragment">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -30,12 +31,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/app_bar_title_text_size"
-                app:titleTextColor="@color/white"
                 app:navigationIcon="@drawable/ic_arrow_left_white"
                 app:title="@string/add_category"
-                app:titleCentered="true" />
+                app:titleCentered="true"
+                app:titleTextColor="@color/white" />
 
         </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_body_start_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
 
         <TextView
             android:id="@+id/tv_name_title"
@@ -44,8 +52,8 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="60dp"
             android:text="@string/name"
-            android:textColor="@color/gray3"
-            android:textSize="16sp"
+            android:textColor="@color/gray1"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/app_bar_layout_add_category" />
 
@@ -53,19 +61,20 @@
             android:id="@+id/et_name_body"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@null"
             android:hint="@string/add_category_name_hint"
+            android:importantForAutofill="no"
             android:inputType="text"
             android:maxLength="10"
             android:text="@={viewModel.categoryName}"
-            android:textColor="@color/gray3"
+            android:textColor="@color/black"
             android:textColorHint="@color/gray2"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_name_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_name_title"
-            app:layout_constraintTop_toTopOf="@id/tv_name_title"
-            android:importantForAutofill="no" />
+            app:layout_constraintStart_toStartOf="@id/gl_body_start_vertical"
+            app:layout_constraintTop_toTopOf="@id/tv_name_title" />
 
         <TextView
             android:id="@+id/tv_icon_title"
@@ -74,8 +83,8 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="40dp"
             android:text="@string/icon"
-            android:textColor="@color/gray3"
-            android:textSize="16sp"
+            android:textColor="@color/gray1"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_name_title" />
 
@@ -83,20 +92,18 @@
             android:id="@+id/tv_icon_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
             android:text="@{viewModel.selectedCategoryIcon.isEmpty()? @string/emoji_meal:viewModel.selectedCategoryIcon}"
             android:textColor="@color/black"
-            android:textSize="40sp"
+            android:textSize="35sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_icon_title"
-            app:layout_constraintStart_toEndOf="@id/tv_icon_title"
+            app:layout_constraintStart_toStartOf="@id/gl_body_start_vertical"
             app:layout_constraintTop_toTopOf="@id/tv_icon_title"
             tools:text="@string/emoji_meal" />
 
         <View
             android:id="@+id/view_line_1"
             android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:layout_marginHorizontal="16dp"
+            android:layout_height="0.5dp"
             android:layout_marginTop="40dp"
             android:background="@color/gray2"
             app:layout_constraintEnd_toEndOf="parent"

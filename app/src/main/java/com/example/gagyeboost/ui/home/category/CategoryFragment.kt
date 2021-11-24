@@ -22,6 +22,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     private lateinit var categoryAdapter: CategoryAdapter
     private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var navController: NavController
+    private lateinit var inputMethodManager: InputMethodManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,6 +33,8 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     }
 
     private fun initView() {
+        inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         categoryAdapter = CategoryAdapter(
             { category -> categoryOnClick(category) },
             { category -> categoryLongClick(category) })
@@ -60,7 +63,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         }
 
         viewModel.loadCategoryList()
-        viewModel.content.value = ""
     }
 
     private fun categoryOnClick(category: Category): Boolean {
@@ -82,10 +84,16 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     private fun initClickListeners() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
+            viewModel.resetCategoryFragmentData()
         }
 
         binding.btnClose.setOnClickListener {
             findNavController().popBackStack(R.id.homeFragment, false)
+            viewModel.resetAllData()
+        }
+
+        binding.root.setOnClickListener {
+            inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
         }
     }
 
@@ -100,9 +108,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
     override fun onResume() {
         super.onResume()
-
-        val inputMethodManager =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.toggleSoftInput(
             InputMethodManager.SHOW_FORCED,
             InputMethodManager.HIDE_IMPLICIT_ONLY
@@ -111,9 +116,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
     override fun onPause() {
         super.onPause()
-
-        val inputMethodManager =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
     }
 }
