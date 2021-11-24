@@ -35,3 +35,6 @@ fun intToStringDate(year: Int, month: Int, day: Int): String {
 
     return "$year/$m/$d"
 }
+
+fun isValidPosition(lat: Double, lng: Double) =
+    lat in (MIN_LAT..MAX_LAT) && lng in (MIN_LNG..MAX_LNG)

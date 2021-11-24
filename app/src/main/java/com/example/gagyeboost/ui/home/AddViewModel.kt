@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.MAX_LAT
+import com.example.gagyeboost.common.MAX_LNG
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
@@ -32,7 +34,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     val searchAddress = MutableLiveData<String>()
 
     //var selectedLocation: PlaceDetail? = null
-    private val _selectedLocation = MutableLiveData(MyItem(-1.0, -1.0, "", ""))
+    private val _selectedLocation = MutableLiveData(MyItem(MAX_LAT + 1, MAX_LNG + 1, "", ""))
     val selectedLocation: LiveData<MyItem> = _selectedLocation
 
     private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
@@ -97,8 +99,8 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 money = money.value ?: 0,
                 category = selectedCategoryId,
                 address = selectedLocation.value?.title ?: "",
-                latitude = selectedLocation.value?.position?.latitude ?: -1.0,
-                longitude = selectedLocation.value?.position?.longitude ?: -1.0,
+                latitude = selectedLocation.value?.position?.latitude ?: MAX_LAT + 1,
+                longitude = selectedLocation.value?.position?.longitude ?: MAX_LNG + 1,
                 content = content.value ?: "",
                 year = splitStr[0].toInt(),
                 month = splitStr[1].toInt(),
@@ -125,14 +127,14 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     fun resetLocation() {
         _selectedLocationList.value = listOf()
-        _selectedLocation.value = MyItem(-1.0, -1.0, "", "")
+        _selectedLocation.value = MyItem(MAX_LAT + 1, MAX_LNG + 1, "", "")
         searchAddress.value = ""
     }
 
-    fun resetCategoryFragmentData(){
-        content.value=""
-        _categoryList.value=listOf()
-        _categoryType=EXPENSE
+    fun resetCategoryFragmentData() {
+        content.value = ""
+        _categoryList.value = listOf()
+        _categoryType = EXPENSE
     }
 
     fun resetAllData() {

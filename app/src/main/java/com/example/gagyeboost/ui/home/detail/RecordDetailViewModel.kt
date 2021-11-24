@@ -1,10 +1,7 @@
 package com.example.gagyeboost.ui.home.detail
 
 import androidx.lifecycle.*
-import com.example.gagyeboost.common.DEFAULT_LAT
-import com.example.gagyeboost.common.DEFAULT_LNG
-import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
@@ -29,7 +26,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
     val category: LiveData<Category> = _category
 
     //var placeDetail: PlaceDetail? = null
-    private val _selectedLocation = MutableLiveData(MyItem(-1.0, -1.0, "", ""))
+    private val _selectedLocation = MutableLiveData(MyItem(MAX_LAT + 1, MAX_LNG + 1, "", ""))
     val selectedLocation: LiveData<MyItem> = _selectedLocation
 
     private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
@@ -119,7 +116,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
 
     fun resetLocation() {
         _selectedLocationList.value = listOf()
-        _selectedLocation.value = MyItem(-1.0, -1.0, "", "")
+        _selectedLocation.value = MyItem(MAX_LAT + 1, MAX_LAT + 1, "", "")
         searchAddress.value = ""
     }
 }
