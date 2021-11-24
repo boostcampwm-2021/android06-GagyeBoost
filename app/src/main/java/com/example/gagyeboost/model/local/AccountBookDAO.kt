@@ -40,6 +40,12 @@ interface AccountBookDAO {
 //    @Query("SELECT EXISTS (SELECT * FROM category WHERE category_name=:categoryName) as isExist")
 //    fun isExistCategoryName(categoryName: String): Boolean
 
+    @Query("SELECT EXISTS (SELECT * FROM account_book WHERE category=:categoryId) as isExist")
+    suspend fun isExistAccountBookDataByCategoryId(categoryId: Int): Boolean
+
+    @Query("DELETE FROM category WHERE  id=:id")
+    suspend fun deleteCategoryData(id: Int)
+
     @Query("SELECT * FROM category WHERE id=:id")
     suspend fun loadCategoryData(id: Int): Category
 

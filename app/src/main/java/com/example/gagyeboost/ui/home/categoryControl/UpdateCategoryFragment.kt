@@ -1,7 +1,10 @@
 package com.example.gagyeboost.ui.home.categoryControl
 
+import android.content.Context
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -15,6 +18,7 @@ class UpdateCategoryFragment :
     BaseFragment<FragmentUpdateCategoryBinding>(R.layout.fragment_update_category) {
     private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var navController: NavController
+    private lateinit var inputMethodManager: InputMethodManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -23,9 +27,11 @@ class UpdateCategoryFragment :
     }
 
     private fun init() {
+        inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         binding.viewModel = viewModel
         with(binding.appBarUpdateCategory) {
-            setNavigationOnClickListener{
+            setNavigationOnClickListener {
                 viewModel.resetSelectedCategory()
                 navController.popBackStack()
             }
@@ -33,7 +39,17 @@ class UpdateCategoryFragment :
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.delete -> {
-                        // TODO: 카테고리 삭제 로직 추가
+                        viewModel.deleteCategory { result ->
+                            if (result) {
+                                showDeleteDialog()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "데이터가 존재해서 삭제할 수 없습니다.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                         true
                     }
                     else -> false
@@ -53,6 +69,31 @@ class UpdateCategoryFragment :
                 navController.popBackStack()
             }
         }
+
+        binding.root.setOnClickListener {
+            inputMethodManager.hideSoftInputFromWindow(binding.etNameBody.windowToken, 0)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        inputMethodManager.hideSoftInputFromWindow(binding.etNameBody.windowToken, 0)
+    }
+    private fun showDeleteDialog() {
+        val dialog =
+            AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.category_delete_dialog_title))
+                .setMessage(getString(R.string.category_delete_dialog_message))
+                .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.category_delete_complete),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    navController.popBackStack()
+                }.setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+
+        dialog.show()
     }
 
 }
