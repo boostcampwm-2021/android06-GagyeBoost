@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -38,6 +39,10 @@ class CategoryAdapter(
             binding.category = categoryItem
             if (viewModel is AddViewModel) {
                 binding.viewModel = viewModel
+
+                (binding.viewModel as AddViewModel).isEdit.value?.let {
+                    binding.ivSetting.isVisible = it
+                }
             }
             setCategoryColor()
         }

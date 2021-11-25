@@ -36,15 +36,15 @@
         tools:ignore="MissingConstraints">
 
         <ImageView
+            android:id="@+id/iv_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_white_round_stroke_black_1dp"
             android:contentDescription="@string/category_edit"
             android:elevation="1dp"
             android:onClick="@{_ -> categoryEditClickListener.invoke(category)}"
             android:padding="3dp"
             android:src="@drawable/ic_setting"
-            android:visibility="@{viewModel.isEdit ? View.VISIBLE : View.GONE}"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
