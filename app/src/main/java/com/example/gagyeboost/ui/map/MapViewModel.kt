@@ -8,6 +8,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
+import kotlin.random.Random
 
 class MapViewModel(private val repository: Repository) : ViewModel() {
 

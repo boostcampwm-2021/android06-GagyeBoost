@@ -36,3 +36,9 @@ val END_DAY = Calendar.getInstance().getActualMaximum(Calendar.DATE)
 // SearchFragment
 const val DEFAULT_START_YEAR = 1970
 const val DEFAULT_END_YEAR = 2500
+
+// LAT LNG
+const val MAX_LAT = 90.0
+const val MIN_LAT = -90.0
+const val MAX_LNG = 180.0
+const val MIN_LNG = -180.0
