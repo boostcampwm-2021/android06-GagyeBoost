@@ -3,6 +3,7 @@ package com.example.gagyeboost.common
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.TextView
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,3 +36,9 @@ fun intToStringDate(year: Int, month: Int, day: Int): String {
 
     return "$year/$m/$d"
 }
+
+fun isValidPosition(lat: Double?, lng: Double?) =
+    lat != null && lat > MIN_LAT && lat < MAX_LAT && lng != null && lng > MIN_LNG && lng < MAX_LNG
+
+fun isValidPosition(latLng: LatLng?) =
+    latLng != null && isValidPosition(latLng.latitude, latLng.longitude)

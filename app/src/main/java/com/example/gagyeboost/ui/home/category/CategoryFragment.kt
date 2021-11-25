@@ -37,7 +37,9 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         categoryAdapter = CategoryAdapter(
             { category -> categoryOnClick(category) },
-            { category -> categoryLongClick(category) })
+            { category -> categoryLongClick(category) },
+            viewModel
+        )
 
         binding.viewModel = viewModel
         binding.rvCategory.adapter = categoryAdapter
@@ -87,14 +89,15 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             viewModel.resetCategoryFragmentData()
         }
 
-        binding.btnClose.setOnClickListener {
-            findNavController().popBackStack(R.id.homeFragment, false)
-            viewModel.resetAllData()
+        binding.btnEdit.setOnClickListener {
+            viewModel.isEdit.value?.let {
+                viewModel.doEdit(!it)
+            }
         }
 
         binding.root.setOnClickListener {
             inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
-        }
+       }
     }
 
     private fun setObservers() {
@@ -103,6 +106,10 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
             categoryList.add(Category(-1, getString(R.string.add), "➕", viewModel.categoryType))
             categoryAdapter.submitList(categoryList)
+        }
+
+        viewModel.isEdit.observe(viewLifecycleOwner) {
+            categoryAdapter.notifyItemRangeChanged(0, categoryAdapter.itemCount)
         }
     }
 
@@ -117,5 +124,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     override fun onPause() {
         super.onPause()
         inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
+        viewModel.doEdit(false)
     }
 }
