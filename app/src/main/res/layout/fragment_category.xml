@@ -26,13 +26,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/btn_close"
+            android:id="@+id/btn_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:contentDescription="@string/close_btn"
-            android:src="@drawable/ic_close"
+            android:contentDescription="@string/edit_category"
+            android:src="@{viewModel.isEdit ? @drawable/ic_close : @drawable/ic_edit}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,7 +45,7 @@
             android:textColor="@color/gray3"
             android:textSize="@dimen/app_bar_title_text_size"
             app:intToWon="@{viewModel.money}"
-            app:layout_constraintEnd_toStartOf="@id/btn_close"
+            app:layout_constraintEnd_toStartOf="@id/btn_edit"
             app:layout_constraintStart_toEndOf="@id/btn_back"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="20,000원" />

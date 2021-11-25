@@ -38,6 +38,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
     val selectedLocationList: LiveData<List<PlaceDetail>> = _selectedLocationList
 
+    private val _isEdit = MutableLiveData(false)
+    val isEdit: LiveData<Boolean> get() = _isEdit
+
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
     }
@@ -129,10 +132,10 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         searchAddress.value = ""
     }
 
-    fun resetCategoryFragmentData(){
-        content.value=""
-        _categoryList.value=listOf()
-        _categoryType=EXPENSE
+    fun resetCategoryFragmentData() {
+        content.value = ""
+        _categoryList.value = listOf()
+        _categoryType = EXPENSE
     }
 
     fun resetAllData() {
@@ -152,5 +155,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 callback(false)
             }
         }
+    }
+
+    fun doEdit(isEdit: Boolean) {
+        _isEdit.value = isEdit
     }
 }

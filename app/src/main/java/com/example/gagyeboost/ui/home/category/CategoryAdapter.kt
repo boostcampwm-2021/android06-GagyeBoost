@@ -4,23 +4,26 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemCategoryBinding
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.ui.home.AddViewModel
 
 class CategoryAdapter(
     private val categoryClickListener: (Category) -> Boolean,
-    private val categoryLongClickListener: (Category) -> Boolean
+    private val categoryEditClickListener: (Category) -> Boolean,
+    private val viewModel: ViewModel
 ) : ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding =
             ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.categoryClickListener = categoryClickListener
-        binding.categoryLongClickListener = categoryLongClickListener
+        binding.categoryEditClickListener = categoryEditClickListener
         return CategoryViewHolder(binding)
     }
 
@@ -28,11 +31,14 @@ class CategoryAdapter(
         holder.bind(getItem(position))
     }
 
-    class CategoryViewHolder(private val binding: ItemCategoryBinding) :
+    inner class CategoryViewHolder(private val binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(categoryItem: Category) {
             binding.category = categoryItem
+            if (viewModel is AddViewModel) {
+                binding.viewModel = viewModel
+            }
             setCategoryColor()
         }
 
@@ -40,7 +46,7 @@ class CategoryAdapter(
             with(this.itemView.context) {
                 val emojiBackground = binding.tvEmoji.background as GradientDrawable
                 val nameBackground = binding.tvCategoryName.background as GradientDrawable
-                val colorId: Int = when (adapterPosition % 10) {
+                val colorId: Int = when (bindingAdapterPosition % 10) {
                     0 -> ContextCompat.getColor(this, R.color.category1)
                     1 -> ContextCompat.getColor(this, R.color.category2)
                     2 -> ContextCompat.getColor(this, R.color.category3)
