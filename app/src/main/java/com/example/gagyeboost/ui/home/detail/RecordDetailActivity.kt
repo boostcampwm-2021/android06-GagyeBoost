@@ -44,22 +44,15 @@ class RecordDetailActivity :
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private val moveCameraToPlace: (PlaceDetail) -> Unit = {
         val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
-        googleMap.animateCamera(newLatLngZoom(latLng, 15f))
+        googleMap.moveCamera(newLatLngZoom(latLng.run {
+            if (isValidPosition(this)) this else
+                gpsUtils.getUserLatLng()
+        }, 15f))
+
     }
     private val goToAddressResultActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
-                /*
-                val placeDetail =
-                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as PlaceDetail
-
-                viewModel.placeDetail = placeDetail
-
-                binding.tvAddressBody.text = placeDetail.roadAddressName
-
-                addMarkerToPlace(LatLng(placeDetail.lat.toDouble(), placeDetail.lng.toDouble()))
-
-                 */
                 val placeList =
                     result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as Array<PlaceDetail>
                 viewModel.setPlaceList(placeList.toList())
@@ -101,11 +94,10 @@ class RecordDetailActivity :
             )
             viewModel.setPlaceList(listOf(placeDetail))
             moveCameraToPlace(placeDetail)
-            //addMarkerToPlace(latLng)
         }
 
         categoryAdapter =
-            CategoryAdapter({ category -> categoryOnClickListener(category) }, { true })
+            CategoryAdapter({ category -> categoryOnClickListener(category) }, { true }, viewModel)
     }
 
     private fun setListeners() {

@@ -70,12 +70,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             dialog.window?.setGravity(Gravity.TOP)
             dialog.show()
 
-            dialog.setOnCancelListener {
-                homeViewModel.setYearAndMonth(
-                    dialog.binding.npYear.value,
-                    dialog.binding.npMonth.value
-                )
-            }
             dialog.binding.tvAgree.setOnClickListener {
                 homeViewModel.setYearAndMonth(
                     dialog.binding.npYear.value,
