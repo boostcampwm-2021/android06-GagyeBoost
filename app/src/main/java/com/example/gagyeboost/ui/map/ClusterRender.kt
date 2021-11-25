@@ -58,4 +58,6 @@ class MyClusterRenderer(
             snippet = clusterItem.snippet
         })
     }
+
+    override fun onClusterUpdated(cluster: Cluster<MyItem>, marker: Marker) = Unit
 }
