@@ -14,24 +14,20 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.BitmapUtils
-import com.example.gagyeboost.common.GPSUtils
-import com.example.gagyeboost.common.INTENT_EXTRA_PLACE_DETAIL
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.FragmentSelectPositionBinding
 import com.example.gagyeboost.model.data.MyItem
 import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.ui.address.AddressResultActivity
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class SelectPositionFragment :
     BaseFragment<FragmentSelectPositionBinding>(R.layout.fragment_select_position),
@@ -43,7 +39,25 @@ class SelectPositionFragment :
     private val gpsUtils: GPSUtils by lazy { GPSUtils(requireContext()) }
     private val moveCameraToPlace: (PlaceDetail) -> Unit = {
         val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
-        googleMap.animateCamera(newLatLngZoom(latLng,15f))
+
+        val markerOptions = MarkerOptions()
+
+        ResourcesCompat.getDrawable(
+            resources,
+            R.drawable.ic_default_marker,
+            null
+        )?.let { drawable ->
+            val bitmap = BitmapUtils.createBitmapFromDrawable(drawable)
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+        }
+
+        googleMap.let { map ->
+            map.clear()
+            map.addMarker(
+                markerOptions.position(latLng).title("${it.roadAddressName} ${it.placeName}")
+            )
+            map.animateCamera(newLatLngZoom(latLng, 15f))
+        }
     }
     private val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
     private val requestLocation = registerForActivityResult(
@@ -66,6 +80,7 @@ class SelectPositionFragment :
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         binding.viewModel = viewModel
+
         init()
         initMap()
         viewModel.resetLocation()
@@ -74,16 +89,17 @@ class SelectPositionFragment :
     private fun init() {
         binding.btnComplete.setOnClickListener {
             viewModel.selectedLocation.value?.let {
-                if (it.position.latitude == -1.0) {
-                    showNoPlaceDialog()
-                } else {
+                if (isValidPosition(it.position)) {
                     viewModel.addAccountBookData()
                     navController.popBackStack(R.id.homeFragment, false)
+                    viewModel.resetAllData()
+
+                } else {
+                    showNoPlaceDialog()
                 }
             } ?: run {
                 showNoPlaceDialog()
             }
-
         }
 
         binding.appBarSelectPosition.setNavigationOnClickListener {
@@ -110,9 +126,13 @@ class SelectPositionFragment :
     private fun moveCameraToUser() {
         val userLocation = gpsUtils.getUserLatLng()
 
-        viewModel.userLocation = gpsUtils.getUserLocation()
-
-        googleMap.moveCamera(newLatLngZoom(userLocation, 15f))
+        val cameraPosition = CameraPosition.Builder()
+            .target(userLocation)
+            .zoom(15f)
+            .bearing(0f)
+            .tilt(0f)
+            .build()
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
         val marker = MarkerOptions()
 
@@ -131,6 +151,7 @@ class SelectPositionFragment :
             .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                 viewModel.addAccountBookData()
                 navController.popBackStack(R.id.homeFragment, false)
+                viewModel.resetAllData()
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
 

@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.ActivityRecordDetailBinding
@@ -22,6 +23,7 @@ import com.example.gagyeboost.ui.home.category.CategoryAdapter
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -42,22 +44,15 @@ class RecordDetailActivity :
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private val moveCameraToPlace: (PlaceDetail) -> Unit = {
         val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
-        googleMap.animateCamera(newLatLngZoom(latLng, 15f))
+        googleMap.moveCamera(newLatLngZoom(latLng.run {
+            if (isValidPosition(this)) this else
+                gpsUtils.getUserLatLng()
+        }, 15f))
+
     }
     private val goToAddressResultActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
-                /*
-                val placeDetail =
-                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as PlaceDetail
-
-                viewModel.placeDetail = placeDetail
-
-                binding.tvAddressBody.text = placeDetail.roadAddressName
-
-                addMarkerToPlace(LatLng(placeDetail.lat.toDouble(), placeDetail.lng.toDouble()))
-
-                 */
                 val placeList =
                     result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as Array<PlaceDetail>
                 viewModel.setPlaceList(placeList.toList())
@@ -80,8 +75,8 @@ class RecordDetailActivity :
         binding.viewModel = viewModel
         viewModel.setAccountBookData {
             binding.tvAddressBody.text = viewModel.accountBookData.value?.address
-            val latitude = viewModel.accountBookData.value?.latitude?.toDouble() ?: DEFAULT_LAT
-            val longitude = viewModel.accountBookData.value?.longitude?.toDouble() ?: DEFAULT_LNG
+            val latitude = viewModel.accountBookData.value?.latitude ?: DEFAULT_LAT
+            val longitude = viewModel.accountBookData.value?.longitude ?: DEFAULT_LNG
             val address = viewModel.accountBookData.value?.address
             //val latLng = LatLng(latitude, longitude)
             val placeDetail = PlaceDetail(
@@ -99,7 +94,6 @@ class RecordDetailActivity :
             )
             viewModel.setPlaceList(listOf(placeDetail))
             moveCameraToPlace(placeDetail)
-            //addMarkerToPlace(latLng)
         }
 
         categoryAdapter =
@@ -209,6 +203,12 @@ class RecordDetailActivity :
         viewModel.categoryList.observe(this) {
             categoryAdapter.submitList(it)
         }
+
+        viewModel.dateDetailItemMoney.observe(this) {
+            viewModel.dateDetailItem.value?.let { item ->
+                item.money = it
+            }
+        }
     }
 
     private fun categoryOnClickListener(category: Category): Boolean {
@@ -272,7 +272,18 @@ class RecordDetailActivity :
         googleMap.clear()
 
         if (latLng.latitude > 0 && latLng.longitude > 0) {
-            googleMap.addMarker(MarkerOptions().apply { position(latLng) })
+            val markerOptions = MarkerOptions().apply { position(latLng) }
+
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_default_marker,
+                null
+            )?.let {
+                val bitmap = BitmapUtils.createBitmapFromDrawable(it)
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+            }
+
+            googleMap.addMarker(markerOptions)
             googleMap.moveCamera(newLatLngZoom(latLng, 15f))
         } else {
             googleMap.moveCamera(newLatLngZoom(gpsUtils.getUserLatLng(), 15f))
