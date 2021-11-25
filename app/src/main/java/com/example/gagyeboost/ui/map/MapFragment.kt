@@ -19,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -45,6 +46,16 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         ActivityResultContracts.RequestMultiplePermissions()
     ) {
         moveCameraToUser()
+        if (::googleMap.isInitialized) {
+            googleMap.projection.visibleRegion.latLngBounds.run {
+                (clusterManager.renderer as MyClusterRenderer).resizeBound(
+                    southwest.latitude,
+                    northeast.latitude,
+                    southwest.longitude,
+                    northeast.longitude
+                )
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -142,7 +153,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         googleMap = map
         setUpMap()
         clickListener()
-        addItems()
+        initObserver()
         viewModel.setInitData()
         requestLocation.launch(permissions)
     }
@@ -153,25 +164,49 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         googleMap.setOnCameraIdleListener(clusterManager)
         clusterManager.renderer =
             MyClusterRenderer(requireContext(), googleMap, clusterManager, viewModel.intMoneyType)
+
+        googleMap.setOnCameraMoveListener {
+            googleMap.projection.visibleRegion.latLngBounds.run {
+                (clusterManager.renderer as MyClusterRenderer).resizeBound(
+                    southwest.latitude,
+                    northeast.latitude,
+                    southwest.longitude,
+                    northeast.longitude
+                )
+            }
+        }
     }
 
-    private fun addItems() {
+    private fun initObserver() {
         viewModel.dataMap.observe(viewLifecycleOwner) {
-            googleMap.clear()
-            clusterManager.clearItems()
             val markerMap = viewModel.hashMapToMarkerMap(it)
-            markerMap.forEach { (latLng, addrMoney) ->
-                val offsetItem =
-                    MyItem(
-                        latLng.first,
-                        latLng.second,
-                        addrMoney.first,
-                        addrMoney.second
-                    )
-                clusterManager.addItem(offsetItem)
-            }
-            clusterManager.cluster()
+            addItem(markerMap)
         }
+
+        (clusterManager.renderer as MyClusterRenderer).markerBound.observe(viewLifecycleOwner) {
+            val markerMap = viewModel.hashMapToMarkerMap(viewModel.dataMap.value ?: HashMap())
+            addItem(markerMap)
+        }
+    }
+
+    private fun addItem(markerMap: HashMap<kotlin.Pair<Double, Double>, kotlin.Pair<String, String>>) {
+        googleMap.clear()
+        clusterManager.clearItems()
+
+        markerMap.forEach { (latLng, addrMoney) ->
+            val offsetItem =
+                MyItem(
+                    latLng.first,
+                    latLng.second,
+                    addrMoney.first,
+                    addrMoney.second
+                )
+            (clusterManager.renderer as MyClusterRenderer).addInBoundMarker(
+                clusterManager,
+                offsetItem
+            )
+        }
+        clusterManager.cluster()
     }
 
     private fun clickListener() {
