@@ -1,4 +1,4 @@
-package com.example.gagyeboost.ui.map.filter
+package com.example.gagyeboost.ui.search
 
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -10,19 +10,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.ItemRvFilterCategoryBinding
 import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.ui.map.MapViewModel
 
-class FilterCategoryAdapter(
-    private val viewModel: MapViewModel,
-    private val initCategoryList: List<Int>
-) : ListAdapter<Category, FilterCategoryAdapter.CategoryViewHolder>(diffUtil) {
+class SearchCategoryAdapter(
+    private val viewModel: SearchViewModel,
+) : ListAdapter<Category, SearchCategoryAdapter.CategoryViewHolder>(diffUtil) {
 
     val categorySet = viewModel.categoryIDList.value?.toMutableSet() ?: mutableSetOf()
 
-    fun setCategoryList(boolean: Boolean) {
-        categorySet.clear()
-        if (boolean) {
-            categorySet.addAll(initCategoryList)
+    fun setCategoryList(selectAll: Boolean, isExpense: Boolean) {
+        when (selectAll) {
+            true -> {
+                if (isExpense) {
+                    categorySet.addAll(viewModel.expenseCategoryID ?: listOf())
+                } else {
+                    categorySet.addAll(viewModel.incomeCategoryID ?: listOf())
+                }
+            }
+            false -> {
+                if (isExpense) {
+                    categorySet.removeAll(viewModel.expenseCategoryID ?: listOf())
+                } else {
+                    categorySet.removeAll(viewModel.incomeCategoryID ?: listOf())
+                }
+            }
         }
         notifyDataSetChanged()
     }

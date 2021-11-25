@@ -13,14 +13,6 @@ class GPSUtils(private val context: Context) : LocationListener {
     private val locationManager =
         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-    fun getUserLocation(): Address = if (checkLocationPermission()) {
-        getAddress(DEFAULT_LAT, DEFAULT_LNG)
-    } else {
-        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)?.let {
-            getAddress(it.latitude, it.longitude)
-        } ?: getAddress(DEFAULT_LAT, DEFAULT_LNG)
-    }
-
     fun getUserLatLng(): LatLng = if (checkLocationPermission()) {
         LatLng(DEFAULT_LAT, DEFAULT_LNG)
     } else {

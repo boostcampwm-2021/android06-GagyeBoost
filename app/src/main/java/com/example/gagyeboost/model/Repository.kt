@@ -49,7 +49,7 @@ class Repository(
 
     suspend fun loadFilterData(filter: Filter): List<AccountBook> =
         accountBookDao.loadSearchData(
-            filter.moneyType,
+            filter.moneyType ?: EXPENSE,
             filter.startYear,
             filter.startMonth,
             filter.startDay,
@@ -67,7 +67,6 @@ class Repository(
 
     suspend fun loadFilterDataWithKeyword(filter: Filter, keyword: String) =
         accountBookDao.loadSearchDataWithKeyword(
-            filter.moneyType,
             filter.startYear,
             filter.startMonth,
             filter.startDay,
@@ -77,10 +76,6 @@ class Repository(
             filter.categoryList,
             filter.startMoney,
             filter.endMoney,
-            filter.startLatitude,
-            filter.startLongitude,
-            filter.endLatitude,
-            filter.endLongitude,
             keyword
         )
 
@@ -113,4 +108,11 @@ class Repository(
     }
 
     suspend fun loadMonthData(year: Int, month: Int) = accountBookDao.loadMonthData(year, month)
+
+    suspend fun deleteCategory(selectedCategoryId: Int) {
+        accountBookDao.deleteCategoryData(selectedCategoryId)
+    }
+
+    suspend fun isExistAccountBookDataByCategory(selectedCategoryId: Int) =
+        accountBookDao.isExistAccountBookDataByCategoryId(selectedCategoryId)
 }

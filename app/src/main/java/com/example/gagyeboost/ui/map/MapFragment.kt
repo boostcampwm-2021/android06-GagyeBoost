@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.util.Pair
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.BitmapUtils
-import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.GPSUtils
-import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.DialogFilterMoneyTypeBinding
 import com.example.gagyeboost.databinding.FragmentMapBinding
 import com.example.gagyeboost.model.data.MyItem
@@ -20,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -48,7 +47,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         moveCameraToUser()
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
@@ -62,7 +60,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.btnGps.setOnClickListener {
             moveCameraToUser()
         }
-        binding.btnFilterRefresh.setOnClickListener{
+        binding.btnFilterRefresh.setOnClickListener {
             viewModel.setInitData()
         }
     }
@@ -110,10 +108,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     private fun showDateRangePicker() {
+        val start = dateToLong(viewModel.startYear, viewModel.startMonth, viewModel.startDay)
+        val end = dateToLong(viewModel.endYear, viewModel.endMonth, viewModel.endDay)
+
         val dateRangePicker = MaterialDatePicker.Builder
             .dateRangePicker()
+            .setSelection(Pair(start, end))
             .setTitleText("Select Date").build()
-
         dateRangePicker.show(parentFragmentManager, "date_range_picker")
 
         dateRangePicker.addOnPositiveButtonClickListener { date ->
@@ -150,8 +151,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         markerManager = MarkerManager(googleMap)
         clusterManager = ClusterManager(context, googleMap, markerManager)
         googleMap.setOnCameraIdleListener(clusterManager)
-
-        clusterManager.renderer = MyClusterRenderer(context, googleMap, clusterManager)
+        clusterManager.renderer =
+            MyClusterRenderer(requireContext(), googleMap, clusterManager, viewModel.intMoneyType)
     }
 
     private fun addItems() {
@@ -162,8 +163,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             markerMap.forEach { (latLng, addrMoney) ->
                 val offsetItem =
                     MyItem(
-                        latLng.first.toDouble(),
-                        latLng.second.toDouble(),
+                        latLng.first,
+                        latLng.second,
                         addrMoney.first,
                         addrMoney.second
                     )
@@ -186,8 +187,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         }
         clusterManager.markerCollection.setOnInfoWindowClickListener { marker ->
             viewModel.setSelectedDetail(
-                marker.position.latitude.toFloat(),
-                marker.position.longitude.toFloat()
+                marker.position.latitude,
+                marker.position.longitude
             )
             val bottomSheet =
                 MapDetailFragment(
@@ -204,7 +205,14 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun moveCameraToUser() {
         val userLocation = gpsUtils.getUserLatLng()
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f))
+        val cameraPosition = CameraPosition.Builder()
+            .target(userLocation)
+            .zoom(15f)
+            .bearing(0f)
+            .tilt(0f)
+            .build()
+
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
         val marker = MarkerOptions()
 
