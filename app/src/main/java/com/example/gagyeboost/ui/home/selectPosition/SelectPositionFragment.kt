@@ -91,8 +91,6 @@ class SelectPositionFragment :
                 if (isValidPosition(it.position)) {
                     viewModel.addAccountBookData()
                     navController.popBackStack(R.id.homeFragment, false)
-                    viewModel.resetAllData()
-
                 } else {
                     showNoPlaceDialog()
                 }
@@ -150,7 +148,6 @@ class SelectPositionFragment :
             .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                 viewModel.addAccountBookData()
                 navController.popBackStack(R.id.homeFragment, false)
-                viewModel.resetAllData()
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
 

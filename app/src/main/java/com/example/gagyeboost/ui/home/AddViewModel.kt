@@ -140,14 +140,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         _categoryType = EXPENSE
     }
 
-    fun resetAllData() {
-        resetSelectedCategory()
-        money.value = 0
-        resetCategoryFragmentData()
-        dateString = ""
-        resetLocation()
-    }
-
     fun deleteCategory(callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             if (!repository.isExistAccountBookDataByCategory(selectedCategoryId)) {
