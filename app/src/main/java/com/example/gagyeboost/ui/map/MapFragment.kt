@@ -181,11 +181,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             val markerMap = viewModel.hashMapToMarkerMap(it)
             addItem(markerMap)
         }
-
-        viewModel.markerBound.observe(viewLifecycleOwner) {
-            val markerMap = viewModel.hashMapToMarkerMap(viewModel.dataMap.value ?: HashMap())
-            addItem(markerMap)
-        }
     }
 
     private fun addItem(markerMap: HashMap<kotlin.Pair<Double, Double>, kotlin.Pair<String, String>>) {
