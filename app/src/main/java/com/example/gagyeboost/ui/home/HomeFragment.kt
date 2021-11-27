@@ -15,12 +15,12 @@ import com.example.gagyeboost.databinding.FragmentHomeBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
-    private val homeViewModel: HomeViewModel by viewModel()
-    private lateinit var customCalendarAdapter: CustomCalendarAdapter
+    private val homeViewModel: HomeViewModel by sharedViewModel()
+    private val customCalendarAdapter by lazy { CustomCalendarAdapter(homeViewModel) }
     private lateinit var dialog: NumberPickerDialog
     private lateinit var detailAdapter: DateDetailAdapter
     private val filterActivityLauncher: ActivityResultLauncher<Intent> =
@@ -28,17 +28,34 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             refreshCalendarData()
         }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        customCalendarAdapter = CustomCalendarAdapter(homeViewModel)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        setDialog()
+        clickListener()
         observe()
+    }
 
+    private fun initView() {
+        binding.homeViewModel = homeViewModel
+        detailAdapter = DateDetailAdapter { detailItemOnClick(it) }
+        dialog = NumberPickerDialog(binding.root.context)
+
+        with(binding) {
+            rvCalendar.adapter = customCalendarAdapter
+            rvDetail.adapter = detailAdapter
+        }
+    }
+
+    private fun detailItemOnClick(id: Int) {
+        val intent = Intent(activity, RecordDetailActivity::class.java)
+        intent.putExtra(DATE_DETAIL_ITEM_ID_KEY, id)
+        filterActivityLauncher.launch(intent)
+    }
+
+    private fun clickListener() {
+        binding.tvYearAndMonth.setOnClickListener {
+            setDialog()
+        }
         binding.fabAdd.setOnClickListener {
             val today = homeViewModel.getTodayString()
             findNavController().navigate(
@@ -48,47 +65,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
     }
 
-    private fun initView() {
-        binding.homeViewModel = homeViewModel
-        detailAdapter = DateDetailAdapter {
-            val intent = Intent(activity, RecordDetailActivity::class.java)
-            intent.putExtra(DATE_DETAIL_ITEM_ID_KEY, it)
-            filterActivityLauncher.launch(intent)
-            return@DateDetailAdapter true
-        }
-
-        with(binding) {
-            dialog = NumberPickerDialog(root.context)
-            rvCalendar.adapter = customCalendarAdapter
-            rvDetail.adapter = detailAdapter
-        }
-    }
-
     private fun setDialog() {
-        binding.tvYearAndMonth.setOnClickListener {
-            dialog.window?.setGravity(Gravity.TOP)
-            dialog.show()
+        dialog.window?.setGravity(Gravity.TOP)
+        dialog.show()
 
-            dialog.binding.tvAgree.setOnClickListener {
-                homeViewModel.setYearAndMonth(
-                    dialog.binding.npYear.value,
-                    dialog.binding.npMonth.value
-                )
-                dialog.dismiss()
-            }
-            dialog.binding.tvCancel.setOnClickListener {
-                dialog.dismiss()
-            }
+        dialog.binding.tvAgree.setOnClickListener {
+            homeViewModel.setYearAndMonth(
+                dialog.binding.npYear.value,
+                dialog.binding.npMonth.value
+            )
+            dialog.dismiss()
         }
     }
 
     private fun observe() {
         homeViewModel.yearMonthPair.observe(viewLifecycleOwner) {
             homeViewModel.loadAllDayDataInMonth()
-        }
-
-        homeViewModel.selectedDate.observe(viewLifecycleOwner) {
-            homeViewModel.loadDateDetailItemList(it)
         }
 
         homeViewModel.dateItemList.observe(viewLifecycleOwner) {
@@ -102,7 +94,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun refreshCalendarData() {
         homeViewModel.loadAllDayDataInMonth()
-        homeViewModel.loadDateDetailItemList(homeViewModel.selectedDate.value)
     }
 
     override fun onStop() {

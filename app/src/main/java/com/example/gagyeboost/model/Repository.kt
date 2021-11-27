@@ -38,6 +38,9 @@ class Repository(
     suspend fun loadDayData(year: Int, month: Int, day: Int) =
         accountBookDao.loadDayData(year, month, day)
 
+    fun flowLoadDayData(year: Int, month: Int, day: Int) =
+        accountBookDao.flowLoadDayData(year, month, day)
+
     suspend fun loadCategoryData(id: Int) = accountBookDao.loadCategoryData(id)
 
     suspend fun loadAccountBookData(id: Int) = accountBookDao.loadAccountBookData(id)
