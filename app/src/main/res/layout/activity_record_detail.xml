@@ -13,7 +13,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_detail"
@@ -213,9 +214,9 @@
                 android:id="@+id/tv_address_body"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:autoSizeMaxTextSize="18sp"
-                android:autoSizeMinTextSize="5sp"
-                android:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="18sp"
+                app:autoSizeMinTextSize="5sp"
+                app:autoSizeTextType="uniform"
                 android:gravity="end"
                 android:maxLines="1"
                 android:textColor="@color/black"
