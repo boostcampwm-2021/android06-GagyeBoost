@@ -34,6 +34,7 @@ class SearchCategoryAdapter(
                 }
             }
         }
+        viewModel.categoryIDList.value = categorySet.toMutableList()
         notifyDataSetChanged()
     }
 
@@ -61,8 +62,8 @@ class SearchCategoryAdapter(
                     } else {
                         categorySet.remove(it.id)
                     }
-                    viewModel.categoryIDList.value = categorySet.toMutableList()
                 }
+                viewModel.categoryIDList.value = categorySet.toMutableList()
             }
         }
 
