@@ -12,11 +12,11 @@ import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
+
     private val _selectedCategoryIcon = MutableLiveData("🍚")
     val selectedCategoryIcon: LiveData<String> = _selectedCategoryIcon
 
     val categoryName = MutableLiveData("")
-
     private var selectedCategoryId = -1
 
     val money = MutableLiveData(0)

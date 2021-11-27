@@ -58,7 +58,6 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
         binding.btnClose.setOnClickListener {
             findNavController().popBackStack()
-            viewModel.resetAllData()
         }
 
         binding.etWon.doAfterTextChanged {

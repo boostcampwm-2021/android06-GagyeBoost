@@ -31,7 +31,6 @@ class AddCategoryFragment :
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         binding.appBarAddCategory.setNavigationOnClickListener {
-            viewModel.resetSelectedCategory()
             navController.popBackStack()
         }
 

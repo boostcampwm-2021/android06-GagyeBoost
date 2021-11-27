@@ -16,6 +16,7 @@ import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class UpdateCategoryFragment :
     BaseFragment<FragmentUpdateCategoryBinding>(R.layout.fragment_update_category) {
+
     private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var navController: NavController
     private lateinit var inputMethodManager: InputMethodManager
