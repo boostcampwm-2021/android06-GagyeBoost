@@ -38,6 +38,10 @@ class SearchCategoryAdapter(
         notifyDataSetChanged()
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding =
             ItemRvFilterCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
