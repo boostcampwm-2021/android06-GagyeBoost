@@ -132,7 +132,7 @@
                 android:background="@android:color/transparent"
                 android:gravity="end"
                 android:inputType="number"
-                android:maxLength="9"
+                android:maxLength="11"
                 android:maxLines="1"
                 app:intToString="@={viewModel.dateDetailItemMoney}"
                 app:layout_constraintBottom_toBottomOf="@id/tv_money_title"
