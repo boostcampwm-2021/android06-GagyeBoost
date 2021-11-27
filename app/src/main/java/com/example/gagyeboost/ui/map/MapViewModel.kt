@@ -39,10 +39,10 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endYear: Int = 2500
     var endMonth: Int = 12
     var endDay: Int = 31
-    var startLatitude: Float = 0.0F
-    var startLongitude: Float = 00.0F
-    var endLatitude: Float = 200.0F
-    var endLongitude: Float = 200.0F
+    var startLatitude: Float = MIN_LAT.toFloat()
+    var startLongitude: Float = MIN_LNG.toFloat()
+    var endLatitude: Float = MAX_LAT.toFloat()
+    var endLongitude: Float = MAX_LNG.toFloat()
 
     val isMoneyFilterChange = MutableLiveData(false)
     var moneyFilterBtnText = ""
@@ -122,10 +122,10 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endMonth = NOW_MONTH
         endDay = END_DAY
         // 화면에 보이는 위도/경도로 설정 해야함
-        startLatitude = 0.0f
-        startLongitude = 0.0f
-        endLatitude = 200.0f
-        endLongitude = 200.0f
+        startLatitude = MIN_LAT.toFloat()
+        startLongitude = MIN_LNG.toFloat()
+        endLatitude = MAX_LAT.toFloat()
+        endLongitude = MAX_LNG.toFloat()
         initLoadCategory()
 
         isMoneyFilterChange.value = false
