@@ -1,7 +1,7 @@
 package com.example.gagyeboost.ui.home.categoryControl
 
-import android.content.Context
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -12,11 +12,11 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentUpdateCategoryBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class UpdateCategoryFragment :
     BaseFragment<FragmentUpdateCategoryBinding>(R.layout.fragment_update_category) {
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var navController: NavController
     private lateinit var inputMethodManager: InputMethodManager
 
@@ -79,6 +79,7 @@ class UpdateCategoryFragment :
         super.onPause()
         inputMethodManager.hideSoftInputFromWindow(binding.etNameBody.windowToken, 0)
     }
+
     private fun showDeleteDialog() {
         val dialog =
             AlertDialog.Builder(requireContext())

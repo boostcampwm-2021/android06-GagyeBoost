@@ -26,14 +26,13 @@ import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class SelectPositionFragment :
     BaseFragment<FragmentSelectPositionBinding>(R.layout.fragment_select_position),
     OnMapReadyCallback {
 
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var navController: NavController
     private lateinit var googleMap: GoogleMap
     private val gpsUtils: GPSUtils by lazy { GPSUtils(requireContext()) }

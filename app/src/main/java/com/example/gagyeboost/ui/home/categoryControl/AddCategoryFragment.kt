@@ -11,11 +11,11 @@ import com.example.gagyeboost.R
 import com.example.gagyeboost.databinding.FragmentAddCategoryBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class AddCategoryFragment :
     BaseFragment<FragmentAddCategoryBinding>(R.layout.fragment_add_category) {
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var navController: NavController
     private lateinit var inputMethodManager: InputMethodManager
 

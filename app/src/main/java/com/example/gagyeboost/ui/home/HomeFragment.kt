@@ -16,7 +16,6 @@ import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
@@ -43,7 +42,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.fabAdd.setOnClickListener {
             val today = homeViewModel.getTodayString()
             findNavController().navigate(
-                R.id.action_homeFragment_to_addFragment,
+                R.id.action_homeFragment_to_addMoneyGraph,
                 bundleOf(TODAY_STRING_KEY to today)
             )
         }
