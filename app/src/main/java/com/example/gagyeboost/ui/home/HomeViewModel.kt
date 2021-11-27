@@ -63,17 +63,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
             else -> DateColor.Weekday.color
         }
 
-    private fun setDateAlpha(position: Int): Float {
-        val alpha = if (position < calendar.prevMonthTailOffset
-            || position >= calendar.prevMonthTailOffset + calendar.currentMonthMaxDate
-        ) {
-            DateAlpha.Percent30.alpha
-        } else {
-            DateAlpha.Percent100.alpha
-        }
-        return alpha
-    }
-
     fun setSelectedDate(dateItem: DateItem) {
         _selectedDate.value = dateItem
     }
@@ -88,9 +77,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                 // prev month date
                 if (date < 0) {
                     dateItems.add(
-                        DateItem(
-                            null, null, date, 0, 0, setDateColor(index), setDateAlpha(index)
-                        )
+                        DateItem(null, null, date, 0, 0, setDateColor(index))
                     )
                     return@forEachIndexed
                 }
@@ -118,8 +105,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                         date,
                         _yearMonthPair.value?.first ?: 0,
                         _yearMonthPair.value?.second ?: 0,
-                        setDateColor(index),
-                        setDateAlpha(index)
+                        setDateColor(index)
                     )
                 )
 
