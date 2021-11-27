@@ -8,7 +8,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
-import kotlin.random.Random
 
 class MapViewModel(private val repository: Repository) : ViewModel() {
 
@@ -39,10 +38,6 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endYear: Int = 2500
     var endMonth: Int = 12
     var endDay: Int = 31
-    var startLatitude: Float = MIN_LAT.toFloat()
-    var startLongitude: Float = MIN_LNG.toFloat()
-    var endLatitude: Float = MAX_LAT.toFloat()
-    var endLongitude: Float = MAX_LNG.toFloat()
 
     val isMoneyFilterChange = MutableLiveData(false)
     var moneyFilterBtnText = ""
@@ -62,6 +57,14 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
 
     private var _selectedDetailList = MutableLiveData<List<DateDetailItem>>()
     val selectedDetailList: LiveData<List<DateDetailItem>> = _selectedDetailList
+
+    private var _markerBound = MutableLiveData(CameraBounds(0.0, 0.0, 0.0, 0.0))
+    val markerBound: LiveData<CameraBounds> = _markerBound
+
+    companion object {
+        private const val MAX_BOUND = 3.0
+        private const val MINIMUM_BOUND_SIZE = 1 / (MAX_BOUND * MAX_BOUND)
+    }
 
     fun setSelectedDetail(latitude: Double, longitude: Double) {
         viewModelScope.launch {
@@ -121,11 +124,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endYear = NOW_YEAR
         endMonth = NOW_MONTH
         endDay = END_DAY
-        // 화면에 보이는 위도/경도로 설정 해야함
-        startLatitude = MIN_LAT.toFloat()
-        startLongitude = MIN_LNG.toFloat()
-        endLatitude = MAX_LAT.toFloat()
-        endLongitude = MAX_LNG.toFloat()
+        _markerBound.value = CameraBounds(0.0, 0.0, 0.0, 0.0)
         initLoadCategory()
 
         isMoneyFilterChange.value = false
@@ -188,10 +187,10 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endYear,
         endMonth,
         endDay,
-        startLatitude,
-        startLongitude,
-        endLatitude,
-        endLongitude,
+        markerBound.value?.run { minX.toFloat() } ?: 0f,
+        markerBound.value?.run { minY.toFloat() } ?: 0f,
+        markerBound.value?.run { maxX.toFloat() } ?: 0f,
+        markerBound.value?.run { maxY.toFloat() } ?: 0f,
         intStartMoney.value ?: 0,
         intEndMoney.value ?: 300000,
         categoryIDList.value ?: listOf()
@@ -244,4 +243,38 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
             else -> Timber.e("changeCategoryBackground byteMoneyType is null")
         }
     }
+
+    /*
+     * 카메라 Bound값을 넣고 현재 Renderer Bound안에 있는지, Bound크기가 너무 작은지 검사
+     * 조건을 만족하지 않으면 Bound 재조정
+     */
+    fun resizeBound(minX: Double, maxX: Double, minY: Double, maxY: Double) {
+        if (isInBound(minX, maxX, minY, maxY) && isLargerThanMinSize(minX, maxX, minY, maxY)) return
+        val xSize = maxX - minX
+        val ySize = maxY - minY
+        val xCenter = (maxX + minX) / 2
+        val yCenter = (maxY + minY) / 2
+        _markerBound.value =
+            CameraBounds(
+                xCenter - xSize * MAX_BOUND / 2,
+                xCenter + xSize * MAX_BOUND / 2,
+                yCenter - ySize * MAX_BOUND / 2,
+                yCenter + ySize * MAX_BOUND / 2
+            )
+        loadFilterData()
+    }
+
+    private fun isInBound(minX: Double, maxX: Double, minY: Double, maxY: Double) =
+        markerBound.value?.let {
+            minX >= it.minX && minY >= it.minY && maxX <= it.maxX && maxY <= it.maxY
+        } ?: false
+
+    private fun isLargerThanMinSize(minX: Double, maxX: Double, minY: Double, maxY: Double) =
+        markerBound.value?.let {
+            val xSize = maxX - minX
+            val ySize = maxY - minY
+            val boundXSize = it.maxX - it.minX
+            val boundYSize = it.maxY - it.minY
+            boundXSize * MINIMUM_BOUND_SIZE <= xSize && boundYSize * MINIMUM_BOUND_SIZE <= ySize
+        } ?: true
 }
