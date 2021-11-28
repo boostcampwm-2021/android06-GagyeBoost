@@ -38,6 +38,7 @@
     <string name="complete">완료</string>
     <string name="back_button">back button</string>
     <string name="close_btn">close fragment or activity</string>
+    <string name="edit_category">edit category</string>
     <string name="add_category_btn">add category btn</string>
     <string name="must_enter_category_name">카테고리명을 반드시 입력해야 합니다</string>
     <string name="delete">삭제</string>
@@ -86,4 +87,5 @@
     <string name="category_delete_dialog_message">카테고리를 삭제하시겠습니까?</string>
     <string name="category_delete_complete">카테고리가 삭제됐습니다.</string>
     <string name="filter_has_been_reset">검색 조건이 초기화되었습니다.</string>
+    <string name="category_edit">edit category</string>
 </resources>
