@@ -182,7 +182,7 @@ class SelectPositionFragment :
         }
 
         googleMap.setOnInfoWindowCloseListener {
-            viewModel.setSelectedPlace(MyItem(-1.0, -1.0, "", ""))
+            viewModel.setSelectedPlace(MyItem(MAX_LAT, MAX_LNG, "", ""))
         }
 
         viewModel.selectedLocationList.observe(viewLifecycleOwner, { placeList ->
