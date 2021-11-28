@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="com.example.gagyeboost.model.data.Category" />
 
         <import type="kotlin.jvm.functions.Function1" />
+
+        <import type="android.view.View" />
 
         <variable
             name="category"
@@ -16,17 +20,33 @@
             type="Function1&lt;Category, Boolean>" />
 
         <variable
-            name="categoryLongClickListener"
+            name="categoryEditClickListener"
             type="Function1&lt;Category, Boolean>" />
+
+        <variable
+            name="viewModel"
+            type="com.example.gagyeboost.ui.home.AddViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="@{_ -> categoryClickListener.invoke(category)}"
-        android:onLongClick="@{_ -> categoryLongClickListener.invoke(category)}"
+        android:visibility="@{viewModel.isEdit &amp;&amp; category.id == -1 ? View.GONE : View.VISIBLE}"
         tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/iv_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/category_edit"
+            android:elevation="1dp"
+            android:onClick="@{_ -> categoryEditClickListener.invoke(category)}"
+            android:padding="3dp"
+            android:src="@drawable/ic_setting"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_emoji"

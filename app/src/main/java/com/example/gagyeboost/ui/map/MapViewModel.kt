@@ -8,6 +8,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
+import kotlin.random.Random
 
 class MapViewModel(private val repository: Repository) : ViewModel() {
 
@@ -43,8 +44,10 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     var endLatitude: Float = 200.0F
     var endLongitude: Float = 200.0F
 
-    val isMoneyBackgroundChange = MutableLiveData(false)
-    val isPeriodBackgroundChange = MutableLiveData(false)
+    val isMoneyFilterChange = MutableLiveData(false)
+    var moneyFilterBtnText = ""
+    val isPeriodFilterChange = MutableLiveData(false)
+    var periodFilterBtnText = ""
     val isCategoryBackgroundChange = MutableLiveData(false)
 
     // category filter adapter에서 필요한 초기 카테고리 리스트
@@ -54,13 +57,13 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
     private val filterData = MutableLiveData<List<AccountBook>>()
 
     // HashMap<좌표, 좌표에 해당하는 내역 list>
-    val dataMap: LiveData<HashMap<Pair<Float, Float>, List<AccountBook>>> =
+    val dataMap: LiveData<HashMap<Pair<Double, Double>, List<AccountBook>>> =
         Transformations.map(filterData) { listToHashMap(it) }
 
     private var _selectedDetailList = MutableLiveData<List<DateDetailItem>>()
     val selectedDetailList: LiveData<List<DateDetailItem>> = _selectedDetailList
 
-    fun setSelectedDetail(latitude: Float, longitude: Float) {
+    fun setSelectedDetail(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             val categoryMap = repository.loadCategoryMap()
             val dataList = dataMap.value?.getOrPut(Pair(latitude, longitude)) { listOf() }
@@ -83,21 +86,21 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    private fun listToHashMap(dataList: List<AccountBook>): HashMap<Pair<Float, Float>, List<AccountBook>> {
-        val nowMap = HashMap<Pair<Float, Float>, MutableList<AccountBook>>()
+    private fun listToHashMap(dataList: List<AccountBook>): HashMap<Pair<Double, Double>, List<AccountBook>> {
+        val nowMap = HashMap<Pair<Double, Double>, MutableList<AccountBook>>()
         dataList.forEach {
             val latLng = Pair(it.latitude, it.longitude)
             nowMap.getOrPut(latLng) { mutableListOf() }.add(it)
         }
-        val retMap = HashMap<Pair<Float, Float>, List<AccountBook>>()
+        val retMap = HashMap<Pair<Double, Double>, List<AccountBook>>()
         nowMap.forEach {
             retMap[it.key] = it.value
         }
         return retMap
     }
 
-    fun hashMapToMarkerMap(dataMap: HashMap<Pair<Float, Float>, List<AccountBook>>): HashMap<Pair<Float, Float>, Pair<String, String>> {
-        val markerMap = HashMap<Pair<Float, Float>, Pair<String, String>>()
+    fun hashMapToMarkerMap(dataMap: HashMap<Pair<Double, Double>, List<AccountBook>>): HashMap<Pair<Double, Double>, Pair<String, String>> {
+        val markerMap = HashMap<Pair<Double, Double>, Pair<String, String>>()
         dataMap.forEach {
             markerMap[it.key] = Pair(
                 it.value[0].address,
@@ -125,8 +128,8 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endLongitude = 200.0f
         initLoadCategory()
 
-        isMoneyBackgroundChange.value = false
-        isPeriodBackgroundChange.value = false
+        isMoneyFilterChange.value = false
+        isPeriodFilterChange.value = false
         isCategoryBackgroundChange.value = false
     }
 
@@ -205,20 +208,29 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         endMonth = calendar.get(Calendar.MONTH) + 1
         endDay = calendar.get(Calendar.DAY_OF_MONTH)
 
-        isPeriodBackgroundChange.value = !(startYear == NOW_YEAR &&
+        isPeriodFilterChange.value = !(startYear == NOW_YEAR &&
                 startMonth == NOW_MONTH &&
                 startDay == 1 &&
                 endYear == NOW_YEAR &&
                 endMonth == NOW_MONTH &&
                 endDay == END_DAY)
+
+        periodFilterBtnText =
+            "${intToStringDate(startYear, startMonth, startDay)} ~ ${
+                intToStringDate(endYear, endMonth, endDay)
+            }"
     }
 
-    fun changeMoneyBackground() {
+    fun changeMoneyFilterBtn() {
         val start = intStartMoney.value ?: InitMoneyFilter.Start.money
         val end = intEndMoney.value ?: InitMoneyFilter.End.money
 
-        isMoneyBackgroundChange.value =
+        isMoneyFilterChange.value =
             !(start == InitMoneyFilter.Start.money && end == InitMoneyFilter.End.money)
+
+        moneyFilterBtnText = "${formatter.format(start)} ~ ${
+            if (end == Int.MAX_VALUE) "1,000,000 이상" else formatter.format(end)
+        }"
     }
 
     fun changeCategoryBackground() {

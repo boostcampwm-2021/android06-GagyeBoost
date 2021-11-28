@@ -66,7 +66,7 @@
 <br>
   
 ## 🎞 데모 영상
-  준비중
+- [4주차 데모영상 바로보기](https://www.youtube.com/watch?v=9q4E_THkU9g)
  
 <br>
   
@@ -79,6 +79,3 @@
 ## ⚙ 개발 환경
 - [![Android](https://img.shields.io/badge/Android%20Studio-Arctic%20Fox%20%7C%202020.3.1%20Patch%203-blue)]()
 - [![Kotlin](https://img.shields.io/badge/language-kotlin-yellow)]()
-
-## 데모 영상
-- 2주차 스프린트: https://youtu.be/BN5JgnGBhhU

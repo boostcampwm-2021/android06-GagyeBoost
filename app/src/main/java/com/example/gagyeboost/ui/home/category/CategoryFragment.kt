@@ -22,6 +22,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     private lateinit var categoryAdapter: CategoryAdapter
     private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var navController: NavController
+    private lateinit var inputMethodManager: InputMethodManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,9 +33,13 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     }
 
     private fun initView() {
+        inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         categoryAdapter = CategoryAdapter(
             { category -> categoryOnClick(category) },
-            { category -> categoryLongClick(category) })
+            { category -> categoryLongClick(category) },
+            viewModel
+        )
 
         binding.viewModel = viewModel
         binding.rvCategory.adapter = categoryAdapter
@@ -60,7 +65,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         }
 
         viewModel.loadCategoryList()
-        viewModel.content.value = ""
     }
 
     private fun categoryOnClick(category: Category): Boolean {
@@ -82,11 +86,18 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     private fun initClickListeners() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
+            viewModel.resetCategoryFragmentData()
         }
 
-        binding.btnClose.setOnClickListener {
-            findNavController().popBackStack(R.id.homeFragment, false)
+        binding.btnEdit.setOnClickListener {
+            viewModel.isEdit.value?.let {
+                viewModel.doEdit(!it)
+            }
         }
+
+        binding.root.setOnClickListener {
+            inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
+       }
     }
 
     private fun setObservers() {
@@ -96,13 +107,14 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             categoryList.add(Category(-1, getString(R.string.add), "➕", viewModel.categoryType))
             categoryAdapter.submitList(categoryList)
         }
+
+        viewModel.isEdit.observe(viewLifecycleOwner) {
+            categoryAdapter.notifyItemRangeChanged(0, categoryAdapter.itemCount)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-
-        val inputMethodManager =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.toggleSoftInput(
             InputMethodManager.SHOW_FORCED,
             InputMethodManager.HIDE_IMPLICIT_ONLY
@@ -111,9 +123,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
     override fun onPause() {
         super.onPause()
-
-        val inputMethodManager =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
+        viewModel.doEdit(false)
     }
 }

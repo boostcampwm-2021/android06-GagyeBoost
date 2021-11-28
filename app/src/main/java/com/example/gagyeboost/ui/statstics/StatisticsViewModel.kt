@@ -8,7 +8,6 @@ import com.example.gagyeboost.common.CHART_Y_AXIS_UNIT
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.StatRecordItem
 import com.example.gagyeboost.model.data.nothingEmoji
@@ -33,8 +32,8 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedMoneyType = MutableLiveData(EXPENSE)
     val selectedMoneyType: LiveData<Byte> = _selectedMoneyType
 
-    private val _dailyChartData = MutableLiveData<List<Pair<Int, Int>>>()
-    val dailyChartData: LiveData<List<Pair<Int, Int>>> = _dailyChartData
+    private val _dailyChartData = MutableLiveData<List<Pair<Int, Float>>>()
+    val dailyChartData: LiveData<List<Pair<Int, Float>>> = _dailyChartData
 
     private val _sortedStatRecordList = MutableLiveData<List<StatRecordItem>>()
     val sortedStatRecordList: LiveData<List<StatRecordItem>> = _sortedStatRecordList
@@ -61,7 +60,7 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
     fun setDailyChartData() {
         var totalSum = 0
         viewModelScope.launch {
-            val dataList = mutableListOf<Pair<Int, Int>>()
+            val dataList = mutableListOf<Pair<Int, Float>>()
             calendar.datesInMonth.forEach { date ->
                 // include only current month date
                 if (date <= 0) return@forEach
@@ -73,13 +72,10 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
                         date
                     ).filter { it.moneyType == _selectedMoneyType.value }
 
-                val totalMoney =
-                    accountDataList.fold(0) { total, record: AccountBook ->
-                        total + record.money
-                    } / CHART_Y_AXIS_UNIT
+                val totalMoney = accountDataList.sumOf { it.money }
 
-                totalSum += totalMoney * CHART_Y_AXIS_UNIT
-                dataList.add(Pair(date, totalMoney))
+                totalSum += totalMoney
+                dataList.add(Pair(date, totalMoney * 1f / CHART_Y_AXIS_UNIT))
             }
             _dailyChartData.value = dataList
             _totalMoneyAmount.value = formatter.format(totalSum)

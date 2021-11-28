@@ -1,5 +1,6 @@
 package com.example.gagyeboost.ui.home.detail
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
@@ -8,19 +9,23 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.ActivityRecordDetailBinding
 import com.example.gagyeboost.databinding.BottomSheetCategoryBinding
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.MyItem
 import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.ui.address.AddressResultActivity
 import com.example.gagyeboost.ui.base.BaseActivity
 import com.example.gagyeboost.ui.home.category.CategoryAdapter
-import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -37,17 +42,21 @@ class RecordDetailActivity :
     private lateinit var googleMap: GoogleMap
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var bottomSheetDialog: BottomSheetDialog
+    private val moveCameraToPlace: (PlaceDetail) -> Unit = {
+        val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
+        googleMap.moveCamera(newLatLngZoom(latLng.run {
+            if (isValidPosition(this)) this else
+                gpsUtils.getUserLatLng()
+        }, 15f))
+
+    }
     private val goToAddressResultActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
-                val placeDetail =
-                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as PlaceDetail
-
-                viewModel.placeDetail = placeDetail
-
-                binding.tvAddressBody.text = placeDetail.roadAddressName
-
-                addMarkerToPlace(LatLng(placeDetail.lat.toDouble(), placeDetail.lng.toDouble()))
+                val placeList =
+                    result.data?.getSerializableExtra(INTENT_EXTRA_PLACE_DETAIL) as Array<PlaceDetail>
+                viewModel.setPlaceList(placeList.toList())
+                moveCameraToPlace(placeList.firstOrNull() ?: return@registerForActivityResult)
             }
         }
 
@@ -58,6 +67,7 @@ class RecordDetailActivity :
         initView()
         setListeners()
         setObserver()
+        viewModel.resetLocation()
     }
 
     private fun initView() {
@@ -65,15 +75,29 @@ class RecordDetailActivity :
         binding.viewModel = viewModel
         viewModel.setAccountBookData {
             binding.tvAddressBody.text = viewModel.accountBookData.value?.address
-            val latitude = viewModel.accountBookData.value?.latitude?.toDouble() ?: DEFAULT_LAT
-            val longitude = viewModel.accountBookData.value?.longitude?.toDouble() ?: DEFAULT_LNG
-
-            val latLng = LatLng(latitude, longitude)
-            addMarkerToPlace(latLng)
+            val latitude = viewModel.accountBookData.value?.latitude ?: DEFAULT_LAT
+            val longitude = viewModel.accountBookData.value?.longitude ?: DEFAULT_LNG
+            val address = viewModel.accountBookData.value?.address
+            //val latLng = LatLng(latitude, longitude)
+            val placeDetail = PlaceDetail(
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                roadAddressName = address ?: "",
+                lat = latitude.toString(),
+                lng = longitude.toString()
+            )
+            viewModel.setPlaceList(listOf(placeDetail))
+            moveCameraToPlace(placeDetail)
         }
 
         categoryAdapter =
-            CategoryAdapter({ category -> categoryOnClickListener(category) }, { true })
+            CategoryAdapter({ category -> categoryOnClickListener(category) }, { true }, viewModel)
     }
 
     private fun setListeners() {
@@ -179,6 +203,12 @@ class RecordDetailActivity :
         viewModel.categoryList.observe(this) {
             categoryAdapter.submitList(it)
         }
+
+        viewModel.dateDetailItemMoney.observe(this) {
+            viewModel.dateDetailItem.value?.let { item ->
+                item.money = it
+            }
+        }
     }
 
     private fun categoryOnClickListener(category: Category): Boolean {
@@ -202,18 +232,73 @@ class RecordDetailActivity :
         binding.map.onStop()
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+
+        googleMap.setOnMarkerClickListener {
+            selectLocation(it)
+            true
+        }
+
+        googleMap.setOnInfoWindowCloseListener {
+            viewModel.setSelectedPlace(MyItem(DEFAULT_LAT, DEFAULT_LNG, "", ""))
+        }
+
+        viewModel.selectedLocationList.observe(this, { placeList ->
+            with(googleMap) {
+                clear()
+                placeList.forEachIndexed { idx, placeDetail ->
+                    addMarker(
+                        MarkerOptions().position(
+                            LatLng(
+                                placeDetail.lat.toDouble(),
+                                placeDetail.lng.toDouble()
+                            )
+                        ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                    )?.let {
+                        if (idx == 0) selectLocation(it)
+                    }
+                }
+            }
+        })
+
+        viewModel.selectedLocation.observe(this, { location ->
+            binding.etAddress.text = location.title
+        })
     }
 
     private fun addMarkerToPlace(latLng: LatLng) {
         googleMap.clear()
 
         if (latLng.latitude > 0 && latLng.longitude > 0) {
-            googleMap.addMarker(MarkerOptions().apply { position(latLng) })
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+            val markerOptions = MarkerOptions().apply { position(latLng) }
+
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_default_marker,
+                null
+            )?.let {
+                val bitmap = BitmapUtils.createBitmapFromDrawable(it)
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+            }
+
+            googleMap.addMarker(markerOptions)
+            googleMap.moveCamera(newLatLngZoom(latLng, 15f))
         } else {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(gpsUtils.getUserLatLng(), 15f))
+            googleMap.moveCamera(newLatLngZoom(gpsUtils.getUserLatLng(), 15f))
         }
+    }
+
+    private fun selectLocation(marker: Marker) {
+        marker.showInfoWindow()
+        viewModel.setSelectedPlace(
+            MyItem(
+                marker.position.latitude,
+                marker.position.longitude,
+                marker.title ?: "",
+                marker.snippet ?: ""
+            )
+        )
     }
 }

@@ -1,16 +1,14 @@
 package com.example.gagyeboost.ui.home
 
-import android.location.Address
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.MAX_LAT
+import com.example.gagyeboost.common.MAX_LNG
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.PlaceDetail
-import com.example.gagyeboost.model.data.nothingEmoji
+import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
@@ -35,9 +33,15 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     val searchAddress = MutableLiveData<String>()
 
-    var selectedLocation: PlaceDetail? = null
+    //var selectedLocation: PlaceDetail? = null
+    private val _selectedLocation = MutableLiveData(MyItem(MAX_LAT, MAX_LNG, "", ""))
+    val selectedLocation: LiveData<MyItem> = _selectedLocation
 
-    lateinit var userLocation: Address
+    private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
+    val selectedLocationList: LiveData<List<PlaceDetail>> = _selectedLocationList
+
+    private val _isEdit = MutableLiveData(false)
+    val isEdit: LiveData<Boolean> get() = _isEdit
 
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
@@ -97,11 +101,9 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 moneyType = _categoryType,
                 money = money.value ?: 0,
                 category = selectedCategoryId,
-                address = selectedLocation?.let { "${it.roadAddressName} ${it.placeName}" } ?: "",
-                latitude = selectedLocation?.lat?.toFloat()
-                    ?: -1f,
-                longitude = selectedLocation?.lng?.toFloat()
-                    ?: -1f,
+                address = selectedLocation.value?.title ?: "",
+                latitude = selectedLocation.value?.position?.latitude ?: MAX_LAT,
+                longitude = selectedLocation.value?.position?.longitude ?: MAX_LNG,
                 content = content.value ?: "",
                 year = splitStr[0].toInt(),
                 month = splitStr[1].toInt(),
@@ -116,5 +118,48 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch {
             _categoryList.value = repository.loadCategoryList(categoryType)
         }
+    }
+
+    fun setPlaceList(placeList: List<PlaceDetail>) {
+        _selectedLocationList.value = placeList
+    }
+
+    fun setSelectedPlace(location: MyItem) {
+        _selectedLocation.value = location
+    }
+
+    fun resetLocation() {
+        _selectedLocationList.value = listOf()
+        _selectedLocation.value = MyItem(MAX_LAT, MAX_LNG, "", "")
+        searchAddress.value = ""
+    }
+
+    fun resetCategoryFragmentData() {
+        content.value = ""
+        _categoryList.value = listOf()
+        _categoryType = EXPENSE
+    }
+
+    fun resetAllData() {
+        resetSelectedCategory()
+        money.value = 0
+        resetCategoryFragmentData()
+        dateString = ""
+        resetLocation()
+    }
+
+    fun deleteCategory(callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            if (!repository.isExistAccountBookDataByCategory(selectedCategoryId)) {
+                repository.deleteCategory(selectedCategoryId)
+                callback(true)
+            } else {
+                callback(false)
+            }
+        }
+    }
+
+    fun doEdit(isEdit: Boolean) {
+        _isEdit.value = isEdit
     }
 }

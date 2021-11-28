@@ -53,7 +53,7 @@ class FilterMoneyDialog : BottomSheetDialogFragment() {
                     0 -> start = value
                     1 -> end = value
                 }
-                if (right == InitMoneyFilter.End.money) {
+                if (end == 1000000f) {
                     viewModel.setMoney(start.toInt(), Int.MAX_VALUE)
                 } else {
                     viewModel.setMoney(start.toInt(), end.toInt())
@@ -63,7 +63,7 @@ class FilterMoneyDialog : BottomSheetDialogFragment() {
 
         binding.btnFilterApply.setOnClickListener {
             viewModel.loadFilterData()
-            viewModel.changeMoneyBackground()
+            viewModel.changeMoneyFilterBtn()
             dismiss()
         }
 

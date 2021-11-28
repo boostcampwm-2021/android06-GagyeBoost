@@ -89,6 +89,14 @@ class Repository(
         }.flow
     }
 
+    suspend fun loadPlaceListFromKeyword(keyword: String, latLng: LatLng, page: Int) =
+        client.getKakaoApiService().fetchPlaceListFromKeyword(
+            keyword,
+            page,
+            latLng.latitude.toString(),
+            latLng.longitude.toString()
+        )
+
     suspend fun loadCategoryMap(): HashMap<Int, Category> {
         val categoryMap = HashMap<Int, Category>()
         val categoryList =
@@ -100,4 +108,11 @@ class Repository(
     }
 
     suspend fun loadMonthData(year: Int, month: Int) = accountBookDao.loadMonthData(year, month)
+
+    suspend fun deleteCategory(selectedCategoryId: Int) {
+        accountBookDao.deleteCategoryData(selectedCategoryId)
+    }
+
+    suspend fun isExistAccountBookDataByCategory(selectedCategoryId: Int) =
+        accountBookDao.isExistAccountBookDataByCategoryId(selectedCategoryId)
 }

@@ -1,7 +1,9 @@
 package com.example.gagyeboost.ui.home.categoryControl
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -15,6 +17,7 @@ class AddCategoryFragment :
     BaseFragment<FragmentAddCategoryBinding>(R.layout.fragment_add_category) {
     private val viewModel by sharedViewModel<AddViewModel>()
     private lateinit var navController: NavController
+    private lateinit var inputMethodManager: InputMethodManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -24,6 +27,8 @@ class AddCategoryFragment :
 
     private fun init() {
         binding.viewModel = viewModel
+        inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         binding.appBarAddCategory.setNavigationOnClickListener {
             viewModel.resetSelectedCategory()
@@ -46,6 +51,14 @@ class AddCategoryFragment :
                 navController.popBackStack()
             }
         }
+
+        binding.root.setOnClickListener {
+            inputMethodManager.hideSoftInputFromWindow(binding.etNameBody.windowToken, 0)
+        }
     }
 
+    override fun onPause() {
+        super.onPause()
+        inputMethodManager.hideSoftInputFromWindow(binding.etNameBody.windowToken, 0)
+    }
 }

@@ -139,7 +139,7 @@ class StatisticsFragment :
         }
     }
 
-    private fun setDailyChart(chartData: List<Pair<Int, Int>>) {
+    private fun setDailyChart(chartData: List<Pair<Int, Float>>) {
         with(chartDaily) {
             // 그래프 뷰 설정
             description.isEnabled = false
@@ -167,12 +167,13 @@ class StatisticsFragment :
             }
             axisLeft.axisMinimum = 0F
             axisLeft.granularity = 1F
+            axisLeft.axisMaximum = kotlin.math.ceil(chartData.maxOf { it.second })
             axisRight.setDrawAxisLine(false)
             axisRight.isEnabled = false
             animateY(ANIMATE_Y_TIME)
 
             val chartDataSet = BarDataSet(
-                chartData.map { BarEntry(it.first.toFloat(), it.second.toFloat()) },
+                chartData.map { BarEntry(it.first.toFloat(), it.second) },
                 ""
             ).apply {
                 colors = ColorTemplate.VORDIPLOM_COLORS.toList()
