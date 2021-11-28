@@ -37,7 +37,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         categoryAdapter = CategoryAdapter(
             { category -> categoryOnClick(category) },
-            { category -> categoryLongClick(category) },
             viewModel
         )
 
@@ -72,14 +71,16 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             navController.navigate(R.id.action_categoryFragment_to_addCategoryFragment)
         } else {
             viewModel.setCategoryData(category)
-            navController.navigate(R.id.action_categoryFragment_to_selectPositionFragment)
-        }
-        return true
-    }
 
-    private fun categoryLongClick(category: Category): Boolean {
-        viewModel.setCategoryData(category)
-        navController.navigate(R.id.action_categoryFragment_to_updateCategoryFragment)
+            viewModel.isEdit.value?.let {
+                if (it) {
+                    navController.navigate(R.id.action_categoryFragment_to_updateCategoryFragment)
+                } else {
+                    navController.navigate(R.id.action_categoryFragment_to_selectPositionFragment)
+
+                }
+            }
+        }
         return true
     }
 
@@ -97,7 +98,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
         binding.root.setOnClickListener {
             inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
-       }
+        }
     }
 
     private fun setObservers() {
