@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import com.example.gagyeboost.R
@@ -126,6 +127,7 @@ class RecordDetailActivity :
                 ).show()
             } else {
                 viewModel.updateAccountBookData()
+                Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT).show()
                 finish()
             }
         }
