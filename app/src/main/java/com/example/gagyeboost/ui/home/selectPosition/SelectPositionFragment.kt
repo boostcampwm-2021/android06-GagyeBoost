@@ -187,15 +187,24 @@ class SelectPositionFragment :
 
         viewModel.selectedLocationList.observe(viewLifecycleOwner, { placeList ->
             with(googleMap) {
+                val icon = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_default_marker,
+                    null
+                )?.let {
+                    BitmapUtils.createBitmapFromDrawable(it)
+                }
+
                 clear()
                 placeList.forEachIndexed { idx, placeDetail ->
                     addMarker(
-                        MarkerOptions().position(
-                            LatLng(
-                                placeDetail.lat.toDouble(),
-                                placeDetail.lng.toDouble()
-                            )
-                        ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                        MarkerOptions().icon(icon?.let { BitmapDescriptorFactory.fromBitmap(it) })
+                            .position(
+                                LatLng(
+                                    placeDetail.lat.toDouble(),
+                                    placeDetail.lng.toDouble()
+                                )
+                            ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
                     )?.let {
                         if (idx == 0) selectLocation(it)
                     }
