@@ -4,11 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.IS_EXPENSE_KEY
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.common.setEditTextSize
 import com.example.gagyeboost.databinding.FragmentAddBinding
@@ -49,11 +49,13 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
     private fun initClickListeners() {
         binding.btnIncome.setOnClickListener {
-            goToCategoryFragment(true)
+            viewModel.categoryType.value = INCOME
+            goToCategoryFragment()
         }
 
         binding.btnExpense.setOnClickListener {
-            goToCategoryFragment(false)
+            viewModel.categoryType.value = EXPENSE
+            goToCategoryFragment()
         }
 
         binding.btnClose.setOnClickListener {
@@ -67,11 +69,8 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
         }
     }
 
-    private fun goToCategoryFragment(isExpense: Boolean) {
-        findNavController().navigate(
-            R.id.action_addFragment_to_categoryFragment,
-            bundleOf(IS_EXPENSE_KEY to isExpense)
-        )
+    private fun goToCategoryFragment() {
+        findNavController().navigate(R.id.action_addFragment_to_categoryFragment)
     }
 
     override fun onPause() {

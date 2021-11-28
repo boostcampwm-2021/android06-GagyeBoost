@@ -18,7 +18,7 @@ data class Category(
     var emoji: String,
 
     @ColumnInfo(name = "money_type")
-    var moneyType: Byte
+    var moneyType: Int
 
 ) {
     constructor() : this(0, "", "", EXPENSE)

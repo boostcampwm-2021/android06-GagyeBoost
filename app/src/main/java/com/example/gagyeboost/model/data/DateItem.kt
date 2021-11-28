@@ -20,7 +20,7 @@ data class DateItem(
 )
 
 data class Filter(
-    val moneyType: Byte?,
+    val moneyType: Int?,
     val startYear: Int,
     val startMonth: Int,
     val startDay: Int,

@@ -29,7 +29,7 @@ class Repository(
         accountBookDao.addCategoryData(category)
     }
 
-    suspend fun loadCategoryList(moneyType: Byte) = accountBookDao.loadCategoryAllData(moneyType)
+    suspend fun loadCategoryList(moneyType: Int) = accountBookDao.loadCategoryAllData(moneyType)
 
     suspend fun updateCategoryData(category: Category) = accountBookDao.updateCategoryData(category)
 
