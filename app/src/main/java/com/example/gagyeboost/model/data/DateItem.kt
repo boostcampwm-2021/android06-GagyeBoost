@@ -6,8 +6,7 @@ data class DateItem(
     val date: Int,
     val year: Int,
     val month: Int,
-    val color: String,
-    val alpha: Float
+    val color: String
 )
 
 data class Filter(

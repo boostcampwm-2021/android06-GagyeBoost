@@ -5,9 +5,7 @@ import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.formatter
 import com.example.gagyeboost.model.Repository
-import com.example.gagyeboost.model.data.DateAlpha
 import com.example.gagyeboost.model.data.DateColor
-import com.example.gagyeboost.model.data.DateDetailItem
 import com.example.gagyeboost.model.data.DateItem
 import kotlinx.coroutines.launch
 import java.util.*
@@ -30,9 +28,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     private val _selectedDate = MutableLiveData<DateItem?>()
     val selectedDate: LiveData<DateItem?> = _selectedDate
 
-    private val _detailItemList = MutableLiveData<MutableList<DateDetailItem>>()
-    val detailItemList: LiveData<MutableList<DateDetailItem>> = _detailItemList
-
     private val _totalMonthIncome = MutableLiveData<String>()
     val totalMonthIncome: LiveData<String> = _totalMonthIncome
 
@@ -42,9 +37,16 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     private val _totalMonthBalance = MutableLiveData<String>()
     val totalMonthBalance: LiveData<String> = _totalMonthBalance
 
+    val detailItemList = Transformations.switchMap(_selectedDate) { date ->
+        if (date == null) {
+            MutableLiveData(listOf())
+        } else {
+            repository.flowLoadDayData(date.year, date.month, date.date).asLiveData()
+        }
+    }
+
     init {
         setYearAndMonth(currentYear, Calendar.getInstance().get(Calendar.MONTH) + 1)
-        loadAllDayDataInMonth()
     }
 
     fun setYearAndMonth(year: Int, month: Int) {
@@ -63,17 +65,6 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
             else -> DateColor.Weekday.color
         }
 
-    private fun setDateAlpha(position: Int): Float {
-        val alpha = if (position < calendar.prevMonthTailOffset
-            || position >= calendar.prevMonthTailOffset + calendar.currentMonthMaxDate
-        ) {
-            DateAlpha.Percent30.alpha
-        } else {
-            DateAlpha.Percent100.alpha
-        }
-        return alpha
-    }
-
     fun setSelectedDate(dateItem: DateItem) {
         _selectedDate.value = dateItem
     }
@@ -88,9 +79,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                 // prev month date
                 if (date < 0) {
                     dateItems.add(
-                        DateItem(
-                            null, null, date, 0, 0, setDateColor(index), setDateAlpha(index)
-                        )
+                        DateItem(null, null, date, 0, 0, setDateColor(index))
                     )
                     return@forEachIndexed
                 }
@@ -118,8 +107,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
                         date,
                         _yearMonthPair.value?.first ?: 0,
                         _yearMonthPair.value?.second ?: 0,
-                        setDateColor(index),
-                        setDateAlpha(index)
+                        setDateColor(index)
                     )
                 )
 
@@ -136,29 +124,4 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     fun getTodayString() = _selectedDate.value?.let {
         it.year.toString() + "/" + it.month + "/" + it.date
     } ?: ""
-
-    fun loadDateDetailItemList(date: DateItem?) {
-        val list = mutableListOf<DateDetailItem>()
-        if (date == null) {
-            _detailItemList.value = mutableListOf()
-        } else {
-            viewModelScope.launch {
-                repository.loadDayData(date.year, date.month, date.date).forEach { account ->
-                    val category = repository.loadCategoryData(account.category)
-                    list.add(
-                        DateDetailItem(
-                            account.id,
-                            category.emoji,
-                            category.categoryName,
-                            account.content,
-                            account.money,
-                            account.moneyType == INCOME,
-                        )
-                    )
-                }
-                _detailItemList.postValue(list)
-            }
-        }
-
-    }
 }

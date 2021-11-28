@@ -133,9 +133,6 @@ class StatisticsFragment :
                 )
                 dialog.dismiss()
             }
-            tvCancel.setOnClickListener {
-                dialog.dismiss()
-            }
         }
     }
 
