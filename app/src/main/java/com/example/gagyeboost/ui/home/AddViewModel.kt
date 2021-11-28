@@ -9,6 +9,7 @@ import com.example.gagyeboost.common.MAX_LAT
 import com.example.gagyeboost.common.MAX_LNG
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
@@ -42,6 +43,8 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     private val _isEdit = MutableLiveData(false)
     val isEdit: LiveData<Boolean> get() = _isEdit
+
+    private var saveJob: Job? = null
 
     fun setSelectedIcon(icon: String) {
         _selectedCategoryIcon.value = icon
@@ -93,7 +96,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun addAccountBookData() {
+    fun addAccountBookData(callback: () -> Unit) {
         if (dateString.isEmpty()) return
         viewModelScope.launch {
             val splitStr = dateString.split('/')
@@ -110,8 +113,8 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 day = splitStr[2].toInt()
             )
             repository.addAccountBookData(data)
+            callback()
         }
-        money.value = 0
     }
 
     fun loadCategoryList() {

@@ -14,6 +14,7 @@ import com.example.gagyeboost.model.remote.KakaoAPIClient
 import com.example.gagyeboost.ui.home.selectPosition.AddressPagingSource
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 class Repository(
     private val accountBookDao: AccountBookDAO,
@@ -39,7 +40,7 @@ class Repository(
         accountBookDao.loadDayData(year, month, day)
 
     fun flowLoadDayData(year: Int, month: Int, day: Int) =
-        accountBookDao.flowLoadDayData(year, month, day)
+        accountBookDao.flowLoadDayData(year, month, day).distinctUntilChanged()
 
     suspend fun loadCategoryData(id: Int) = accountBookDao.loadCategoryData(id)
 

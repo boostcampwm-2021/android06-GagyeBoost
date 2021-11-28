@@ -89,8 +89,9 @@ class SelectPositionFragment :
         binding.btnComplete.setOnClickListener {
             viewModel.selectedLocation.value?.let {
                 if (isValidPosition(it.position)) {
-                    viewModel.addAccountBookData()
-                    navController.popBackStack(R.id.homeFragment, false)
+                    viewModel.addAccountBookData {
+                        navController.popBackStack(R.id.homeFragment, false)
+                    }
                 } else {
                     showNoPlaceDialog()
                 }
@@ -146,8 +147,9 @@ class SelectPositionFragment :
             .setTitle(getString(R.string.select_place))
             .setMessage(getString(R.string.select_place_dialog_message))
             .setPositiveButton(getString(R.string.confirm)) { _, _ ->
-                viewModel.addAccountBookData()
-                navController.popBackStack(R.id.homeFragment, false)
+                viewModel.addAccountBookData {
+                    navController.popBackStack(R.id.homeFragment, false)
+                }
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
 
