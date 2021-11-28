@@ -38,6 +38,10 @@ class FilterCategoryAdapter(
         holder.bind(getItem(position))
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
     inner class CategoryViewHolder(private val binding: ItemRvFilterCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
