@@ -6,12 +6,22 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.gagyeboost.model.data.AccountBook
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.DateDetailItem
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountBookDAO {
     //선택한 일자의 모든 데이터
     @Query("SELECT * FROM account_book WHERE year=:year AND month=:month AND day=:day")
     suspend fun loadDayData(year: Int, month: Int, day: Int): List<AccountBook>
+
+    @Query(
+        """SELECT account_book.id, category.emoji, category.category_name, account_book.content, account_book.money, account_book.money_type 
+        FROM account_book, category
+        WHERE account_book.category = category.id AND
+        year=:year AND month=:month AND day=:day"""
+    )
+    fun flowLoadDayData(year: Int, month: Int, day: Int): Flow<List<DateDetailItem>>
 
     //선택한 달의 수입 총 합
     @Query("SELECT SUM(money) FROM account_book WHERE year=:year AND month=:month AND money_type=1")

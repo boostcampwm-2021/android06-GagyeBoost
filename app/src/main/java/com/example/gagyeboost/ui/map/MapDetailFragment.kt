@@ -31,11 +31,9 @@ class MapDetailFragment(
 
     private val adapter: DateDetailAdapter by lazy {
         DateDetailAdapter {
-            // TODO("MapDetailFragment 돌아왔을 때 수정사항 반영")
             startActivity.launch(Intent(requireContext(), RecordDetailActivity::class.java).apply {
                 putExtra(DATE_DETAIL_ITEM_ID_KEY, it)
             })
-            true
         }.apply {
             submitList(liveDetailList.value)
         }

@@ -27,21 +27,18 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".ui.home.detail.RecordDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".ui.MainActivity"
-            android:exported="true" />
-
-        <activity android:name=".ui.address.AddressResultActivity"
-            android:windowSoftInputMode="adjustPan"/>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.address.AddressResultActivity"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>
