@@ -1,9 +1,6 @@
 package com.example.gagyeboost.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.MAX_LAT
 import com.example.gagyeboost.common.MAX_LNG
@@ -21,13 +18,13 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     val money = MutableLiveData(0)
 
-    private val _categoryList = MutableLiveData<List<Category>>()
-    val categoryList: LiveData<List<Category>> = _categoryList
-
     val content = MutableLiveData("")
 
-    //    private var _categoryType = EXPENSE
     val categoryType = MutableLiveData(EXPENSE)
+
+    val categoryList = Transformations.switchMap(categoryType) { moneyType ->
+        repository.flowLoadCategoryList(moneyType).asLiveData()
+    }
 
     var dateString = ""
 
@@ -55,7 +52,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                     moneyType = categoryType.value ?: EXPENSE
                 )
             )
-            loadCategoryList()
             resetSelectedCategory()
         }
     }
@@ -83,7 +79,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                     categoryType.value ?: EXPENSE
                 )
             )
-            loadCategoryList()
             resetSelectedCategory()
         }
     }
@@ -109,12 +104,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun loadCategoryList() {
-        viewModelScope.launch {
-            _categoryList.value = repository.loadCategoryList(categoryType.value ?: EXPENSE)
-        }
-    }
-
     fun setPlaceList(placeList: List<PlaceDetail>) {
         _selectedLocationList.value = placeList
     }
@@ -131,7 +120,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     fun resetCategoryFragmentData() {
         content.value = ""
-        _categoryList.value = listOf()
     }
 
     fun deleteCategory(callback: (Boolean) -> Unit) {

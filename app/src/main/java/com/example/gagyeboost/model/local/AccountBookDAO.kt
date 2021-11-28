@@ -30,6 +30,9 @@ interface AccountBookDAO {
     @Query("SELECT * FROM category WHERE money_type=:moneyType")
     suspend fun loadCategoryAllData(moneyType: Int): List<Category>
 
+    @Query("SELECT * FROM category WHERE money_type=:moneyType")
+    fun flowLoadCategoryAllData(moneyType: Int): Flow<List<Category>>
+
     @Query("SELECT id FROM category")
     suspend fun loadAllCategoryID(): List<Int>
 

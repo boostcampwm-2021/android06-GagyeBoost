@@ -31,12 +31,16 @@ class Repository(
 
     suspend fun loadCategoryList(moneyType: Int) = accountBookDao.loadCategoryAllData(moneyType)
 
+    fun flowLoadCategoryList(moneyType: Int) =
+        accountBookDao.flowLoadCategoryAllData(moneyType).distinctUntilChanged()
+
     suspend fun updateCategoryData(category: Category) = accountBookDao.updateCategoryData(category)
 
     suspend fun loadDayData(year: Int, month: Int, day: Int) =
         accountBookDao.loadDayData(year, month, day)
 
-    suspend fun loadDayTotalMoney(year: Int, month: Int, day: Int) = accountBookDao.loadDayTotalMoney(year, month, day)
+    suspend fun loadDayTotalMoney(year: Int, month: Int, day: Int) =
+        accountBookDao.loadDayTotalMoney(year, month, day)
 
     fun flowLoadDayData(year: Int, month: Int, day: Int) =
         accountBookDao.flowLoadDayData(year, month, day).distinctUntilChanged()

@@ -41,7 +41,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
         binding.viewModel = viewModel
         binding.rvCategory.adapter = categoryAdapter
-        viewModel.loadCategoryList()
         viewModel.resetSelectedCategory()
     }
 
