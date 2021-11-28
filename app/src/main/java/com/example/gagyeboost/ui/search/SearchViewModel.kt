@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gagyeboost.common.DEFAULT_END_YEAR
-import com.example.gagyeboost.common.DEFAULT_START_YEAR
-import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.INCOME
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.DateDetailItem
@@ -83,10 +80,10 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
                 endYear.value ?: DEFAULT_END_YEAR,
                 endMonth.value ?: 12,
                 endDay.value ?: 31,
-                0f,
-                0f,
-                200f,
-                200f,
+                MIN_LAT.toFloat(),
+                MIN_LNG.toFloat(),
+                MAX_LAT.toFloat(),
+                MAX_LNG.toFloat(),
                 startMoney.value ?: 0,
                 endMoney.value ?: 1000000,
                 categoryIDList.value ?: listOf()
