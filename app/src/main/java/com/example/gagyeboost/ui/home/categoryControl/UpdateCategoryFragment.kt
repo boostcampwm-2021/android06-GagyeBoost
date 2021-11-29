@@ -71,6 +71,7 @@ class UpdateCategoryFragment :
                     LENGTH_SHORT
                 ).show()
             } else {
+                viewModel.doEdit(false)
                 viewModel.updateCategory()
                 navController.popBackStack()
             }
@@ -102,5 +103,4 @@ class UpdateCategoryFragment :
 
         dialog.show()
     }
-
 }

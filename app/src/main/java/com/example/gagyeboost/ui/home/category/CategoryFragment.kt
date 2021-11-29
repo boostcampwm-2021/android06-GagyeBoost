@@ -103,6 +103,5 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     override fun onPause() {
         super.onPause()
         inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
-        viewModel.doEdit(false)
     }
 }

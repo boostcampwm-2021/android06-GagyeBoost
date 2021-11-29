@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
@@ -36,6 +35,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
         viewModel.dateString = dateStr ?: ""
         inputMethodManager =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        viewModel.doEdit(false)
     }
 
     private fun editTextFocus() {
@@ -60,12 +60,6 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
         binding.btnClose.setOnClickListener {
             findNavController().popBackStack()
-        }
-
-        binding.etWon.doAfterTextChanged {
-            it?.let {
-                if (it.length == 1) binding.etWon.setSelection(it.length)
-            }
         }
     }
 
