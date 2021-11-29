@@ -49,17 +49,7 @@ class UpdateCategoryFragment :
             appBarUpdateCategory.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.delete -> {
-                        this@UpdateCategoryFragment.viewModel.deleteCategory { result ->
-                            if (result) {
-                                showDeleteDialog()
-                            } else {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "데이터가 존재해서 삭제할 수 없습니다.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
+                        showDeleteDialog()
                         true
                     }
                     else -> false
@@ -95,16 +85,28 @@ class UpdateCategoryFragment :
             AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.category_delete_dialog_title))
                 .setMessage(getString(R.string.category_delete_dialog_message))
-                .setPositiveButton(getString(R.string.confirm)) { _, _ ->
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.category_delete_complete),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    navController.popBackStack()
-                }.setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+                .setPositiveButton(getString(R.string.confirm)) { _, _ -> deleteCategory() }
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
 
         dialog.show()
     }
 
+    private fun deleteCategory() {
+        viewModel.deleteCategory { callback ->
+            if (callback) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.category_delete_complete),
+                    Toast.LENGTH_SHORT
+                ).show()
+                navController.popBackStack()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.cannot_delete_category_due_to_existing_data),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 }
