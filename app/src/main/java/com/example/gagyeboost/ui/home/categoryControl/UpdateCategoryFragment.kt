@@ -24,23 +24,32 @@ class UpdateCategoryFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        init()
+        initView()
+        setListeners()
     }
 
-    private fun init() {
+    private fun initView() {
         inputMethodManager =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         binding.viewModel = viewModel
-        with(binding.appBarUpdateCategory) {
-            setNavigationOnClickListener {
-                viewModel.resetSelectedCategory()
+
+        with(binding) {
+            etNameBody.requestFocus()
+            inputMethodManager.showSoftInput(binding.etNameBody, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
+    private fun setListeners() {
+        with(binding) {
+            appBarUpdateCategory.setNavigationOnClickListener {
+                this@UpdateCategoryFragment.viewModel.resetSelectedCategory()
                 navController.popBackStack()
             }
 
-            setOnMenuItemClickListener { menuItem ->
+            appBarUpdateCategory.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.delete -> {
-                        viewModel.deleteCategory { result ->
+                        this@UpdateCategoryFragment.viewModel.deleteCategory { result ->
                             if (result) {
                                 showDeleteDialog()
                             } else {
@@ -56,23 +65,23 @@ class UpdateCategoryFragment :
                     else -> false
                 }
             }
-        }
 
-        binding.tvIconBody.setOnClickListener {
-            navController.navigate(R.id.action_updateCategoryFragment_to_categoryIconListFragment)
-        }
-
-        binding.btnUpdateCategoryComplete.setOnClickListener {
-            if (binding.etNameBody.text.isEmpty()) {
-                Toast.makeText(requireContext(), "이름을 반드시 입력해야 합니다", Toast.LENGTH_SHORT).show()
-            } else {
-                viewModel.updateCategory()
-                navController.popBackStack()
+            tvIconBody.setOnClickListener {
+                navController.navigate(R.id.action_updateCategoryFragment_to_categoryIconListFragment)
             }
-        }
 
-        binding.root.setOnClickListener {
-            inputMethodManager.hideSoftInputFromWindow(binding.etNameBody.windowToken, 0)
+            btnUpdateCategoryComplete.setOnClickListener {
+                if (etNameBody.text.isEmpty()) {
+                    Toast.makeText(requireContext(), "이름을 반드시 입력해야 합니다", Toast.LENGTH_SHORT).show()
+                } else {
+                    this@UpdateCategoryFragment.viewModel.updateCategory()
+                    navController.popBackStack()
+                }
+            }
+
+            root.setOnClickListener {
+                inputMethodManager.hideSoftInputFromWindow(etNameBody.windowToken, 0)
+            }
         }
     }
 
