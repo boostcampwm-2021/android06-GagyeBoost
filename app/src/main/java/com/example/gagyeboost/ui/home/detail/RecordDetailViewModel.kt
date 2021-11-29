@@ -41,12 +41,12 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
             val data = repository.loadRecordDetailData(accountBookId)
             _accountBookData.value = data
             _category.value =
-                Category(data.categoryID, data.categoryName, data.emoji, data.moneyType)
+                Category(data.categoryID, data.categoryName, data.emoji, data.moneyType.toByte())
             setDate(data.year, data.month, data.day)
             content.value = data.content
             money.value = data.money
 
-            val categoryList = repository.loadCategoryList(data.moneyType)
+            val categoryList = repository.loadCategoryList(data.moneyType.toByte())
             _categoryList.value = categoryList
         }
     }
@@ -62,7 +62,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
             val strDate = (_date.value ?: "2021.07.19").split(".").map { it.toInt() }
             val updatedAccountBookData = AccountBook(
                 accountBookId,
-                _accountBookData.value?.moneyType ?: EXPENSE,
+                _accountBookData.value?.moneyType?.toByte() ?: EXPENSE,
                 money.value ?: 0,
                 _category.value?.id ?: 0,
                 _selectedLocation.value?.position?.latitude ?: DEFAULT_LAT,

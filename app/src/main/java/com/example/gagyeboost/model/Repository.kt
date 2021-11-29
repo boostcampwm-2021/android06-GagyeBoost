@@ -29,9 +29,9 @@ class Repository(
         accountBookDao.addCategoryData(category)
     }
 
-    suspend fun loadCategoryList(moneyType: Int) = accountBookDao.loadCategoryAllData(moneyType)
+    suspend fun loadCategoryList(moneyType: Byte) = accountBookDao.loadCategoryAllData(moneyType)
 
-    fun flowLoadCategoryList(moneyType: Int) =
+    fun flowLoadCategoryList(moneyType: Byte) =
         accountBookDao.flowLoadCategoryAllData(moneyType).distinctUntilChanged()
 
     suspend fun updateCategoryData(category: Category) = accountBookDao.updateCategoryData(category)

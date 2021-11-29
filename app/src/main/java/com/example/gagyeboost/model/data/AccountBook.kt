@@ -24,7 +24,7 @@ data class AccountBook(
     var id: Int = 0,
 
     @ColumnInfo(name = "money_type")
-    var moneyType: Int,
+    var moneyType: Byte,
 
     @ColumnInfo(name = "money")
     var money: Int,

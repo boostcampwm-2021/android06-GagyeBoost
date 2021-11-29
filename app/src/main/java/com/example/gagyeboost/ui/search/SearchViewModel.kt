@@ -187,7 +187,7 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun getCategoryList(moneyType: Int): List<Category> {
+    fun getCategoryList(moneyType: Byte): List<Category> {
         return when (moneyType) {
             INCOME -> categoryIncomeList.value ?: listOf()
             else -> _categoryExpenseList.value ?: listOf()

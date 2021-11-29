@@ -25,10 +25,10 @@ interface AccountBookDAO {
     fun flowLoadDayData(year: Int, month: Int, day: Int): Flow<List<DateDetailItem>>
 
     @Query("SELECT * FROM category WHERE money_type=:moneyType")
-    suspend fun loadCategoryAllData(moneyType: Int): List<Category>
+    suspend fun loadCategoryAllData(moneyType: Byte): List<Category>
 
     @Query("SELECT * FROM category WHERE money_type=:moneyType")
-    fun flowLoadCategoryAllData(moneyType: Int): Flow<List<Category>>
+    fun flowLoadCategoryAllData(moneyType: Byte): Flow<List<Category>>
 
     @Query("SELECT id FROM category")
     suspend fun loadAllCategoryID(): List<Int>
@@ -83,7 +83,7 @@ interface AccountBookDAO {
             (longitude BETWEEN :startLongitude AND :endLongitude)"""
     )
     suspend fun loadSearchData(
-        moneyType: Int,
+        moneyType: Byte,
         startYear: Int,
         startMonth: Int,
         startDay: Int,

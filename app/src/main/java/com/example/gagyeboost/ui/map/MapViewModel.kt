@@ -150,7 +150,7 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun setCategoryIDList(moneyType: Int) {
+    fun setCategoryIDList(moneyType: Byte) {
         when (moneyType) {
             INCOME -> categoryIDList.value =
                 categoryIncomeList.value?.map { it.id }?.toMutableList()

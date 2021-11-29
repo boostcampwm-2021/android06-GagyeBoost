@@ -30,7 +30,7 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
     private val calendar = CustomCalendar()
 
     private val _selectedMoneyType = MutableLiveData(EXPENSE)
-    val selectedMoneyType: LiveData<Int> = _selectedMoneyType
+    val selectedMoneyType: LiveData<Byte> = _selectedMoneyType
 
     private val _dailyChartData = MutableLiveData<List<Pair<Int, Float>>>()
     val dailyChartData: LiveData<List<Pair<Int, Float>>> = _dailyChartData
@@ -82,7 +82,7 @@ class StatisticsViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun setSelectedMoneyType(type: Int) {
+    fun setSelectedMoneyType(type: Byte) {
         _selectedMoneyType.value = type
     }
 
