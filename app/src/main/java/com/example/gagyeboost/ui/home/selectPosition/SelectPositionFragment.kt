@@ -79,10 +79,7 @@ class SelectPositionFragment :
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         binding.viewModel = viewModel
-
-        init()
         initMap()
-        viewModel.resetLocation()
     }
 
     private fun init() {
@@ -174,6 +171,8 @@ class SelectPositionFragment :
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        init()
+        viewModel.resetLocation()
         requestLocation.launch(permissions)
 
         googleMap.setOnMarkerClickListener {

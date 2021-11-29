@@ -66,10 +66,10 @@ class RecordDetailActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initMap()
-        initView()
-        setListeners()
-        setObserver()
-        viewModel.resetLocation()
+//        initView()
+//        setListeners()
+//        setObserver()
+//        viewModel.resetLocation()
     }
 
     private fun initView() {
@@ -239,7 +239,10 @@ class RecordDetailActivity :
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-
+        initView()
+        setListeners()
+        setObserver()
+        viewModel.resetLocation()
         googleMap.setOnMarkerClickListener {
             selectLocation(it)
             true
