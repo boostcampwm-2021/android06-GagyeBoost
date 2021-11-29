@@ -16,6 +16,7 @@ import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.ActivityRecordDetailBinding
 import com.example.gagyeboost.databinding.BottomSheetCategoryBinding
 import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.MyItem
 import com.example.gagyeboost.model.data.PlaceDetail
 import com.example.gagyeboost.ui.address.AddressResultActivity
 import com.example.gagyeboost.ui.base.BaseActivity
@@ -124,18 +125,14 @@ class RecordDetailActivity :
 
     private fun deleteAccountBookData() {
         viewModel.deleteAccountBookData(accountBookId)
-        Toast.makeText(this, getString(R.string.record_delete_success), Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.record_delete_success), LENGTH_SHORT).show()
         finish()
     }
 
     private fun setDialogs() {
-        binding.tvDateBody.setOnClickListener {
-            showDatePicker()
-        }
+        binding.tvDateBody.setOnClickListener { showDatePicker() }
 
-        binding.tvCategoryBody.setOnClickListener {
-            showCategoryList()
-        }
+        binding.tvCategoryBody.setOnClickListener { showCategoryList() }
     }
 
     private fun showDatePicker() {
@@ -194,7 +191,7 @@ class RecordDetailActivity :
         }
 
         googleMap.setOnInfoWindowCloseListener {
-            viewModel.setSelectedPlace(null)
+            viewModel.setSelectedPlace(MyItem(MAX_LAT, MAX_LNG, "", ""))
         }
 
         viewModel.placeDetail.observe(this) { placeDetail -> moveCameraToPlace(placeDetail) }
@@ -225,6 +222,13 @@ class RecordDetailActivity :
 
     private fun selectLocation(marker: Marker) {
         marker.showInfoWindow()
-        viewModel.setSelectedPlace(marker)
+        viewModel.setSelectedPlace(
+            MyItem(
+                marker.position.latitude,
+                marker.position.longitude,
+                marker.title ?: "",
+                marker.snippet ?: ""
+            )
+        )
     }
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import com.example.gagyeboost.common.*
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.*
-import com.google.android.gms.maps.model.Marker
 import kotlinx.coroutines.launch
 
 class RecordDetailViewModel(private val repository: Repository, private val accountBookId: Int) :
@@ -90,17 +89,7 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
         _searchPlaceList.value = placeList
     }
 
-    fun setSelectedPlace(marker: Marker?) {
-        val location = if (marker != null) {
-            MyItem(
-                marker.position.latitude,
-                marker.position.longitude,
-                marker.title ?: "",
-                marker.snippet ?: ""
-            )
-        } else {
-            MyItem(MAX_LAT, MAX_LNG, "", "")
-        }
+    fun setSelectedPlace(location: MyItem) {
         _selectedLocation.value = location
     }
 }
