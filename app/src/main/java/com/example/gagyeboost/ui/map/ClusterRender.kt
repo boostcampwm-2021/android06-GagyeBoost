@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.map
 
 import android.content.Context
+import android.graphics.ColorSpace
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.LiveData
 import com.example.gagyeboost.R
@@ -15,6 +16,7 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.ui.IconGenerator
+
 
 class MyClusterRenderer(
     val context: Context,
@@ -37,17 +39,19 @@ class MyClusterRenderer(
     }
 
     override fun onBeforeClusterRendered(cluster: Cluster<MyItem?>, markerOptions: MarkerOptions) {
-
-        clusterIconGenerator.setContentPadding(50, 50, 50, 50)
-
-        var totalMoney = 0
-        cluster.items.forEach {
-            it?.snippet?.let { money ->
-                totalMoney += money.replace("원", "").toInt()
-            }
+        val icon = with(clusterIconGenerator) {
+            setContentPadding(30, 20, 30, 20)
+            setBackground(
+                ResourcesCompat.getDrawable(
+                    context.resources,
+                    if (isExpense.value == 0) R.drawable.background_white_radius_20dp_stroke_expense else R.drawable.background_white_radius_20dp_stroke_green,
+                    null
+                )
+            )
+            val totalMoney = cluster.items.sumOf { it?.snippet?.replace("원", "")?.toInt() ?: 0 }
+            makeIcon("${formatter.format(totalMoney)}원")
         }
 
-        val icon = clusterIconGenerator.makeIcon("${formatter.format(totalMoney)}원")
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon))
     }
 
@@ -57,8 +61,6 @@ class MyClusterRenderer(
             title = clusterItem.title
             snippet = clusterItem.snippet
         })
-
-
     }
 
     override fun onClusterUpdated(cluster: Cluster<MyItem>, marker: Marker) = Unit
