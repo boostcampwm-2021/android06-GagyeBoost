@@ -128,7 +128,8 @@ class RecordDetailActivity :
                 ).show()
             } else {
                 viewModel.updateAccountBookData()
-                Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT)
+                    .show()
                 finish()
             }
         }
@@ -278,6 +279,8 @@ class RecordDetailActivity :
         viewModel.selectedLocation.observe(this, { location ->
             binding.etAddress.text = location.title
         })
+
+        googleMap.setRegionKorea()
     }
 
     private fun addMarkerToPlace(latLng: LatLng) {

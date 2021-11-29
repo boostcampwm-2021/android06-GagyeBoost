@@ -215,6 +215,7 @@ class SelectPositionFragment :
         viewModel.selectedLocation.observe(viewLifecycleOwner, { location ->
             binding.btnSearch.text = location.title
         })
+        googleMap.setRegionKorea()
     }
 
     private fun selectLocation(marker: Marker) {
