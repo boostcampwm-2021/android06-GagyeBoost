@@ -90,4 +90,5 @@
     <string name="filter_has_been_reset">검색 조건이 초기화되었습니다.</string>
     <string name="category_edit">edit category</string>
     <string name="update_has_been_completed">수정이 완료되었습니다.</string>
+    <string name="cant_delete_category">데이터가 존재해서 삭제할 수 없습니다.</string>
 </resources>

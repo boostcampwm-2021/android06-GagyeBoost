@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.gagyeboost.R
@@ -46,8 +47,8 @@ class UpdateCategoryFragment :
                             } else {
                                 Toast.makeText(
                                     requireContext(),
-                                    "데이터가 존재해서 삭제할 수 없습니다.",
-                                    Toast.LENGTH_SHORT
+                                    getString(R.string.cant_delete_category),
+                                    LENGTH_SHORT
                                 ).show()
                             }
                         }
@@ -64,7 +65,11 @@ class UpdateCategoryFragment :
 
         binding.btnUpdateCategoryComplete.setOnClickListener {
             if (binding.etNameBody.text.isEmpty()) {
-                Toast.makeText(requireContext(), "이름을 반드시 입력해야 합니다", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.must_enter_category_name),
+                    LENGTH_SHORT
+                ).show()
             } else {
                 viewModel.updateCategory()
                 navController.popBackStack()
@@ -90,7 +95,7 @@ class UpdateCategoryFragment :
                     Toast.makeText(
                         requireContext(),
                         getString(R.string.category_delete_complete),
-                        Toast.LENGTH_SHORT
+                        LENGTH_SHORT
                     ).show()
                     navController.popBackStack()
                 }.setNegativeButton(getString(R.string.cancel)) { _, _ -> }
