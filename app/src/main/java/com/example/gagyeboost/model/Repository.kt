@@ -48,6 +48,7 @@ class Repository(
     suspend fun loadCategoryData(id: Int) = accountBookDao.loadCategoryData(id)
 
     suspend fun loadAccountBookData(id: Int) = accountBookDao.loadAccountBookData(id)
+    suspend fun exLoadAccountBookData(id: Int) = accountBookDao.exLoadAccountBookData(id)
 
     suspend fun deleteAccountBookData(id: Int) = accountBookDao.deleteAccountBookData(id)
 

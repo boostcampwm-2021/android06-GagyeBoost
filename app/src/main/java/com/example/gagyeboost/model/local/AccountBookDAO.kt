@@ -4,10 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.DateDetailItem
-import com.example.gagyeboost.model.data.DayTotalMoney
+import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -60,6 +57,9 @@ interface AccountBookDAO {
 
     @Query("SELECT * FROM account_book WHERE id=:id")
     suspend fun loadAccountBookData(id: Int): AccountBook
+
+    @Query("SELECT * FROM account_book, category WHERE account_book.id=:id")
+    suspend fun exLoadAccountBookData(id: Int): RecordDetailData
 
     @Insert
     suspend fun addAccountBookData(accountBook: AccountBook)

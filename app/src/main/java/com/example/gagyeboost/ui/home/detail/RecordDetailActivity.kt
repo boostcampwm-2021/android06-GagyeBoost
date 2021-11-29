@@ -32,7 +32,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import timber.log.Timber
 
 class RecordDetailActivity :
     BaseActivity<ActivityRecordDetailBinding>(R.layout.activity_record_detail),
@@ -80,13 +79,7 @@ class RecordDetailActivity :
             val latitude = viewModel.accountBookData.value?.latitude ?: DEFAULT_LAT
             val longitude = viewModel.accountBookData.value?.longitude ?: DEFAULT_LNG
             val address = viewModel.accountBookData.value?.address
-            //val latLng = LatLng(latitude, longitude)
             val placeDetail = PlaceDetail(
-                "",
-                "",
-                "",
-                "",
-                "",
                 "",
                 "",
                 "",
@@ -121,14 +114,12 @@ class RecordDetailActivity :
 
         binding.btnUpdate.setOnClickListener {
             if (binding.tvCategoryBody.text.isEmpty()) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.must_enter_category_name),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this, getString(R.string.must_enter_category_name), LENGTH_SHORT)
+                    .show()
             } else {
                 viewModel.updateAccountBookData()
-                Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT)
+                    .show()
                 finish()
             }
         }
@@ -162,10 +153,7 @@ class RecordDetailActivity :
 
     private fun deleteAccountBookData() {
         viewModel.deleteAccountBookData(accountBookId)
-        Toast.makeText(
-            this, getString(R.string.record_delete_success),
-            Toast.LENGTH_SHORT
-        ).show()
+        Toast.makeText(this, getString(R.string.record_delete_success), Toast.LENGTH_SHORT).show()
         finish()
     }
 
@@ -192,7 +180,6 @@ class RecordDetailActivity :
     }
 
     private fun showCategoryList() {
-        viewModel.loadCategoryList()
         val binding = BottomSheetCategoryBinding.inflate(layoutInflater)
         binding.rvCategory.adapter = categoryAdapter
         bottomSheetDialog = BottomSheetDialog(this)
@@ -205,12 +192,6 @@ class RecordDetailActivity :
     private fun setObserver() {
         viewModel.categoryList.observe(this) {
             categoryAdapter.submitList(it)
-        }
-
-        viewModel.dateDetailItemMoney.observe(this) {
-            viewModel.dateDetailItem.value?.let { item ->
-                item.money = it
-            }
         }
     }
 
@@ -278,28 +259,6 @@ class RecordDetailActivity :
         viewModel.selectedLocation.observe(this, { location ->
             binding.etAddress.text = location.title
         })
-    }
-
-    private fun addMarkerToPlace(latLng: LatLng) {
-        googleMap.clear()
-
-        if (latLng.latitude > 0 && latLng.longitude > 0) {
-            val markerOptions = MarkerOptions().apply { position(latLng) }
-
-            ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_default_marker,
-                null
-            )?.let {
-                val bitmap = BitmapUtils.createBitmapFromDrawable(it)
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-            }
-
-            googleMap.addMarker(markerOptions)
-            googleMap.moveCamera(newLatLngZoom(latLng, 15f))
-        } else {
-            googleMap.moveCamera(newLatLngZoom(gpsUtils.getUserLatLng(), 15f))
-        }
     }
 
     private fun selectLocation(marker: Marker) {
