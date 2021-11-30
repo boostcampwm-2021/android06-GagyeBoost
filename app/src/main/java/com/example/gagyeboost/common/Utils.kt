@@ -3,7 +3,9 @@ package com.example.gagyeboost.common
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.TextView
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,3 +44,13 @@ fun isValidPosition(lat: Double?, lng: Double?) =
 
 fun isValidPosition(latLng: LatLng?) =
     latLng != null && isValidPosition(latLng.latitude, latLng.longitude)
+
+fun GoogleMap.setRegionKorea() {
+    setMinZoomPreference(MIN_ZOOM_LEVEL_KOREA)
+    setLatLngBoundsForCameraTarget(
+        LatLngBounds(
+            LatLng(MIN_LAT_KOREA, MIN_LNG_KOREA),
+            LatLng(MAX_LAT_KOREA, MAX_LNG_KOREA)
+        )
+    )
+}

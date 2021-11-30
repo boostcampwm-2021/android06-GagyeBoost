@@ -66,10 +66,10 @@ class RecordDetailActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initMap()
-        initView()
-        setListeners()
-        setObserver()
-        viewModel.resetLocation()
+//        initView()
+//        setListeners()
+//        setObserver()
+//        viewModel.resetLocation()
     }
 
     private fun initView() {
@@ -128,7 +128,8 @@ class RecordDetailActivity :
                 ).show()
             } else {
                 viewModel.updateAccountBookData()
-                Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT)
+                    .show()
                 finish()
             }
         }
@@ -238,7 +239,10 @@ class RecordDetailActivity :
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-
+        initView()
+        setListeners()
+        setObserver()
+        viewModel.resetLocation()
         googleMap.setOnMarkerClickListener {
             selectLocation(it)
             true
@@ -278,6 +282,8 @@ class RecordDetailActivity :
         viewModel.selectedLocation.observe(this, { location ->
             binding.etAddress.text = location.title
         })
+
+        googleMap.setRegionKorea()
     }
 
     private fun addMarkerToPlace(latLng: LatLng) {
