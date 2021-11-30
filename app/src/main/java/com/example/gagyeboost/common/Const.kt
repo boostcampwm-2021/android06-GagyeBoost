@@ -38,7 +38,14 @@ const val DEFAULT_START_YEAR = 1970
 const val DEFAULT_END_YEAR = 2500
 
 // LAT LNG
-const val MAX_LAT = 89.9
-const val MIN_LAT = -89.9
-const val MAX_LNG = 179.9
-const val MIN_LNG = -179.9
+const val MAX_LAT = 90.0
+const val MIN_LAT = -90.0
+const val MAX_LNG = 180.0
+const val MIN_LNG = -180.0
+const val MAX_LAT_KOREA = 43.0
+const val MIN_LAT_KOREA = 33.0
+const val MAX_LNG_KOREA = 132.0
+const val MIN_LNG_KOREA = 124.0
+
+// Zoom Level
+const val MIN_ZOOM_LEVEL_KOREA = 5.8f

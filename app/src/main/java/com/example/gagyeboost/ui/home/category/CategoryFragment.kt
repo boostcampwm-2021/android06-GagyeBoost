@@ -16,11 +16,12 @@ import com.example.gagyeboost.databinding.FragmentCategoryBinding
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment_category) {
+
     private lateinit var categoryAdapter: CategoryAdapter
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var navController: NavController
     private lateinit var inputMethodManager: InputMethodManager
 
@@ -65,6 +66,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         }
 
         viewModel.loadCategoryList()
+        viewModel.resetSelectedCategory()
     }
 
     private fun categoryOnClick(category: Category): Boolean {
@@ -97,7 +99,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
         binding.root.setOnClickListener {
             inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
-       }
+        }
     }
 
     private fun setObservers() {

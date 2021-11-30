@@ -23,6 +23,7 @@ class NumberPickerDialog(context: Context) : AlertDialog(context) {
         )
         setContentView(binding.root)
         setNumberPicker()
+        clickListener()
     }
 
     private fun setNumberPicker() {
@@ -45,5 +46,9 @@ class NumberPickerDialog(context: Context) : AlertDialog(context) {
             maxValue = 12
             value = currentMonth
         }
+    }
+
+    private fun clickListener() {
+        binding.tvCancel.setOnClickListener { dismiss() }
     }
 }

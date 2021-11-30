@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import com.example.gagyeboost.R
@@ -31,6 +32,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import timber.log.Timber
 
 class RecordDetailActivity :
     BaseActivity<ActivityRecordDetailBinding>(R.layout.activity_record_detail),
@@ -64,10 +66,10 @@ class RecordDetailActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initMap()
-        initView()
-        setListeners()
-        setObserver()
-        viewModel.resetLocation()
+//        initView()
+//        setListeners()
+//        setObserver()
+//        viewModel.resetLocation()
     }
 
     private fun initView() {
@@ -126,6 +128,8 @@ class RecordDetailActivity :
                 ).show()
             } else {
                 viewModel.updateAccountBookData()
+                Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT)
+                    .show()
                 finish()
             }
         }
@@ -235,7 +239,10 @@ class RecordDetailActivity :
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-
+        initView()
+        setListeners()
+        setObserver()
+        viewModel.resetLocation()
         googleMap.setOnMarkerClickListener {
             selectLocation(it)
             true
@@ -247,15 +254,24 @@ class RecordDetailActivity :
 
         viewModel.selectedLocationList.observe(this, { placeList ->
             with(googleMap) {
+                val icon = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_default_marker,
+                    null
+                )?.let {
+                    BitmapUtils.createBitmapFromDrawable(it)
+                }
+
                 clear()
                 placeList.forEachIndexed { idx, placeDetail ->
                     addMarker(
-                        MarkerOptions().position(
-                            LatLng(
-                                placeDetail.lat.toDouble(),
-                                placeDetail.lng.toDouble()
-                            )
-                        ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                        MarkerOptions().icon(icon?.let { BitmapDescriptorFactory.fromBitmap(it) })
+                            .position(
+                                LatLng(
+                                    placeDetail.lat.toDouble(),
+                                    placeDetail.lng.toDouble()
+                                )
+                            ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
                     )?.let {
                         if (idx == 0) selectLocation(it)
                     }
@@ -266,6 +282,8 @@ class RecordDetailActivity :
         viewModel.selectedLocation.observe(this, { location ->
             binding.etAddress.text = location.title
         })
+
+        googleMap.setRegionKorea()
     }
 
     private fun addMarkerToPlace(latLng: LatLng) {

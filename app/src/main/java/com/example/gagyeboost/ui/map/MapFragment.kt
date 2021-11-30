@@ -71,7 +71,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             moveCameraToUser()
         }
         binding.btnFilterRefresh.setOnClickListener {
-            viewModel.setInitData()
+            viewModel.refreshData()
         }
     }
 
@@ -174,6 +174,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                 )
             }
         }
+        googleMap.setRegionKorea()
     }
 
     private fun initObserver() {

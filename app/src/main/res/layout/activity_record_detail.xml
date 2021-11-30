@@ -13,7 +13,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_detail"
@@ -132,7 +133,7 @@
                 android:background="@android:color/transparent"
                 android:gravity="end"
                 android:inputType="number"
-                android:maxLength="9"
+                android:maxLength="11"
                 android:maxLines="1"
                 app:intToString="@={viewModel.dateDetailItemMoney}"
                 app:layout_constraintBottom_toBottomOf="@id/tv_money_title"
@@ -213,9 +214,9 @@
                 android:id="@+id/tv_address_body"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:autoSizeMaxTextSize="18sp"
-                android:autoSizeMinTextSize="5sp"
-                android:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="18sp"
+                app:autoSizeMinTextSize="5sp"
+                app:autoSizeTextType="uniform"
                 android:gravity="end"
                 android:maxLines="1"
                 android:textColor="@color/black"
@@ -259,7 +260,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
                 android:background="@drawable/background_default_btn"
-                android:text="@string/update"
+                android:text="@string/update_complete"
                 android:textSize="18sp"
                 android:theme="@style/GradationButton"
                 app:layout_constraintBottom_toBottomOf="parent"

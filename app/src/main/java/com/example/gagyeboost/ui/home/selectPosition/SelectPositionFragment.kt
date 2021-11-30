@@ -26,14 +26,13 @@ import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class SelectPositionFragment :
     BaseFragment<FragmentSelectPositionBinding>(R.layout.fragment_select_position),
     OnMapReadyCallback {
 
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var navController: NavController
     private lateinit var googleMap: GoogleMap
     private val gpsUtils: GPSUtils by lazy { GPSUtils(requireContext()) }
@@ -80,20 +79,16 @@ class SelectPositionFragment :
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         binding.viewModel = viewModel
-
-        init()
         initMap()
-        viewModel.resetLocation()
     }
 
     private fun init() {
         binding.btnComplete.setOnClickListener {
             viewModel.selectedLocation.value?.let {
                 if (isValidPosition(it.position)) {
-                    viewModel.addAccountBookData()
-                    navController.popBackStack(R.id.homeFragment, false)
-                    viewModel.resetAllData()
-
+                    viewModel.addAccountBookData {
+                        navController.popBackStack(R.id.homeFragment, false)
+                    }
                 } else {
                     showNoPlaceDialog()
                 }
@@ -149,9 +144,9 @@ class SelectPositionFragment :
             .setTitle(getString(R.string.select_place))
             .setMessage(getString(R.string.select_place_dialog_message))
             .setPositiveButton(getString(R.string.confirm)) { _, _ ->
-                viewModel.addAccountBookData()
-                navController.popBackStack(R.id.homeFragment, false)
-                viewModel.resetAllData()
+                viewModel.addAccountBookData {
+                    navController.popBackStack(R.id.homeFragment, false)
+                }
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
 
@@ -176,6 +171,8 @@ class SelectPositionFragment :
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        init()
+        viewModel.resetLocation()
         requestLocation.launch(permissions)
 
         googleMap.setOnMarkerClickListener {
@@ -184,20 +181,29 @@ class SelectPositionFragment :
         }
 
         googleMap.setOnInfoWindowCloseListener {
-            viewModel.setSelectedPlace(MyItem(-1.0, -1.0, "", ""))
+            viewModel.setSelectedPlace(MyItem(MAX_LAT, MAX_LNG, "", ""))
         }
 
         viewModel.selectedLocationList.observe(viewLifecycleOwner, { placeList ->
             with(googleMap) {
+                val icon = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_default_marker,
+                    null
+                )?.let {
+                    BitmapUtils.createBitmapFromDrawable(it)
+                }
+
                 clear()
                 placeList.forEachIndexed { idx, placeDetail ->
                     addMarker(
-                        MarkerOptions().position(
-                            LatLng(
-                                placeDetail.lat.toDouble(),
-                                placeDetail.lng.toDouble()
-                            )
-                        ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                        MarkerOptions().icon(icon?.let { BitmapDescriptorFactory.fromBitmap(it) })
+                            .position(
+                                LatLng(
+                                    placeDetail.lat.toDouble(),
+                                    placeDetail.lng.toDouble()
+                                )
+                            ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
                     )?.let {
                         if (idx == 0) selectLocation(it)
                     }
@@ -208,6 +214,7 @@ class SelectPositionFragment :
         viewModel.selectedLocation.observe(viewLifecycleOwner, { location ->
             binding.btnSearch.text = location.title
         })
+        googleMap.setRegionKorea()
     }
 
     private fun selectLocation(marker: Marker) {
