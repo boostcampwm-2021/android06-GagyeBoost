@@ -15,7 +15,7 @@
 
         <variable
             name="listener"
-            type="Function1&lt;Integer, Boolean>" />
+            type="Function1&lt;Integer, Unit>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

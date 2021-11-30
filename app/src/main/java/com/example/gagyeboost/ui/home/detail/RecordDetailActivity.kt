@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import com.example.gagyeboost.R
@@ -31,6 +32,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import timber.log.Timber
 
 class RecordDetailActivity :
     BaseActivity<ActivityRecordDetailBinding>(R.layout.activity_record_detail),
@@ -97,7 +99,7 @@ class RecordDetailActivity :
         }
 
         categoryAdapter =
-            CategoryAdapter({ category -> categoryOnClickListener(category) }, { true })
+            CategoryAdapter({ category -> categoryOnClickListener(category) }, { true }, viewModel)
     }
 
     private fun setListeners() {
@@ -126,6 +128,7 @@ class RecordDetailActivity :
                 ).show()
             } else {
                 viewModel.updateAccountBookData()
+                Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT).show()
                 finish()
             }
         }
@@ -247,15 +250,24 @@ class RecordDetailActivity :
 
         viewModel.selectedLocationList.observe(this, { placeList ->
             with(googleMap) {
+                val icon = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_default_marker,
+                    null
+                )?.let {
+                    BitmapUtils.createBitmapFromDrawable(it)
+                }
+
                 clear()
                 placeList.forEachIndexed { idx, placeDetail ->
                     addMarker(
-                        MarkerOptions().position(
-                            LatLng(
-                                placeDetail.lat.toDouble(),
-                                placeDetail.lng.toDouble()
-                            )
-                        ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                        MarkerOptions().icon(icon?.let { BitmapDescriptorFactory.fromBitmap(it) })
+                            .position(
+                                LatLng(
+                                    placeDetail.lat.toDouble(),
+                                    placeDetail.lng.toDouble()
+                                )
+                            ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
                     )?.let {
                         if (idx == 0) selectLocation(it)
                     }

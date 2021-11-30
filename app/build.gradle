@@ -32,7 +32,7 @@ android {
         minSdk 21
         targetSdk 30
         versionCode 1
-        versionName "1.0.3"
+        versionName "1.0.5"
 
         manifestPlaceholders = [googleMapKey: googleMapKey]
         buildConfigField "String", "google_map_key", properties["google_map_key"]?:"null"
@@ -73,7 +73,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     // Koin
-    implementation "io.insert-koin:koin-android:$koin_version"
+    implementation "io.insert-koin:koin-androidx-navigation:$koin_version"
 
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"

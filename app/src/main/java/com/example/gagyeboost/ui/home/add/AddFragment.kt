@@ -14,11 +14,11 @@ import com.example.gagyeboost.common.setEditTextSize
 import com.example.gagyeboost.databinding.FragmentAddBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var inputMethodManager: InputMethodManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,7 +58,6 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
         binding.btnClose.setOnClickListener {
             findNavController().popBackStack()
-            viewModel.resetAllData()
         }
 
         binding.etWon.doAfterTextChanged {

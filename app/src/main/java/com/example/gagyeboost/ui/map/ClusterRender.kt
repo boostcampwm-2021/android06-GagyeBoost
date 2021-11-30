@@ -16,7 +16,6 @@ import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.ui.IconGenerator
 
-
 class MyClusterRenderer(
     val context: Context,
     map: GoogleMap?,
@@ -53,9 +52,14 @@ class MyClusterRenderer(
     }
 
     override fun onClusterItemRendered(clusterItem: MyItem, marker: Marker) {
+
         super.onClusterItemRendered(clusterItem, marker.apply {
             title = clusterItem.title
             snippet = clusterItem.snippet
         })
+
+
     }
+
+    override fun onClusterUpdated(cluster: Cluster<MyItem>, marker: Marker) = Unit
 }

@@ -26,14 +26,13 @@ import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class SelectPositionFragment :
     BaseFragment<FragmentSelectPositionBinding>(R.layout.fragment_select_position),
     OnMapReadyCallback {
 
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var navController: NavController
     private lateinit var googleMap: GoogleMap
     private val gpsUtils: GPSUtils by lazy { GPSUtils(requireContext()) }
@@ -60,6 +59,7 @@ class SelectPositionFragment :
         }
     }
     private val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
+    private var currPositionMarker: Marker? = null
     private val requestLocation = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) {
@@ -90,10 +90,9 @@ class SelectPositionFragment :
         binding.btnComplete.setOnClickListener {
             viewModel.selectedLocation.value?.let {
                 if (isValidPosition(it.position)) {
-                    viewModel.addAccountBookData()
-                    navController.popBackStack(R.id.homeFragment, false)
-                    viewModel.resetAllData()
-
+                    viewModel.addAccountBookData {
+                        navController.popBackStack(R.id.homeFragment, false)
+                    }
                 } else {
                     showNoPlaceDialog()
                 }
@@ -133,6 +132,10 @@ class SelectPositionFragment :
             .tilt(0f)
             .build()
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        currPositionMarker?.let {
+            (currPositionMarker as Marker).remove()
+        }
+
 
         val marker = MarkerOptions()
 
@@ -140,7 +143,7 @@ class SelectPositionFragment :
             val bitmap = BitmapUtils.createBitmapFromDrawable(it)
             marker.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
             marker.position(userLocation)
-            googleMap.addMarker(marker)
+            currPositionMarker = googleMap.addMarker(marker)
         }
     }
 
@@ -149,9 +152,9 @@ class SelectPositionFragment :
             .setTitle(getString(R.string.select_place))
             .setMessage(getString(R.string.select_place_dialog_message))
             .setPositiveButton(getString(R.string.confirm)) { _, _ ->
-                viewModel.addAccountBookData()
-                navController.popBackStack(R.id.homeFragment, false)
-                viewModel.resetAllData()
+                viewModel.addAccountBookData {
+                    navController.popBackStack(R.id.homeFragment, false)
+                }
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
 
@@ -189,15 +192,24 @@ class SelectPositionFragment :
 
         viewModel.selectedLocationList.observe(viewLifecycleOwner, { placeList ->
             with(googleMap) {
+                val icon = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_default_marker,
+                    null
+                )?.let {
+                    BitmapUtils.createBitmapFromDrawable(it)
+                }
+
                 clear()
                 placeList.forEachIndexed { idx, placeDetail ->
                     addMarker(
-                        MarkerOptions().position(
-                            LatLng(
-                                placeDetail.lat.toDouble(),
-                                placeDetail.lng.toDouble()
-                            )
-                        ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                        MarkerOptions().icon(icon?.let { BitmapDescriptorFactory.fromBitmap(it) })
+                            .position(
+                                LatLng(
+                                    placeDetail.lat.toDouble(),
+                                    placeDetail.lng.toDouble()
+                                )
+                            ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
                     )?.let {
                         if (idx == 0) selectLocation(it)
                     }

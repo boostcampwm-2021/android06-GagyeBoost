@@ -16,11 +16,12 @@ import com.example.gagyeboost.databinding.FragmentCategoryBinding
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment_category) {
+
     private lateinit var categoryAdapter: CategoryAdapter
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var navController: NavController
     private lateinit var inputMethodManager: InputMethodManager
 
@@ -37,7 +38,9 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         categoryAdapter = CategoryAdapter(
             { category -> categoryOnClick(category) },
-            { category -> categoryLongClick(category) })
+            { category -> categoryLongClick(category) },
+            viewModel
+        )
 
         binding.viewModel = viewModel
         binding.rvCategory.adapter = categoryAdapter
@@ -63,6 +66,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
         }
 
         viewModel.loadCategoryList()
+        viewModel.resetSelectedCategory()
     }
 
     private fun categoryOnClick(category: Category): Boolean {
@@ -87,9 +91,10 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             viewModel.resetCategoryFragmentData()
         }
 
-        binding.btnClose.setOnClickListener {
-            findNavController().popBackStack(R.id.homeFragment, false)
-            viewModel.resetAllData()
+        binding.btnEdit.setOnClickListener {
+            viewModel.isEdit.value?.let {
+                viewModel.doEdit(!it)
+            }
         }
 
         binding.root.setOnClickListener {
@@ -104,6 +109,10 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
             categoryList.add(Category(-1, getString(R.string.add), "➕", viewModel.categoryType))
             categoryAdapter.submitList(categoryList)
         }
+
+        viewModel.isEdit.observe(viewLifecycleOwner) {
+            categoryAdapter.notifyItemRangeChanged(0, categoryAdapter.itemCount)
+        }
     }
 
     override fun onResume() {
@@ -117,5 +126,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     override fun onPause() {
         super.onPause()
         inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
+        viewModel.doEdit(false)
     }
 }
