@@ -208,7 +208,7 @@ class SelectPositionFragment :
                                     placeDetail.lat.toDouble(),
                                     placeDetail.lng.toDouble()
                                 )
-                            ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                            ).title(if (placeDetail.placeName.isEmpty()) placeDetail.roadAddressName else placeDetail.placeName)
                     )?.let {
                         if (idx == 0) selectLocation(it)
                     }
