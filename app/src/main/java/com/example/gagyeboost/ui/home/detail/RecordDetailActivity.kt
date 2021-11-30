@@ -46,7 +46,8 @@ class RecordDetailActivity :
     private val moveCameraToPlace: (PlaceDetail) -> Unit = {
         val latLng = LatLng(it.lat.toDouble(), it.lng.toDouble())
         googleMap.moveCamera(newLatLngZoom(latLng.run {
-            if (isValidPosition(this)) this else gpsUtils.getUserLatLng()
+            if (isValidPosition(this)) this else
+                gpsUtils.getUserLatLng()
         }, 15f))
 
     }
@@ -96,10 +97,6 @@ class RecordDetailActivity :
             viewModel.updateAccountBookData()
             Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT).show()
             finish()
-        }
-
-        binding.etAddress.setOnClickListener {
-            goToAddressResultActivity.launch(Intent(this, AddressResultActivity::class.java))
         }
 
         binding.constraintDetail.setOnClickListener {
@@ -184,6 +181,11 @@ class RecordDetailActivity :
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        googleMap.setRegionKorea()
+
+        binding.etAddress.setOnClickListener {
+            goToAddressResultActivity.launch(Intent(this, AddressResultActivity::class.java))
+        }
 
         googleMap.setOnMarkerClickListener {
             selectLocation(it)

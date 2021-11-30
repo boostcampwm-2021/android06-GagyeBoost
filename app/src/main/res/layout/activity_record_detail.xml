@@ -258,12 +258,13 @@
 
             <TextView
                 android:id="@+id/btn_update"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
                 android:background="@drawable/background_default_btn"
                 android:text="@string/update_complete"
                 android:textSize="18sp"
+                android:maxLines="1"
                 android:theme="@style/GradationButton"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"

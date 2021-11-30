@@ -59,6 +59,7 @@ class SelectPositionFragment :
         }
     }
     private val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
+    private var currPositionMarker: Marker? = null
     private val requestLocation = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) {
@@ -79,10 +80,7 @@ class SelectPositionFragment :
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         binding.viewModel = viewModel
-
-        init()
         initMap()
-        viewModel.resetLocation()
     }
 
     private fun init() {
@@ -131,6 +129,10 @@ class SelectPositionFragment :
             .tilt(0f)
             .build()
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        currPositionMarker?.let {
+            (currPositionMarker as Marker).remove()
+        }
+
 
         val marker = MarkerOptions()
 
@@ -138,7 +140,7 @@ class SelectPositionFragment :
             val bitmap = BitmapUtils.createBitmapFromDrawable(it)
             marker.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
             marker.position(userLocation)
-            googleMap.addMarker(marker)
+            currPositionMarker = googleMap.addMarker(marker)
         }
     }
 
@@ -174,6 +176,8 @@ class SelectPositionFragment :
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        init()
+        viewModel.resetLocation()
         requestLocation.launch(permissions)
 
         googleMap.setOnMarkerClickListener {
@@ -182,7 +186,7 @@ class SelectPositionFragment :
         }
 
         googleMap.setOnInfoWindowCloseListener {
-            viewModel.setSelectedPlace(MyItem(-1.0, -1.0, "", ""))
+            viewModel.setSelectedPlace(MyItem(MAX_LAT, MAX_LNG, "", ""))
         }
 
         viewModel.selectedLocationList.observe(viewLifecycleOwner, { placeList ->
@@ -215,6 +219,7 @@ class SelectPositionFragment :
         viewModel.selectedLocation.observe(viewLifecycleOwner, { location ->
             binding.btnSearch.text = location.title
         })
+        googleMap.setRegionKorea()
     }
 
     private fun selectLocation(marker: Marker) {
