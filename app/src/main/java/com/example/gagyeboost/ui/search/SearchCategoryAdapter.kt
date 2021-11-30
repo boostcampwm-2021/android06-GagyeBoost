@@ -34,7 +34,12 @@ class SearchCategoryAdapter(
                 }
             }
         }
+        viewModel.categoryIDList.value = categorySet.toMutableList()
         notifyDataSetChanged()
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -61,8 +66,8 @@ class SearchCategoryAdapter(
                     } else {
                         categorySet.remove(it.id)
                     }
-                    viewModel.categoryIDList.value = categorySet.toMutableList()
                 }
+                viewModel.categoryIDList.value = categorySet.toMutableList()
             }
         }
 

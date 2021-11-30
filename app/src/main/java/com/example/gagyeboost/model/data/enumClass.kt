@@ -6,11 +6,6 @@ enum class DateColor(val color: String) {
     Weekday("#676d6e")
 }
 
-enum class DateAlpha(val alpha: Float) {
-    Percent30(0.3f),
-    Percent100(1f)
-}
-
 enum class InitMoneyFilter(val money: Int) {
     Start(0),
     End(300000)

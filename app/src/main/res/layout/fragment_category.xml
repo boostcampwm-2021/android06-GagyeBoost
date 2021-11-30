@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
-            android:textColor="@color/gray3"
+            android:textColor="@{viewModel.categoryType == 0 ? @color/expense : @color/income}"
             android:textSize="@dimen/app_bar_title_text_size"
             app:intToWon="@{viewModel.money}"
             app:layout_constraintEnd_toStartOf="@id/btn_edit"

@@ -1,5 +1,15 @@
 package com.example.gagyeboost.model.data
 
+import androidx.lifecycle.MutableLiveData
+
+data class DayTotalMoney(val expenseMoney: Int?, val incomeMoney: Int?)
+
+data class MonthTotalMoney(
+    val totalExpense: MutableLiveData<Int>,
+    val totalIncome: MutableLiveData<Int>,
+    val totalBalance: MutableLiveData<Int>
+)
+
 data class DateItem(
     val expense: Int?,
     val income: Int?,

@@ -9,12 +9,8 @@ import kotlinx.coroutines.launch
 class RecordDetailViewModel(private val repository: Repository, private val accountBookId: Int) :
     ViewModel() {
 
-    private val _accountBookData = MutableLiveData<AccountBook>()
-    val accountBookData: LiveData<AccountBook> = _accountBookData
-
-    val dateDetailItem = MutableLiveData<DateDetailItem>()
-
-    val dateDetailItemMoney = MutableLiveData<Int>()
+    private val _accountBookData = MutableLiveData<RecordDetailData>()
+    val accountBookData: LiveData<RecordDetailData> = _accountBookData
 
     private val _date = MutableLiveData<String>()
     val date: LiveData<String> = _date
@@ -25,37 +21,33 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category> = _category
 
-    //var placeDetail: PlaceDetail? = null
     private val _selectedLocation = MutableLiveData(MyItem(MAX_LAT, MAX_LNG, "", ""))
     val selectedLocation: LiveData<MyItem> = _selectedLocation
 
-    private val _selectedLocationList = MutableLiveData<List<PlaceDetail>>()
-    val selectedLocationList: LiveData<List<PlaceDetail>> = _selectedLocationList
+    private val _searchPlaceList = MutableLiveData<List<PlaceDetail>>()
+    val searchPlaceList: LiveData<List<PlaceDetail>> = _searchPlaceList
 
-    val searchAddress = MutableLiveData<String>()
+    val money = MutableLiveData<Int>()
+    val content = MutableLiveData<String>()
+    val placeDetail = Transformations.map(_accountBookData) {
+        val place =
+            PlaceDetail("", "", "", it.address, it.latitude.toString(), it.longitude.toString())
+        setPlaceList(listOf(place))
+        place
+    }
 
-    fun setAccountBookData(callback: () -> Unit) {
+    init {
         viewModelScope.launch {
-            val accountBookData = repository.loadAccountBookData(accountBookId)
-            val categoryId = accountBookData.category
-            val category = repository.loadCategoryData(categoryId)
-            _category.value = category
-            _accountBookData.value = accountBookData
+            val data = repository.loadRecordDetailData(accountBookId)
+            _accountBookData.value = data
+            _category.value =
+                Category(data.categoryID, data.categoryName, data.emoji, data.moneyType.toByte())
+            setDate(data.year, data.month, data.day)
+            content.value = data.content
+            money.value = data.money
 
-            dateDetailItem.value = DateDetailItem(
-                accountBookId,
-                category.emoji,
-                category.categoryName,
-                accountBookData.content,
-                accountBookData.money,
-                accountBookData.moneyType == INCOME,
-            )
-
-            dateDetailItemMoney.value = accountBookData.money
-
-            setDate(accountBookData.year, accountBookData.month, accountBookData.day)
-
-            callback()
+            val categoryList = repository.loadCategoryList(data.moneyType.toByte())
+            _categoryList.value = categoryList
         }
     }
 
@@ -67,26 +59,21 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
 
     fun updateAccountBookData() {
         viewModelScope.launch {
-            with(dateDetailItem.value) {
-                if (this == null) return@launch
-
-                val strDate = _date.value ?: "2021.07.19"
-                val updatedAccountBookData = AccountBook(
-                    accountBookId,
-                    if (moneyType) INCOME else EXPENSE,
-                    money,
-                    _category.value?.id ?: 0,
-                    selectedLocation.value?.position?.latitude ?: DEFAULT_LAT,
-                    selectedLocation.value?.position?.longitude ?: DEFAULT_LNG,
-                    selectedLocation.value?.title ?: "",
-                    dateDetailItem.value?.content ?: "",
-                    strDate.split(".")[0].toInt(),
-                    strDate.split(".")[1].toInt(),
-                    strDate.split(".")[2].toInt()
-                )
-
-                repository.updateAccountBookData(updatedAccountBookData)
-            }
+            val strDate = (_date.value ?: "2021.07.19").split(".").map { it.toInt() }
+            val updatedAccountBookData = AccountBook(
+                accountBookId,
+                _accountBookData.value?.moneyType?.toByte() ?: EXPENSE,
+                money.value ?: 0,
+                _category.value?.id ?: 0,
+                _selectedLocation.value?.position?.latitude ?: DEFAULT_LAT,
+                _selectedLocation.value?.position?.longitude ?: DEFAULT_LNG,
+                _selectedLocation.value?.title ?: "",
+                content.value ?: "",
+                strDate[0],
+                strDate[1],
+                strDate[2]
+            )
+            repository.updateAccountBookData(updatedAccountBookData)
         }
     }
 
@@ -94,29 +81,15 @@ class RecordDetailViewModel(private val repository: Repository, private val acco
         _date.value = "$year.$month.$day"
     }
 
-    fun loadCategoryList() {
-        val categoryType = if (dateDetailItem.value?.moneyType == true) INCOME else EXPENSE
-
-        viewModelScope.launch {
-            _categoryList.value = repository.loadCategoryList(categoryType)
-        }
-    }
-
     fun setCategory(category: Category) {
         _category.value = category
     }
 
     fun setPlaceList(placeList: List<PlaceDetail>) {
-        _selectedLocationList.value = placeList
+        _searchPlaceList.value = placeList
     }
 
     fun setSelectedPlace(location: MyItem) {
         _selectedLocation.value = location
-    }
-
-    fun resetLocation() {
-        _selectedLocationList.value = listOf()
-        _selectedLocation.value = MyItem(MAX_LAT, MAX_LAT, "", "")
-        searchAddress.value = ""
     }
 }
