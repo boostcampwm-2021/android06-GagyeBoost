@@ -59,6 +59,7 @@ class SelectPositionFragment :
         }
     }
     private val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
+    private var currPositionMarker: Marker? = null
     private val requestLocation = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) {
@@ -128,6 +129,10 @@ class SelectPositionFragment :
             .tilt(0f)
             .build()
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        currPositionMarker?.let {
+            (currPositionMarker as Marker).remove()
+        }
+
 
         val marker = MarkerOptions()
 
@@ -135,7 +140,7 @@ class SelectPositionFragment :
             val bitmap = BitmapUtils.createBitmapFromDrawable(it)
             marker.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
             marker.position(userLocation)
-            googleMap.addMarker(marker)
+            currPositionMarker = googleMap.addMarker(marker)
         }
     }
 
