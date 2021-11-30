@@ -38,6 +38,13 @@ class AddressPagingSource(
                 if (body.meta.isEnd && body.documents.isEmpty()) {
                     callback(true)
                     LoadResult.Error(Exception())
+                } else if (body.meta.isEnd) {
+                    callback(false)
+                    LoadResult.Page(
+                        data = body.documents,
+                        prevKey = if (next == STARTING_PAGE_INDEX) null else next - 1,
+                        nextKey = null
+                    )
                 } else {
                     callback(false)
                     LoadResult.Page(

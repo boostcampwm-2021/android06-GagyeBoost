@@ -14,6 +14,7 @@ import com.example.gagyeboost.model.remote.KakaoAPIClient
 import com.example.gagyeboost.ui.home.selectPosition.AddressPagingSource
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 class Repository(
     private val accountBookDao: AccountBookDAO,
@@ -28,19 +29,25 @@ class Repository(
         accountBookDao.addCategoryData(category)
     }
 
-    suspend fun loadMonthExpense(year: Int, month: Int) =
-        accountBookDao.loadMonthExpense(year, month)
-
     suspend fun loadCategoryList(moneyType: Byte) = accountBookDao.loadCategoryAllData(moneyType)
+
+    fun flowLoadCategoryList(moneyType: Byte) =
+        accountBookDao.flowLoadCategoryAllData(moneyType).distinctUntilChanged()
 
     suspend fun updateCategoryData(category: Category) = accountBookDao.updateCategoryData(category)
 
     suspend fun loadDayData(year: Int, month: Int, day: Int) =
         accountBookDao.loadDayData(year, month, day)
 
+    suspend fun loadDayTotalMoney(year: Int, month: Int, day: Int) =
+        accountBookDao.loadDayTotalMoney(year, month, day)
+
+    fun flowLoadDayData(year: Int, month: Int, day: Int) =
+        accountBookDao.flowLoadDayData(year, month, day).distinctUntilChanged()
+
     suspend fun loadCategoryData(id: Int) = accountBookDao.loadCategoryData(id)
 
-    suspend fun loadAccountBookData(id: Int) = accountBookDao.loadAccountBookData(id)
+    suspend fun loadRecordDetailData(id: Int) = accountBookDao.loadRecordDetailData(id)
 
     suspend fun deleteAccountBookData(id: Int) = accountBookDao.deleteAccountBookData(id)
 

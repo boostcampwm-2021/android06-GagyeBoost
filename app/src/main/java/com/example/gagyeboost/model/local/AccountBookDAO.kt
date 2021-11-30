@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
+import com.example.gagyeboost.model.data.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountBookDAO {
@@ -13,16 +13,22 @@ interface AccountBookDAO {
     @Query("SELECT * FROM account_book WHERE year=:year AND month=:month AND day=:day")
     suspend fun loadDayData(year: Int, month: Int, day: Int): List<AccountBook>
 
-    //선택한 달의 수입 총 합
-    @Query("SELECT SUM(money) FROM account_book WHERE year=:year AND month=:month AND money_type=1")
-    suspend fun loadMonthIncome(year: Int, month: Int): Int?
+    @Query("SELECT SUM(CASE WHEN money_type=0 THEN money else null END) as expenseMoney, SUM(CASE WHEN money_type=1 THEN money else null END) as incomeMoney FROM account_book WHERE year=:year AND month=:month AND day=:day")
+    suspend fun loadDayTotalMoney(year: Int, month: Int, day: Int): DayTotalMoney?
 
-    //선택한 달의 지출 총 합
-    @Query("SELECT SUM(money) FROM account_book WHERE year=:year AND month=:month AND money_type=0")
-    suspend fun loadMonthExpense(year: Int, month: Int): Int?
+    @Query(
+        """SELECT account_book.id, category.emoji, category.category_name, account_book.content, account_book.money, account_book.money_type 
+        FROM account_book, category
+        WHERE account_book.category = category.id AND
+        year=:year AND month=:month AND day=:day"""
+    )
+    fun flowLoadDayData(year: Int, month: Int, day: Int): Flow<List<DateDetailItem>>
 
     @Query("SELECT * FROM category WHERE money_type=:moneyType")
     suspend fun loadCategoryAllData(moneyType: Byte): List<Category>
+
+    @Query("SELECT * FROM category WHERE money_type=:moneyType")
+    fun flowLoadCategoryAllData(moneyType: Byte): Flow<List<Category>>
 
     @Query("SELECT id FROM category")
     suspend fun loadAllCategoryID(): List<Int>
@@ -49,8 +55,8 @@ interface AccountBookDAO {
     @Query("SELECT * FROM category WHERE id=:id")
     suspend fun loadCategoryData(id: Int): Category
 
-    @Query("SELECT * FROM account_book WHERE id=:id")
-    suspend fun loadAccountBookData(id: Int): AccountBook
+    @Query("SELECT * FROM account_book, category WHERE account_book.id=:id AND category.id=account_book.category")
+    suspend fun loadRecordDetailData(id: Int): RecordDetailData
 
     @Insert
     suspend fun addAccountBookData(accountBook: AccountBook)

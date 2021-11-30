@@ -26,7 +26,6 @@
             android:id="@+id/tv_date"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:alpha="@{item.alpha}"
             android:gravity="center"
             android:text="@{String.valueOf(item.date)}"
             android:textColor="@{viewModel.selectedDate.date == item.date ? @color/white : Color.parseColor(item.color)}"

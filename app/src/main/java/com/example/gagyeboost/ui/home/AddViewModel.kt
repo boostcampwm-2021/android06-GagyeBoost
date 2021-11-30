@@ -1,9 +1,6 @@
 package com.example.gagyeboost.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.MAX_LAT
 import com.example.gagyeboost.common.MAX_LNG
@@ -12,28 +9,27 @@ import com.example.gagyeboost.model.data.*
 import kotlinx.coroutines.launch
 
 class AddViewModel(private val repository: Repository) : ViewModel() {
+
     private val _selectedCategoryIcon = MutableLiveData("🍚")
     val selectedCategoryIcon: LiveData<String> = _selectedCategoryIcon
 
     val categoryName = MutableLiveData("")
-
     private var selectedCategoryId = -1
 
     val money = MutableLiveData(0)
 
-    private val _categoryList = MutableLiveData<List<Category>>()
-    val categoryList: LiveData<List<Category>> = _categoryList
-
     val content = MutableLiveData("")
 
-    private var _categoryType = EXPENSE
-    val categoryType get() = _categoryType
+    val categoryType = MutableLiveData(EXPENSE)
+
+    val categoryList = Transformations.switchMap(categoryType) { moneyType ->
+        repository.flowLoadCategoryList(moneyType).asLiveData()
+    }
 
     var dateString = ""
 
     val searchAddress = MutableLiveData<String>()
 
-    //var selectedLocation: PlaceDetail? = null
     private val _selectedLocation = MutableLiveData(MyItem(MAX_LAT, MAX_LNG, "", ""))
     val selectedLocation: LiveData<MyItem> = _selectedLocation
 
@@ -53,16 +49,11 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 Category(
                     categoryName = categoryName.value ?: "",
                     emoji = _selectedCategoryIcon.value ?: nothingEmoji,
-                    moneyType = _categoryType
+                    moneyType = categoryType.value ?: EXPENSE
                 )
             )
-            loadCategoryList()
             resetSelectedCategory()
         }
-    }
-
-    fun setCategoryType(type: Byte) {
-        _categoryType = type
     }
 
     fun resetSelectedCategory() {
@@ -85,20 +76,19 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                     selectedCategoryId,
                     categoryName.value ?: "",
                     selectedCategoryIcon.value ?: nothingEmoji,
-                    _categoryType
+                    categoryType.value ?: EXPENSE
                 )
             )
-            loadCategoryList()
             resetSelectedCategory()
         }
     }
 
-    fun addAccountBookData() {
+    fun addAccountBookData(callback: () -> Unit) {
         if (dateString.isEmpty()) return
         viewModelScope.launch {
             val splitStr = dateString.split('/')
             val data = AccountBook(
-                moneyType = _categoryType,
+                moneyType = categoryType.value ?: EXPENSE,
                 money = money.value ?: 0,
                 category = selectedCategoryId,
                 address = selectedLocation.value?.title ?: "",
@@ -110,13 +100,7 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
                 day = splitStr[2].toInt()
             )
             repository.addAccountBookData(data)
-        }
-        money.value = 0
-    }
-
-    fun loadCategoryList() {
-        viewModelScope.launch {
-            _categoryList.value = repository.loadCategoryList(categoryType)
+            callback()
         }
     }
 
@@ -136,16 +120,6 @@ class AddViewModel(private val repository: Repository) : ViewModel() {
 
     fun resetCategoryFragmentData() {
         content.value = ""
-        _categoryList.value = listOf()
-        _categoryType = EXPENSE
-    }
-
-    fun resetAllData() {
-        resetSelectedCategory()
-        money.value = 0
-        resetCategoryFragmentData()
-        dateString = ""
-        resetLocation()
     }
 
     fun deleteCategory(callback: (Boolean) -> Unit) {

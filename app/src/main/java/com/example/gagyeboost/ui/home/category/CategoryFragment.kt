@@ -4,23 +4,21 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.EXPENSE
-import com.example.gagyeboost.common.INCOME
-import com.example.gagyeboost.common.IS_EXPENSE_KEY
 import com.example.gagyeboost.databinding.FragmentCategoryBinding
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment_category) {
+
     private lateinit var categoryAdapter: CategoryAdapter
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var navController: NavController
     private lateinit var inputMethodManager: InputMethodManager
 
@@ -43,28 +41,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
         binding.viewModel = viewModel
         binding.rvCategory.adapter = categoryAdapter
-
-        arguments?.let {
-            if (it.getBoolean(IS_EXPENSE_KEY)) {
-                binding.tvMoney.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.income
-                    )
-                )
-                viewModel.setCategoryType(INCOME)
-            } else {
-                binding.tvMoney.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.expense
-                    )
-                )
-                viewModel.setCategoryType(EXPENSE)
-            }
-        }
-
-        viewModel.loadCategoryList()
+        viewModel.resetSelectedCategory()
     }
 
     private fun categoryOnClick(category: Category): Boolean {
@@ -97,14 +74,16 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
 
         binding.root.setOnClickListener {
             inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
-       }
+        }
     }
 
     private fun setObservers() {
         viewModel.categoryList.observe(viewLifecycleOwner) {
             val categoryList = it.toMutableList()
 
-            categoryList.add(Category(-1, getString(R.string.add), "➕", viewModel.categoryType))
+            categoryList.add(
+                Category(-1, getString(R.string.add), "➕", viewModel.categoryType.value ?: EXPENSE)
+            )
             categoryAdapter.submitList(categoryList)
         }
 
@@ -124,6 +103,5 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     override fun onPause() {
         super.onPause()
         inputMethodManager.hideSoftInputFromWindow(binding.etHistory.windowToken, 0)
-        viewModel.doEdit(false)
     }
 }

@@ -35,13 +35,15 @@ class SearchCategoryDialog(private val viewModel: SearchViewModel) : BottomSheet
         binding.viewModel = viewModel
         binding.toggleGroupMoneyType.check(R.id.btn_expense)
 
+        adapter = SearchCategoryAdapter(viewModel)
+        adapter.setHasStableIds(true)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = SearchCategoryAdapter(viewModel)
         binding.rvCategoryList.adapter = adapter
 
         this.dialog?.setOnCancelListener {

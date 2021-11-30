@@ -4,21 +4,20 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.core.os.bundleOf
-import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.IS_EXPENSE_KEY
+import com.example.gagyeboost.common.EXPENSE
+import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.common.setEditTextSize
 import com.example.gagyeboost.databinding.FragmentAddBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var inputMethodManager: InputMethodManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,6 +35,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
         viewModel.dateString = dateStr ?: ""
         inputMethodManager =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        viewModel.doEdit(false)
     }
 
     private fun editTextFocus() {
@@ -49,30 +49,22 @@ class AddFragment : BaseFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
     private fun initClickListeners() {
         binding.btnIncome.setOnClickListener {
-            goToCategoryFragment(true)
+            viewModel.categoryType.value = INCOME
+            goToCategoryFragment()
         }
 
         binding.btnExpense.setOnClickListener {
-            goToCategoryFragment(false)
+            viewModel.categoryType.value = EXPENSE
+            goToCategoryFragment()
         }
 
         binding.btnClose.setOnClickListener {
             findNavController().popBackStack()
-            viewModel.resetAllData()
-        }
-
-        binding.etWon.doAfterTextChanged {
-            it?.let {
-                if (it.length == 1) binding.etWon.setSelection(it.length)
-            }
         }
     }
 
-    private fun goToCategoryFragment(isExpense: Boolean) {
-        findNavController().navigate(
-            R.id.action_addFragment_to_categoryFragment,
-            bundleOf(IS_EXPENSE_KEY to isExpense)
-        )
+    private fun goToCategoryFragment() {
+        findNavController().navigate(R.id.action_addFragment_to_categoryFragment)
     }
 
     override fun onPause() {
