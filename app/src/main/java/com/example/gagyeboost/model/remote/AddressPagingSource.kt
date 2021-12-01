@@ -1,9 +1,8 @@
-package com.example.gagyeboost.ui.home.selectPosition
+package com.example.gagyeboost.model.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.gagyeboost.model.data.PlaceDetail
-import com.example.gagyeboost.model.remote.KakaoAPIService
 import com.google.android.gms.maps.model.LatLng
 
 private const val STARTING_PAGE_INDEX = 1
