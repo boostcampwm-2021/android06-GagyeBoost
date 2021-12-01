@@ -75,7 +75,7 @@ class RecordDetailActivity :
         binding.viewModel = viewModel
 
         categoryAdapter =
-            CategoryAdapter({ category -> categoryOnClickListener(category) }, { true }, viewModel)
+            CategoryAdapter({ category -> categoryOnClickListener(category) }, viewModel)
     }
 
     private fun setListeners() {

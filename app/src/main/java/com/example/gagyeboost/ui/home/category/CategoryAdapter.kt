@@ -16,7 +16,6 @@ import com.example.gagyeboost.ui.home.AddViewModel
 
 class CategoryAdapter(
     private val categoryClickListener: (Category) -> Boolean,
-    private val categoryEditClickListener: (Category) -> Boolean,
     private val viewModel: ViewModel
 ) : ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(diffUtil) {
 
@@ -24,7 +23,6 @@ class CategoryAdapter(
         val binding =
             ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.categoryClickListener = categoryClickListener
-        binding.categoryEditClickListener = categoryEditClickListener
         return CategoryViewHolder(binding)
     }
 
