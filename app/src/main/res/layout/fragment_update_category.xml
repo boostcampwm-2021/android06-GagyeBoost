@@ -113,17 +113,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_icon_title" />
 
-        <ImageView
+        <TextView
             android:id="@+id/btn_update_category_complete"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="40dp"
-            android:background="@drawable/ic_baseline_add_circle_24"
-            android:backgroundTint="@color/green"
+            style="@style/GradationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/background_default_btn"
             android:contentDescription="@string/btn_add_description"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
+            android:text="@string/complete"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/view_line_1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

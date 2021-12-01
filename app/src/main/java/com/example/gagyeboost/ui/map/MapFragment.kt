@@ -19,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -56,6 +57,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             }
         }
     }
+    private var currPositionMarker: Marker? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -239,6 +241,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             .build()
 
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        currPositionMarker?.let {
+            (currPositionMarker as Marker).remove()
+        }
 
         val marker = MarkerOptions()
 
@@ -246,7 +251,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             val bitmap = BitmapUtils.createBitmapFromDrawable(it)
             marker.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
             marker.position(userLocation)
-            googleMap.addMarker(marker)
+            currPositionMarker = googleMap.addMarker(marker)
         }
     }
 }

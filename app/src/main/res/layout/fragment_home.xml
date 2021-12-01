@@ -79,9 +79,9 @@
             android:autoSizeTextType="uniform"
             android:gravity="end"
             android:maxLines="1"
-            android:text="@{homeViewModel.totalMonthIncome}"
             android:textColor="@color/income"
             android:textSize="20sp"
+            app:intToWon="@{homeViewModel.monthTotalMoney.totalIncome}"
             app:layout_constraintEnd_toEndOf="@id/gl_50percent_vertical"
             app:layout_constraintStart_toEndOf="@id/tv_income_title"
             app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
@@ -111,7 +111,7 @@
             android:maxLines="1"
             android:textColor="@color/expense"
             android:textSize="20sp"
-            app:intToWon="@{homeViewModel.totalMonthExpense}"
+            app:intToWon="@{homeViewModel.monthTotalMoney.totalExpense}"
             app:layout_constraintEnd_toEndOf="@id/gl_end_vertical"
             app:layout_constraintStart_toEndOf="@id/tv_expense_title"
             app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
@@ -140,9 +140,9 @@
             android:autoSizeTextType="uniform"
             android:gravity="end"
             android:maxLines="1"
-            android:text="@{homeViewModel.totalMonthBalance}"
             android:textColor="@color/gray3"
             android:textSize="20sp"
+            app:intToWon="@{homeViewModel.monthTotalMoney.totalBalance}"
             app:layout_constraintEnd_toEndOf="@id/gl_50percent_vertical"
             app:layout_constraintStart_toEndOf="@id/tv_balance_title"
             app:layout_constraintTop_toBottomOf="@id/tv_income_body" />
