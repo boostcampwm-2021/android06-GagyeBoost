@@ -35,7 +35,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
 
             etKeywordBody.requestFocus()
 
-            adapter = DateDetailAdapter { true }
+            adapter = DateDetailAdapter {}
             rvSearchResult.adapter = adapter
         }
         inputMethodManager =

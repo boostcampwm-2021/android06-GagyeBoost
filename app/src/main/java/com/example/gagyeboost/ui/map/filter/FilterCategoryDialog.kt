@@ -43,6 +43,7 @@ class FilterCategoryDialog : BottomSheetDialogFragment() {
                 FilterCategoryAdapter(viewModel, viewModel.incomeCategoryID ?: listOf())
             else -> Timber.e("viewModel byteMoneyType is null")
         }
+        adapter.setHasStableIds(true)
 
         return binding.root
     }

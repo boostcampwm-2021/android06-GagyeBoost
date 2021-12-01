@@ -10,12 +10,12 @@
         android:name="com.example.gagyeboost.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_homeFragment_to_addFragment"
-            app:destination="@id/addFragment" />
         <argument
             android:name="today"
             app:argType="string" />
+        <action
+            android:id="@+id/action_homeFragment_to_addMoneyGraph"
+            app:destination="@id/addMoneyGraph" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -32,60 +32,63 @@
         android:name="com.example.gagyeboost.ui.statstics.StatisticsFragment"
         android:label="fragment_statistics"
         tools:layout="@layout/fragment_statistics" />
-    <fragment
-        android:id="@+id/addFragment"
-        android:name="com.example.gagyeboost.ui.home.add.AddFragment"
-        android:label="fragment_add"
-        tools:layout="@layout/fragment_add">
-        <action
-            android:id="@+id/action_addFragment_to_categoryFragment"
-            app:destination="@id/categoryFragment" />
+    <navigation android:id="@+id/addMoneyGraph"
+        app:startDestination="@id/addFragment">
+        <fragment
+            android:id="@+id/selectPositionFragment"
+            android:name="com.example.gagyeboost.ui.home.selectPosition.SelectPositionFragment"
+            android:label="SelectPositionFragment"
+            tools:layout="@layout/fragment_select_position" />
+        <fragment
+            android:id="@+id/addCategoryFragment"
+            android:name="com.example.gagyeboost.ui.home.categoryControl.AddCategoryFragment"
+            android:label="AddCategoryFragment"
+            tools:layout="@layout/fragment_add_category">
+            <action
+                android:id="@+id/action_addCategoryFragment_to_categoryIconListFragment"
+                app:destination="@id/categoryIconListFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/updateCategoryFragment"
+            android:name="com.example.gagyeboost.ui.home.categoryControl.UpdateCategoryFragment"
+            android:label="UpdateCategoryFragment"
+            tools:layout="@layout/fragment_update_category">
+            <action
+                android:id="@+id/action_updateCategoryFragment_to_categoryIconListFragment"
+                app:destination="@id/categoryIconListFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/categoryFragment"
+            android:name="com.example.gagyeboost.ui.home.category.CategoryFragment"
+            android:label="fragment_category"
+            tools:layout="@layout/fragment_category">
+            <action
+                android:id="@+id/action_categoryFragment_to_updateCategoryFragment"
+                app:destination="@id/updateCategoryFragment" />
+            <action
+                android:id="@+id/action_categoryFragment_to_addCategoryFragment"
+                app:destination="@id/addCategoryFragment" />
+            <action
+                android:id="@+id/action_categoryFragment_to_selectPositionFragment"
+                app:destination="@id/selectPositionFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/categoryIconListFragment"
+            android:name="com.example.gagyeboost.ui.home.categoryControl.CategoryIconListFragment"
+            android:label="CategoryIconListFragment"
+            tools:layout="@layout/fragment_category_icon_list" />
+        <fragment
+            android:id="@+id/addFragment"
+            android:name="com.example.gagyeboost.ui.home.add.AddFragment"
+            android:label="fragment_add"
+            tools:layout="@layout/fragment_add">
+            <action
+                android:id="@+id/action_addFragment_to_categoryFragment"
+                app:destination="@id/categoryFragment" />
 
-        <argument
-            android:name="isExpense"
-            app:argType="boolean" />
-    </fragment>
-    <fragment
-        android:id="@+id/categoryFragment"
-        android:name="com.example.gagyeboost.ui.home.category.CategoryFragment"
-        android:label="fragment_category"
-        tools:layout="@layout/fragment_category">
-        <action
-            android:id="@+id/action_categoryFragment_to_updateCategoryFragment"
-            app:destination="@id/updateCategoryFragment" />
-        <action
-            android:id="@+id/action_categoryFragment_to_addCategoryFragment"
-            app:destination="@id/addCategoryFragment" />
-        <action
-            android:id="@+id/action_categoryFragment_to_selectPositionFragment"
-            app:destination="@id/selectPositionFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/addCategoryFragment"
-        android:name="com.example.gagyeboost.ui.home.categoryControl.AddCategoryFragment"
-        android:label="AddCategoryFragment"
-        tools:layout="@layout/fragment_add_category">
-        <action
-            android:id="@+id/action_addCategoryFragment_to_categoryIconListFragment"
-            app:destination="@id/categoryIconListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/categoryIconListFragment"
-        android:name="com.example.gagyeboost.ui.home.categoryControl.CategoryIconListFragment"
-        android:label="CategoryIconListFragment"
-        tools:layout="@layout/fragment_category_icon_list" />
-    <fragment
-        android:id="@+id/updateCategoryFragment"
-        android:name="com.example.gagyeboost.ui.home.categoryControl.UpdateCategoryFragment"
-        android:label="UpdateCategoryFragment"
-        tools:layout="@layout/fragment_update_category">
-        <action
-            android:id="@+id/action_updateCategoryFragment_to_categoryIconListFragment"
-            app:destination="@id/categoryIconListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/selectPositionFragment"
-        android:name="com.example.gagyeboost.ui.home.selectPosition.SelectPositionFragment"
-        android:label="SelectPositionFragment"
-        tools:layout="@layout/fragment_select_position" />
+            <argument
+                android:name="isExpense"
+                app:argType="boolean" />
+        </fragment>
+    </navigation>
 </navigation>

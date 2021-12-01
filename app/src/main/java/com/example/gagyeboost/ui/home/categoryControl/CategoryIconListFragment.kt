@@ -9,11 +9,11 @@ import com.example.gagyeboost.databinding.FragmentCategoryIconListBinding
 import com.example.gagyeboost.model.data.emojiList
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.AddViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class CategoryIconListFragment :
     BaseFragment<FragmentCategoryIconListBinding>(R.layout.fragment_category_icon_list) {
-    private val viewModel by sharedViewModel<AddViewModel>()
+    private val viewModel by koinNavGraphViewModel<AddViewModel>(R.id.addMoneyGraph)
     private lateinit var navController: NavController
     private val categoryIconAdapter = CategoryIconAdapter {
         viewModel.setSelectedIcon(it)
@@ -31,7 +31,7 @@ class CategoryIconListFragment :
 
         categoryIconAdapter.submitList(emojiList)
 
-        binding.appBarCategoryIconList.setNavigationOnClickListener{
+        binding.appBarCategoryIconList.setNavigationOnClickListener {
             navController.popBackStack()
         }
     }

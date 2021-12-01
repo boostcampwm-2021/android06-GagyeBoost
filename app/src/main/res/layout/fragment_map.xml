@@ -45,6 +45,15 @@
                 android:paddingBottom="10dp">
 
                 <TextView
+                    android:id="@+id/btn_filter_refresh"
+                    style="@style/MapFilterButton"
+                    android:background="@drawable/background_white_radius_20dp"
+                    android:text="@string/reset"
+                    android:textColor="@color/gray1"
+                    app:drawableEndCompat="@drawable/ic_refresh"
+                    app:drawableTint="@color/gray1" />
+
+                <TextView
                     android:id="@+id/btn_money_type"
                     style="@style/MapFilterButton"
                     android:background="@{viewModel.intMoneyType == 0 ? @drawable/background_white_radius_20dp : @drawable/background_filter_selected}"
@@ -68,7 +77,8 @@
                     android:background="@{viewModel.isPeriodFilterChange ? @drawable/background_filter_selected : @drawable/background_white_radius_20dp}"
                     android:text="@{viewModel.isPeriodFilterChange ? viewModel.periodFilterBtnText : @string/period}"
                     android:textColor="@{viewModel.isPeriodFilterChange ? @color/white : @color/gray1}"
-                    tools:background="@drawable/background_white_radius_20dp" />
+                    tools:background="@drawable/background_white_radius_20dp"
+                    tools:text="@string/period" />
 
                 <TextView
                     android:id="@+id/btn_category"
@@ -80,19 +90,6 @@
 
             </LinearLayout>
         </HorizontalScrollView>
-
-        <ImageView
-            android:id="@+id/btn_filter_refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:background="@drawable/background_gradation_circle"
-            android:contentDescription="@string/find_my_location"
-            android:padding="10dp"
-            android:src="@drawable/ic_refresh"
-            app:layout_constraintEnd_toStartOf="@id/btn_gps"
-            app:layout_constraintTop_toTopOf="@id/btn_gps"
-            app:layout_constraintBottom_toBottomOf="@id/btn_gps"/>
 
         <ImageView
             android:id="@+id/btn_gps"
