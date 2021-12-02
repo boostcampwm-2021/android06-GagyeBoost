@@ -31,7 +31,7 @@ class AddressResultViewModel(private val repository: Repository) : ViewModel() {
                 }
             }
             defArr.map { it ->
-                (it.await().body()?.documents ?: listOf()).forEach {
+                (it.await()?.documents ?: listOf()).forEach {
                     placeMap[it.id] = it
                 }
             }
