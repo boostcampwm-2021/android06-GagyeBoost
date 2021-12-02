@@ -156,7 +156,7 @@
 
 
 ## 🎞 데모 영상
-<a href="https://www.youtube.com/watch?v=9q4E_THkU9g">
+<a href="https://youtu.be/ogo4HMuJC28">
     <img src="https://i.imgur.com/P6Kh8qx.png"/></a>
 <br>
   
