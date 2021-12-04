@@ -7,28 +7,42 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
-import com.example.gagyeboost.common.TODAY_STRING_KEY
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.FragmentHomeBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.calendar.CalendarViewPagerAdapter
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import java.util.*
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by sharedViewModel()
-//    private val customCalendarAdapter by lazy { CustomCalendarAdapter(homeViewModel) }
     private lateinit var dialog: NumberPickerDialog
     private lateinit var detailAdapter: DateDetailAdapter
     private val filterActivityLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             refreshCalendarData()
         }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setFragmentResultListener(SELECTED_DATE_KEY) { key, bundle ->
+            val result = bundle.getLong(key)
+            homeViewModel.setSelectedDate(longToCustomDate(result))
+        }
+
+        setFragmentResultListener(YEAR_MONTH) { key, bundle ->
+            val result = bundle.get(key) as Date
+            val date = longToCustomDate(result.time)
+            homeViewModel.setYearAndMonth(date.year, date.month)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,7 +63,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         dialog = NumberPickerDialog(binding.root.context)
 
         with(binding) {
-//            rvCalendar.adapter = customCalendarAdapter
             rvDetail.adapter = detailAdapter
         }
     }
@@ -87,14 +100,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun observe() {
-//        homeViewModel.yearMonthPair.observe(viewLifecycleOwner) {
-//            homeViewModel.loadAllDayDataInMonth()
-//        }
-//
-//        homeViewModel.dateItemList.observe(viewLifecycleOwner) {
-//            customCalendarAdapter.submitList(it)
-//        }
-
         homeViewModel.detailItemList.observe(viewLifecycleOwner) {
             detailAdapter.submitList(it)
         }

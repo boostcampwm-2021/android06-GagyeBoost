@@ -35,3 +35,5 @@ data class Filter(
     val endMoney: Int,
     val categoryList: List<Int>
 )
+
+data class CustomDate(val year: Int, val month: Int, val day: Int)

@@ -3,6 +3,7 @@ package com.example.gagyeboost.common
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.TextView
+import com.example.gagyeboost.model.data.CustomDate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -30,6 +31,12 @@ fun dateToLong(year: Int, month: Int, day: Int): Long {
     val sdf = SimpleDateFormat("yyyy/MM/dd", Locale.KOREA)
 
     return sdf.parse(stringDate).time
+}
+
+fun longToCustomDate(long: Long): CustomDate {
+    val cal = Calendar.getInstance()
+    cal.timeInMillis = long
+    return CustomDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))
 }
 
 fun intToStringDate(year: Int, month: Int, day: Int): String {

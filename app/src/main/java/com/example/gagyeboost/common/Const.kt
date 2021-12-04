@@ -4,8 +4,9 @@ import java.text.DecimalFormat
 import java.util.*
 
 // AddFragment, CategoryFragment
-const val IS_EXPENSE_KEY = "isExpense"
 const val TODAY_STRING_KEY = "today"
+const val SELECTED_DATE_KEY = "selectedDate"
+const val YEAR_MONTH = "yearAndMonth"
 
 // Money Type
 const val INCOME = 1.toByte()
