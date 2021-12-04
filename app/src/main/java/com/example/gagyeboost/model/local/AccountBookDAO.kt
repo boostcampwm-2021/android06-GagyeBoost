@@ -39,13 +39,6 @@ interface AccountBookDAO {
     @Update
     suspend fun updateCategoryData(category: Category)
 
-//    @Query("DELETE FROM category WHERE  category_name=:categoryName")
-//    fun deleteCategoryData(categoryName: String)
-
-    //카테고리 이름으로 존재하는지 검사
-//    @Query("SELECT EXISTS (SELECT * FROM category WHERE category_name=:categoryName) as isExist")
-//    fun isExistCategoryName(categoryName: String): Boolean
-
     @Query("SELECT EXISTS (SELECT * FROM account_book WHERE category=:categoryId) as isExist")
     suspend fun isExistAccountBookDataByCategoryId(categoryId: Int): Boolean
 
@@ -119,4 +112,11 @@ interface AccountBookDAO {
         endMoney: Int,
         keyword: String
     ): List<AccountBook>
+
+    @Query(
+        """SELECT SUM(CASE WHEN money_type=0 THEN money else null END) as expenseMoney, SUM(CASE WHEN money_type=1 THEN money else null END)
+        FROM account_book WHERE year=:year AND month=:month
+    """
+    )
+    suspend fun loadMonthExpenseAndIncome(year: Int, month: Int): DayTotalMoney?
 }

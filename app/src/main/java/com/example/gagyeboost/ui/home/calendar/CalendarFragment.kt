@@ -11,7 +11,6 @@ import com.example.gagyeboost.common.dateToLong
 import com.example.gagyeboost.databinding.FragmentCalendarBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,11 +27,9 @@ class CalendarFragment(private val pageIndex: Int) :
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         year = SimpleDateFormat("yyyy", Locale.KOREA).format(date.time).toInt()
         month = SimpleDateFormat("MM", Locale.KOREA).format(date.time).toInt()
 
-        viewModel.setYearAndMonth(year, month)
         binding.rvCalendar.adapter = customCalendarAdapter
 
         viewModel.dateItemList.observe(viewLifecycleOwner) {
@@ -50,6 +47,7 @@ class CalendarFragment(private val pageIndex: Int) :
 
     override fun onResume() {
         super.onResume()
+        viewModel.setYearAndMonth(year, month)
         setFragmentResult(YEAR_MONTH, bundleOf(YEAR_MONTH to date))
     }
 

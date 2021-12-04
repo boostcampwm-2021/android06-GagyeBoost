@@ -122,4 +122,7 @@ class Repository(
 
     suspend fun isExistAccountBookDataByCategory(selectedCategoryId: Int) =
         accountBookDao.isExistAccountBookDataByCategoryId(selectedCategoryId)
+
+    suspend fun loadMonthExpenseAndIncome(year: Int, month: Int) =
+        accountBookDao.loadMonthExpenseAndIncome(year, month)
 }

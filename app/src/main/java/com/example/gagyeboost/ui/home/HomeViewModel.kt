@@ -6,8 +6,11 @@ import com.example.gagyeboost.common.intToStringDate
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.CustomDate
 import com.example.gagyeboost.model.data.MonthTotalMoney
+import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: Repository) : ViewModel() {
+
+    private var nowYearMonth = CustomDate(2021, 11, 0)
 
     private val _yearAndMonth = MutableLiveData<String>()
     val yearAndMonth: LiveData<String> = _yearAndMonth
@@ -29,6 +32,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         val stringDate = if (year == NOW_YEAR) "${month}월" else "${year}년 ${month}월"
         _yearAndMonth.value = stringDate
         _selectedDate.value = null
+        nowYearMonth = CustomDate(year, month, 0)
+        loadTotalMoney()
     }
 
     fun setSelectedDate(dateItem: CustomDate) {
@@ -39,7 +44,16 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         intToStringDate(it.year, it.month, it.day)
     } ?: ""
 
-    fun loadTotalMoney(){
-
+    fun loadTotalMoney() {
+        viewModelScope.launch {
+            _yearAndMonth.value?.let {
+                val data =
+                    repository.loadMonthExpenseAndIncome(nowYearMonth.year, nowYearMonth.month)
+                monthTotalMoney.totalExpense.value = data?.expenseMoney ?: 0
+                monthTotalMoney.totalIncome.value = data?.incomeMoney ?: 0
+                monthTotalMoney.totalBalance.value =
+                    (data?.incomeMoney ?: 0) - (data?.expenseMoney ?: 0)
+            }
+        }
     }
 }
