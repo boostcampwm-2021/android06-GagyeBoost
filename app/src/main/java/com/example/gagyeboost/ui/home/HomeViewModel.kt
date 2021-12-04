@@ -6,7 +6,9 @@ import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.DateColor
 import com.example.gagyeboost.model.data.DateItem
 import com.example.gagyeboost.model.data.MonthTotalMoney
+import com.example.gagyeboost.ui.home.calendar.CustomCalendar
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 
 class HomeViewModel(private val repository: Repository) : ViewModel() {
@@ -36,7 +38,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     }
 
     init {
-        setYearAndMonth(NOW_YEAR, Calendar.getInstance().get(Calendar.MONTH) + 1)
+//        setYearAndMonth(NOW_YEAR, Calendar.getInstance().get(Calendar.MONTH) + 1)
     }
 
     fun setYearAndMonth(year: Int, month: Int) {
@@ -56,42 +58,39 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         }
 
     fun setSelectedDate(dateItem: DateItem) {
-        _selectedDate.value = dateItem
+//        _selectedDate.value = dateItem
     }
 
-    fun loadAllDayDataInMonth() {
-        viewModelScope.launch {
-            val dateItems = mutableListOf<DateItem>()
-            calendar.datesInMonth.forEachIndexed { index, date ->
-                // prev month date
-                if (date < 0) {
-                    dateItems.add(DateItem(null, null, date, 0, 0, setDateColor(index)))
-                    return@forEachIndexed
-                }
-                val total = repository.loadDayTotalMoney(
-                    _yearMonthPair.value?.first ?: 0,
-                    _yearMonthPair.value?.second ?: 0,
-                    date
-                )
-
-                dateItems.add(
-                    DateItem(
-                        total?.expenseMoney,
-                        total?.incomeMoney,
-                        date,
-                        _yearMonthPair.value?.first ?: 0,
-                        _yearMonthPair.value?.second ?: 0,
-                        setDateColor(index)
-                    )
-                )
-            }
-            val monthIncome = dateItems.sumOf { it.income ?: 0 }
-            val monthExpense = dateItems.sumOf { it.expense ?: 0 }
-            monthTotalMoney.totalIncome.value = monthIncome
-            monthTotalMoney.totalExpense.value = monthExpense
-            monthTotalMoney.totalBalance.value = monthIncome - monthExpense
-            _dateItemList.postValue(dateItems)
-        }
+    fun loadAllDayDataInMonth(year: Int, month: Int) {
+//        viewModelScope.launch {
+//            val dateItems = mutableListOf<DateItem>()
+//            calendar.datesInMonth.forEachIndexed { index, date ->
+//                // prev month date
+//                if (date < 0) {
+//                    dateItems.add(DateItem(null, null, date, 0, 0, setDateColor(index)))
+//                    return@forEachIndexed
+//                }
+//                val total = repository.loadDayTotalMoney(year, month, date)
+//
+//                dateItems.add(
+//                    DateItem(
+//                        total?.expenseMoney,
+//                        total?.incomeMoney,
+//                        date,
+//                        year,
+//                        month,
+//                        setDateColor(index)
+//                    )
+//                )
+//            }
+//            val monthIncome = dateItems.sumOf { it.income ?: 0 }
+//            val monthExpense = dateItems.sumOf { it.expense ?: 0 }
+//            monthTotalMoney.totalIncome.value = monthIncome
+//            monthTotalMoney.totalExpense.value = monthExpense
+//            monthTotalMoney.totalBalance.value = monthIncome - monthExpense
+//            Timber.e(dateItems.toString())
+//            _dateItemList.postValue(dateItems)
+//        }
     }
 
     fun getTodayString() = _selectedDate.value?.let {

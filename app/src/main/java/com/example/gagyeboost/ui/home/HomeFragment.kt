@@ -14,7 +14,7 @@ import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentHomeBinding
 import com.example.gagyeboost.ui.base.BaseFragment
-import com.example.gagyeboost.ui.calendar.CalendarAdapter
+import com.example.gagyeboost.ui.home.calendar.CalendarViewPagerAdapter
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -22,7 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by sharedViewModel()
-    private val customCalendarAdapter by lazy { CustomCalendarAdapter(homeViewModel) }
+//    private val customCalendarAdapter by lazy { CustomCalendarAdapter(homeViewModel) }
     private lateinit var dialog: NumberPickerDialog
     private lateinit var detailAdapter: DateDetailAdapter
     private val filterActivityLauncher: ActivityResultLauncher<Intent> =
@@ -36,10 +36,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         clickListener()
         observe()
 
-        val calendarAdapter = CalendarAdapter(requireActivity())
+        val calendarAdapter = CalendarViewPagerAdapter(requireParentFragment())
         binding.vpCalendar.adapter = calendarAdapter
         binding.vpCalendar.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpCalendar.currentItem = calendarAdapter.FIRST_POSITION
+        binding.vpCalendar.setCurrentItem(calendarAdapter.FIRST_POSITION, false)
+
     }
 
     private fun initView() {
@@ -48,7 +49,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         dialog = NumberPickerDialog(binding.root.context)
 
         with(binding) {
-            rvCalendar.adapter = customCalendarAdapter
+//            rvCalendar.adapter = customCalendarAdapter
             rvDetail.adapter = detailAdapter
         }
     }
@@ -86,13 +87,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun observe() {
-        homeViewModel.yearMonthPair.observe(viewLifecycleOwner) {
-            homeViewModel.loadAllDayDataInMonth()
-        }
-
-        homeViewModel.dateItemList.observe(viewLifecycleOwner) {
-            customCalendarAdapter.submitList(it)
-        }
+//        homeViewModel.yearMonthPair.observe(viewLifecycleOwner) {
+//            homeViewModel.loadAllDayDataInMonth()
+//        }
+//
+//        homeViewModel.dateItemList.observe(viewLifecycleOwner) {
+//            customCalendarAdapter.submitList(it)
+//        }
 
         homeViewModel.detailItemList.observe(viewLifecycleOwner) {
             detailAdapter.submitList(it)
@@ -100,7 +101,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun refreshCalendarData() {
-        homeViewModel.loadAllDayDataInMonth()
+//        homeViewModel.loadAllDayDataInMonth()
     }
 
     override fun onStop() {

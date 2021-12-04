@@ -1,10 +1,9 @@
-package com.example.gagyeboost.ui.calendar
+package com.example.gagyeboost.ui.home.calendar
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class CalendarAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
+class CalendarViewPagerAdapter(fm: Fragment) : FragmentStateAdapter(fm) {
 
     private val pageCount = Int.MAX_VALUE
     val FIRST_POSITION = Int.MAX_VALUE / 2
@@ -12,8 +11,7 @@ class CalendarAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
     override fun getItemCount(): Int = pageCount
 
     override fun createFragment(position: Int): Fragment {
-        val calendarFragment = CalendarFragment()
-        calendarFragment.pageIndex = position
-        return calendarFragment
+        return CalendarFragment(position - (FIRST_POSITION))
     }
+
 }

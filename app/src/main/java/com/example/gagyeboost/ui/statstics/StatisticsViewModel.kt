@@ -11,7 +11,7 @@ import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.Category
 import com.example.gagyeboost.model.data.StatRecordItem
 import com.example.gagyeboost.model.data.nothingEmoji
-import com.example.gagyeboost.ui.home.CustomCalendar
+import com.example.gagyeboost.ui.home.calendar.CustomCalendar
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch

@@ -7,16 +7,17 @@ import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
 import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.local.AccountBookDatabase
-import com.example.gagyeboost.model.remote.KakaoAPIClient
 import com.example.gagyeboost.model.remote.HeaderInterceptor
+import com.example.gagyeboost.model.remote.KakaoAPIClient
 import com.example.gagyeboost.ui.address.AddressResultViewModel
+import com.example.gagyeboost.ui.home.calendar.CalendarViewModel
 import com.example.gagyeboost.ui.home.AddViewModel
 import com.example.gagyeboost.ui.home.HomeViewModel
-import com.example.gagyeboost.ui.statstics.StatisticsViewModel
-import com.example.gagyeboost.ui.map.MapViewModel
-import okhttp3.logging.HttpLoggingInterceptor
 import com.example.gagyeboost.ui.home.detail.RecordDetailViewModel
+import com.example.gagyeboost.ui.map.MapViewModel
 import com.example.gagyeboost.ui.search.SearchViewModel
+import com.example.gagyeboost.ui.statstics.StatisticsViewModel
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -75,4 +76,5 @@ val viewModelModule = module {
     viewModel { StatisticsViewModel(get()) }
     viewModel { AddressResultViewModel(get()) }
     viewModel { SearchViewModel(get()) }
+    viewModel { CalendarViewModel(get()) }
 }
