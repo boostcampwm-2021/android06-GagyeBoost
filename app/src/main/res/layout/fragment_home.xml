@@ -73,10 +73,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
-            android:autoSizeMaxTextSize="20sp"
-            android:autoSizeMinTextSize="14sp"
-            android:autoSizeStepGranularity="1dp"
-            android:autoSizeTextType="uniform"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="14sp"
+            app:autoSizeStepGranularity="1dp"
+            app:autoSizeTextType="uniform"
             android:gravity="end"
             android:maxLines="1"
             android:textColor="@color/income"
@@ -103,10 +103,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:autoSizeMaxTextSize="20sp"
-            android:autoSizeMinTextSize="14sp"
-            android:autoSizeStepGranularity="1dp"
-            android:autoSizeTextType="uniform"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="14sp"
+            app:autoSizeStepGranularity="1dp"
+            app:autoSizeTextType="uniform"
             android:gravity="end"
             android:maxLines="1"
             android:textColor="@color/expense"
@@ -134,10 +134,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:autoSizeMaxTextSize="20sp"
-            android:autoSizeMinTextSize="14sp"
-            android:autoSizeStepGranularity="1dp"
-            android:autoSizeTextType="uniform"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="14sp"
+            app:autoSizeStepGranularity="1dp"
+            app:autoSizeTextType="uniform"
             android:gravity="end"
             android:maxLines="1"
             android:textColor="@color/gray3"
@@ -203,6 +203,14 @@
             app:layout_constraintStart_toStartOf="@id/gl_start_vertical"
             app:layout_constraintTop_toBottomOf="@id/flow_day" />
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_calendar"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_line_1" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_calendar"
             android:layout_width="0dp"
@@ -210,7 +218,7 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_line_1"
+            app:layout_constraintTop_toBottomOf="@id/vp_calendar"
             app:spanCount="7"
             tools:listitem="@layout/item_date" />
 

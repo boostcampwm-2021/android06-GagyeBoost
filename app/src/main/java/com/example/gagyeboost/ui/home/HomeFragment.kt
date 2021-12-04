@@ -8,11 +8,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.example.gagyeboost.R
 import com.example.gagyeboost.common.DATE_DETAIL_ITEM_ID_KEY
 import com.example.gagyeboost.common.TODAY_STRING_KEY
 import com.example.gagyeboost.databinding.FragmentHomeBinding
 import com.example.gagyeboost.ui.base.BaseFragment
+import com.example.gagyeboost.ui.calendar.CalendarAdapter
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -33,6 +35,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         initView()
         clickListener()
         observe()
+
+        val calendarAdapter = CalendarAdapter(requireActivity())
+        binding.vpCalendar.adapter = calendarAdapter
+        binding.vpCalendar.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.vpCalendar.currentItem = calendarAdapter.FIRST_POSITION
     }
 
     private fun initView() {
