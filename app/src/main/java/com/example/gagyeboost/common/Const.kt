@@ -30,10 +30,13 @@ const val MAX_LIST_ITEMS = 5
 // INTENT
 const val INTENT_EXTRA_PLACE_DETAIL = "INTENT_EXTRA_PLACE_DETAIL"
 
+// Now Date
 val NOW_YEAR = Calendar.getInstance().get(Calendar.YEAR)
 val NOW_MONTH = Calendar.getInstance().get(Calendar.MONTH) + 1
 val END_DAY = Calendar.getInstance().getActualMaximum(Calendar.DATE)
 
+// Viewpager init position
+const val INIT_POSITION = Int.MAX_VALUE / 2
 // SearchFragment
 const val DEFAULT_START_YEAR = 1970
 const val DEFAULT_END_YEAR = 2500

@@ -18,7 +18,6 @@ import com.example.gagyeboost.ui.home.calendar.CalendarViewPagerAdapter
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 import java.util.*
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -34,8 +33,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        calendarAdapter = CalendarViewPagerAdapter(requireParentFragment())
-
         setFragmentResultListener(SELECTED_DATE_KEY) { key, bundle ->
             val result = bundle.getLong(key)
             homeViewModel.setSelectedDate(longToCustomDate(result))
@@ -45,6 +42,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             val result = bundle.get(key) as Date
             val date = longToCustomDate(result.time)
             homeViewModel.setYearAndMonth(date.year, date.month)
+            val month = (date.year - NOW_YEAR) * 12 + (date.month - NOW_MONTH)
+            homeViewModel.viewPagerPosition = INIT_POSITION + month
         }
     }
 
@@ -53,20 +52,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         initView()
         clickListener()
         observe()
-
-        binding.vpCalendar.adapter = calendarAdapter
-        binding.vpCalendar.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpCalendar.setCurrentItem(calendarAdapter.FIRST_POSITION, false)
-
     }
 
     private fun initView() {
-        binding.homeViewModel = homeViewModel
         detailAdapter = DateDetailAdapter { detailItemOnClick(it) }
         dialog = NumberPickerDialog(binding.root.context)
+        calendarAdapter = CalendarViewPagerAdapter(requireParentFragment())
 
         with(binding) {
+            viewModel = homeViewModel
             rvDetail.adapter = detailAdapter
+            vpCalendar.adapter = calendarAdapter
+            vpCalendar.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            vpCalendar.setCurrentItem(homeViewModel.viewPagerPosition, false)
         }
     }
 
@@ -96,7 +94,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         dialog.binding.tvAgree.setOnClickListener {
             val month =
                 (dialog.binding.npYear.value - NOW_YEAR) * 12 + (dialog.binding.npMonth.value - NOW_MONTH)
-            binding.vpCalendar.setCurrentItem(calendarAdapter.FIRST_POSITION + month, false)
+            homeViewModel.viewPagerPosition = INIT_POSITION + month
+            binding.vpCalendar.setCurrentItem(INIT_POSITION + month, false)
             dialog.dismiss()
         }
     }

@@ -1,6 +1,7 @@
 package com.example.gagyeboost.ui.home
 
 import androidx.lifecycle.*
+import com.example.gagyeboost.common.INIT_POSITION
 import com.example.gagyeboost.common.NOW_YEAR
 import com.example.gagyeboost.common.intToStringDate
 import com.example.gagyeboost.model.Repository
@@ -19,6 +20,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     val selectedDate: LiveData<CustomDate?> = _selectedDate
 
     val monthTotalMoney = MonthTotalMoney(MutableLiveData(), MutableLiveData(), MutableLiveData())
+
+    var viewPagerPosition = INIT_POSITION
 
     val detailItemList = Transformations.switchMap(_selectedDate) { date ->
         if (date == null) {
