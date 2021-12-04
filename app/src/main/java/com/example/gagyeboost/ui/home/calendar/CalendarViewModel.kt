@@ -8,7 +8,6 @@ import com.example.gagyeboost.model.Repository
 import com.example.gagyeboost.model.data.DateColor
 import com.example.gagyeboost.model.data.DateItem
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class CalendarViewModel(private val repository: Repository) : ViewModel() {
 
@@ -28,19 +27,16 @@ class CalendarViewModel(private val repository: Repository) : ViewModel() {
     fun setYearAndMonth(year: Int, month: Int) {
         calendar.setYearAndMonth(year, month)
         _yearMonthPair.value = Pair(year, month)
-        _selectedDate.value = null
         loadAllDayDataInMonth(year, month)
     }
 
-    fun setSelectedDate(dateItem: DateItem?) {
+    fun setSelectedDate(position:Int, dateItem: DateItem?) {
         _selectedDate.value = dateItem
     }
 
     private fun loadAllDayDataInMonth(year: Int, month: Int) {
         viewModelScope.launch {
             val dateItems = mutableListOf<DateItem>()
-            Timber.e(this@CalendarViewModel.toString())
-            Timber.e(calendar.datesInMonth.toString())
             calendar.datesInMonth.forEachIndexed { index, date ->
                 // prev month date
                 if (date < 0) {
@@ -60,7 +56,6 @@ class CalendarViewModel(private val repository: Repository) : ViewModel() {
                     )
                 )
             }
-            Timber.e(dateItems.toString())
             _dateItemList.postValue(dateItems)
         }
     }

@@ -13,5 +13,4 @@ class CalendarViewPagerAdapter(fm: Fragment) : FragmentStateAdapter(fm) {
     override fun createFragment(position: Int): Fragment {
         return CalendarFragment(position - (FIRST_POSITION))
     }
-
 }

@@ -31,12 +31,11 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
     fun setYearAndMonth(year: Int, month: Int) {
         val stringDate = if (year == NOW_YEAR) "${month}월" else "${year}년 ${month}월"
         _yearAndMonth.value = stringDate
-        _selectedDate.value = null
         nowYearMonth = CustomDate(year, month, 0)
         loadTotalMoney()
     }
 
-    fun setSelectedDate(dateItem: CustomDate) {
+    fun setSelectedDate(dateItem: CustomDate?) {
         _selectedDate.value = dateItem
     }
 

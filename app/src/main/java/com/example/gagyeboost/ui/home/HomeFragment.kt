@@ -18,11 +18,13 @@ import com.example.gagyeboost.ui.home.calendar.CalendarViewPagerAdapter
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 import java.util.*
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by sharedViewModel()
+    private lateinit var calendarAdapter: CalendarViewPagerAdapter
     private lateinit var dialog: NumberPickerDialog
     private lateinit var detailAdapter: DateDetailAdapter
     private val filterActivityLauncher: ActivityResultLauncher<Intent> =
@@ -32,6 +34,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        calendarAdapter = CalendarViewPagerAdapter(requireParentFragment())
+
         setFragmentResultListener(SELECTED_DATE_KEY) { key, bundle ->
             val result = bundle.getLong(key)
             homeViewModel.setSelectedDate(longToCustomDate(result))
@@ -50,7 +54,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         clickListener()
         observe()
 
-        val calendarAdapter = CalendarViewPagerAdapter(requireParentFragment())
         binding.vpCalendar.adapter = calendarAdapter
         binding.vpCalendar.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.vpCalendar.setCurrentItem(calendarAdapter.FIRST_POSITION, false)
@@ -91,10 +94,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         dialog.show()
 
         dialog.binding.tvAgree.setOnClickListener {
-            homeViewModel.setYearAndMonth(
-                dialog.binding.npYear.value,
-                dialog.binding.npMonth.value
-            )
+            val month =
+                (dialog.binding.npYear.value - NOW_YEAR) * 12 + (dialog.binding.npMonth.value - NOW_MONTH)
+            binding.vpCalendar.setCurrentItem(calendarAdapter.FIRST_POSITION + month, false)
             dialog.dismiss()
         }
     }

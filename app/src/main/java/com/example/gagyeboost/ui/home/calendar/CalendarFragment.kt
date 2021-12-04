@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.SELECTED_DATE_KEY
-import com.example.gagyeboost.common.YEAR_MONTH
-import com.example.gagyeboost.common.dateToLong
+import com.example.gagyeboost.common.*
 import com.example.gagyeboost.databinding.FragmentCalendarBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -37,12 +36,13 @@ class CalendarFragment(private val pageIndex: Int) :
         }
 
         viewModel.selectedDate.observe(viewLifecycleOwner) { date ->
-            setFragmentResult(
-                SELECTED_DATE_KEY,
-                bundleOf(SELECTED_DATE_KEY to date?.let { dateToLong(it.year, it.month, it.date) })
-            )
+            date?.let {
+                setFragmentResult(
+                    SELECTED_DATE_KEY,
+                    bundleOf(SELECTED_DATE_KEY to dateToLong(it.year, it.month, it.date))
+                )
+            }
         }
-
     }
 
     override fun onResume() {
@@ -51,11 +51,4 @@ class CalendarFragment(private val pageIndex: Int) :
         setFragmentResult(YEAR_MONTH, bundleOf(YEAR_MONTH to date))
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.selectedDatePosition?.let {
-            viewModel.setSelectedDate(null)
-            customCalendarAdapter.notifyItemChanged(it)
-        }
-    }
 }
