@@ -6,7 +6,10 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import com.example.gagyeboost.R
-import com.example.gagyeboost.common.*
+import com.example.gagyeboost.common.ADD_MONTH_DATA
+import com.example.gagyeboost.common.SELECTED_DATE_KEY
+import com.example.gagyeboost.common.YEAR_MONTH
+import com.example.gagyeboost.common.dateToLong
 import com.example.gagyeboost.databinding.FragmentCalendarBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -23,6 +26,13 @@ class CalendarFragment(private val pageIndex: Int) :
     private val date = Calendar.getInstance().run {
         add(Calendar.MONTH, pageIndex)
         time
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setFragmentResultListener(ADD_MONTH_DATA) { _, _ ->
+            viewModel.loadAllDayDataInMonth()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

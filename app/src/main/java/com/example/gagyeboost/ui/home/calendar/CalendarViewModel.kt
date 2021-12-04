@@ -18,23 +18,24 @@ class CalendarViewModel(private val repository: Repository) : ViewModel() {
 
     var selectedDatePosition: Int? = null
 
-    private val _yearMonthPair = MutableLiveData<Pair<Int, Int>>()
-    val yearMonthPair: LiveData<Pair<Int, Int>> = _yearMonthPair
+    private var _yearMonthPair = Pair(0, 0)
 
     private val _dateItemList = MutableLiveData<List<DateItem>>()
     val dateItemList: LiveData<List<DateItem>> = _dateItemList
 
     fun setYearAndMonth(year: Int, month: Int) {
         calendar.setYearAndMonth(year, month)
-        _yearMonthPair.value = Pair(year, month)
-        loadAllDayDataInMonth(year, month)
+        _yearMonthPair = Pair(year, month)
+        loadAllDayDataInMonth()
     }
 
-    fun setSelectedDate(position:Int, dateItem: DateItem?) {
+    fun setSelectedDate(position: Int, dateItem: DateItem?) {
         _selectedDate.value = dateItem
     }
 
-    private fun loadAllDayDataInMonth(year: Int, month: Int) {
+    fun loadAllDayDataInMonth() {
+        val year = _yearMonthPair.first
+        val month = _yearMonthPair.second
         viewModelScope.launch {
             val dateItems = mutableListOf<DateItem>()
             calendar.datesInMonth.forEachIndexed { index, date ->

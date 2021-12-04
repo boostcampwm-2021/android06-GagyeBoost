@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -88,6 +90,7 @@ class SelectPositionFragment :
             viewModel.selectedLocation.value?.let {
                 if (isValidPosition(it.position)) {
                     viewModel.addAccountBookData {
+                        setFragmentResult(ADD_MONTH_DATA, bundleOf())
                         navController.popBackStack(R.id.homeFragment, false)
                     }
                 } else {
@@ -150,6 +153,7 @@ class SelectPositionFragment :
             .setMessage(getString(R.string.select_place_dialog_message))
             .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                 viewModel.addAccountBookData {
+                    setFragmentResult(ADD_MONTH_DATA, bundleOf())
                     navController.popBackStack(R.id.homeFragment, false)
                 }
             }

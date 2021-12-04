@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
@@ -18,6 +16,7 @@ import com.example.gagyeboost.ui.home.calendar.CalendarViewPagerAdapter
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 import java.util.*
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -26,10 +25,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var calendarAdapter: CalendarViewPagerAdapter
     private lateinit var dialog: NumberPickerDialog
     private lateinit var detailAdapter: DateDetailAdapter
-    private val filterActivityLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            refreshCalendarData()
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +66,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun detailItemOnClick(id: Int) {
         val intent = Intent(activity, RecordDetailActivity::class.java)
         intent.putExtra(DATE_DETAIL_ITEM_ID_KEY, id)
-        filterActivityLauncher.launch(intent)
+        startActivity(intent)
     }
 
     private fun clickListener() {
@@ -104,10 +99,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         homeViewModel.detailItemList.observe(viewLifecycleOwner) {
             detailAdapter.submitList(it)
         }
-    }
-
-    private fun refreshCalendarData() {
-//        homeViewModel.loadAllDayDataInMonth()
     }
 
     override fun onStop() {
