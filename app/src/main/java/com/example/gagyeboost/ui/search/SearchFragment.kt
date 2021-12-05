@@ -14,13 +14,19 @@ import com.example.gagyeboost.common.DEFAULT_START_YEAR
 import com.example.gagyeboost.databinding.FragmentSearchBinding
 import com.example.gagyeboost.ui.base.BaseFragment
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_search) {
     private val viewModel: SearchViewModel by viewModel()
     private lateinit var inputMethodManager: InputMethodManager
     private lateinit var adapter: DateDetailAdapter
+    private val observable = BehaviorSubject.create<Boolean>()
+    private lateinit var disposable: Disposable
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,9 +80,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             }
 
             btnSearch.setOnClickListener {
-                viewModel?.loadFilterData()
-
-                inputMethodManager.hideSoftInputFromWindow(binding.etKeywordBody.windowToken, 0)
+                observable.onNext(true)
             }
             root.setOnClickListener {
                 inputMethodManager.hideSoftInputFromWindow(binding.etKeywordBody.windowToken, 0)
@@ -94,6 +98,13 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             adapter.submitList(it)
             setResultVisibility(it.isNotEmpty())
         }
+
+        disposable = observable.debounce(400, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                viewModel.loadFilterData()
+
+                inputMethodManager.hideSoftInputFromWindow(binding.etKeywordBody.windowToken, 0)
+            }
     }
 
     private fun showDatePicker(isStart: Boolean) {
@@ -131,5 +142,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
                 it.isVisible = visibility
             }
         }
+    }
+
+    override fun onDestroy() {
+        disposable.dispose()
+        super.onDestroy()
     }
 }

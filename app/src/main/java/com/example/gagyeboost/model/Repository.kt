@@ -5,13 +5,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.gagyeboost.common.EXPENSE
 import com.example.gagyeboost.common.INCOME
-import com.example.gagyeboost.model.data.AccountBook
-import com.example.gagyeboost.model.data.Category
-import com.example.gagyeboost.model.data.Filter
-import com.example.gagyeboost.model.data.PlaceDetail
+import com.example.gagyeboost.model.data.*
 import com.example.gagyeboost.model.local.AccountBookDAO
+import com.example.gagyeboost.model.remote.AddressPagingSource
 import com.example.gagyeboost.model.remote.KakaoAPIClient
-import com.example.gagyeboost.ui.home.selectPosition.AddressPagingSource
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -96,13 +93,22 @@ class Repository(
         }.flow
     }
 
-    suspend fun loadPlaceListFromKeyword(keyword: String, latLng: LatLng, page: Int) =
-        client.getKakaoApiService().fetchPlaceListFromKeyword(
-            keyword,
-            page,
-            latLng.latitude.toString(),
-            latLng.longitude.toString()
-        )
+    suspend fun loadPlaceListFromKeyword(
+        keyword: String,
+        latLng: LatLng,
+        page: Int
+    ): PlaceDetailResponse? {
+        return try {
+            client.getKakaoApiService().fetchPlaceListFromKeyword(
+                keyword,
+                page,
+                latLng.latitude.toString(),
+                latLng.longitude.toString()
+            ).body()
+        } catch (e: Exception) {
+            null
+        }
+    }
 
     suspend fun loadCategoryMap(): HashMap<Int, Category> {
         val categoryMap = HashMap<Int, Category>()
