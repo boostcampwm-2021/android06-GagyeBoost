@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gagyeboost.model.Repository
+import com.example.gagyeboost.model.data.CustomDate
 import com.example.gagyeboost.model.data.DateColor
 import com.example.gagyeboost.model.data.DateItem
 import kotlinx.coroutines.launch
@@ -13,8 +14,8 @@ class CalendarViewModel(private val repository: Repository) : ViewModel() {
 
     private val calendar = CustomCalendar()
 
-    private val _selectedDate = MutableLiveData<DateItem?>()
-    val selectedDate: LiveData<DateItem?> = _selectedDate
+    private val _selectedDate = MutableLiveData<CustomDate?>()
+    val selectedDate: LiveData<CustomDate?> = _selectedDate
 
     var selectedDatePosition: Int? = null
 
@@ -29,8 +30,18 @@ class CalendarViewModel(private val repository: Repository) : ViewModel() {
         loadAllDayDataInMonth()
     }
 
-    fun setSelectedDate(dateItem: DateItem?) {
-        _selectedDate.value = dateItem
+    fun <T> setSelectedDate(item: T?) {
+        when (item) {
+            is DateItem -> {
+                _selectedDate.value = CustomDate(item.year, item.month, item.date)
+            }
+            is CustomDate -> {
+                _selectedDate.value = item
+            }
+            null -> {
+                _selectedDate.value = item
+            }
+        }
     }
 
     fun loadAllDayDataInMonth() {

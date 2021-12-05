@@ -59,6 +59,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             vpCalendar.orientation = ViewPager2.ORIENTATION_HORIZONTAL
             vpCalendar.setCurrentItem(homeViewModel.viewPagerPosition, false)
         }
+        homeViewModel.loadTotalMoney()
     }
 
     private fun detailItemOnClick(id: Int) {
@@ -103,5 +104,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     override fun onStop() {
         super.onStop()
         dialog.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        homeViewModel.setSelectedDate(null)
     }
 }

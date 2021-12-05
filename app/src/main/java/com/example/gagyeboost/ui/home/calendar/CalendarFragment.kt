@@ -28,13 +28,6 @@ class CalendarFragment(private val pageIndex: Int) :
         time
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setFragmentResultListener(ADD_MONTH_DATA) { _, _ ->
-            viewModel.loadAllDayDataInMonth()
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         year = SimpleDateFormat("yyyy", Locale.KOREA).format(date.time).toInt()
         month = SimpleDateFormat("MM", Locale.KOREA).format(date.time).toInt()
@@ -46,7 +39,7 @@ class CalendarFragment(private val pageIndex: Int) :
         }
 
         viewModel.selectedDate.observe(viewLifecycleOwner) { date ->
-            val selectedData = date?.let { dateToLong(it.year, it.month, it.date) }
+            val selectedData = date?.let { dateToLong(it.year, it.month, it.day) }
             setFragmentResult(SELECTED_DATE_KEY, bundleOf(SELECTED_DATE_KEY to selectedData))
         }
     }
@@ -55,5 +48,8 @@ class CalendarFragment(private val pageIndex: Int) :
         super.onResume()
         viewModel.setYearAndMonth(year, month)
         setFragmentResult(YEAR_MONTH, bundleOf(YEAR_MONTH to date))
+        setFragmentResultListener(ADD_MONTH_DATA) { _, _ ->
+            viewModel.loadAllDayDataInMonth()
+        }
     }
 }
