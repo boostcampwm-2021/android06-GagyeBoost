@@ -8,6 +8,7 @@ const val TODAY_STRING_KEY = "today"
 const val SELECTED_DATE_KEY = "selectedDate"
 const val YEAR_MONTH = "yearAndMonth"
 const val ADD_MONTH_DATA = "add"
+const val SELECT_DATE_NULL = "selectedDateIsNull"
 
 // Money Type
 const val INCOME = 1.toByte()

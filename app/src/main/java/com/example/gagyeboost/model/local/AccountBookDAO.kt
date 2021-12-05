@@ -114,9 +114,9 @@ interface AccountBookDAO {
     ): List<AccountBook>
 
     @Query(
-        """SELECT SUM(CASE WHEN money_type=0 THEN money else null END) as expenseMoney, SUM(CASE WHEN money_type=1 THEN money else null END)
+        """SELECT SUM(CASE WHEN money_type=0 THEN money else null END) as expenseMoney, SUM(CASE WHEN money_type=1 THEN money else null END) as incomeMoney
         FROM account_book WHERE year=:year AND month=:month
     """
     )
-    suspend fun loadMonthExpenseAndIncome(year: Int, month: Int): DayTotalMoney?
+    suspend fun loadMonthExpenseAndIncome(year: Int, month: Int): DayTotalMoney
 }

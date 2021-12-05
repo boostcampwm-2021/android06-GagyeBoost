@@ -16,7 +16,6 @@ import com.example.gagyeboost.ui.home.calendar.CalendarViewPagerAdapter
 import com.example.gagyeboost.ui.home.detail.DateDetailAdapter
 import com.example.gagyeboost.ui.home.detail.RecordDetailActivity
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 import java.util.*
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -37,8 +36,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             val result = bundle.get(key) as Date
             val date = longToCustomDate(result.time)
             homeViewModel.setYearAndMonth(date.year, date.month)
-            val month = (date.year - NOW_YEAR) * 12 + (date.month - NOW_MONTH)
-            homeViewModel.viewPagerPosition = INIT_POSITION + month
+            homeViewModel.selectedMonthMinusNow(date.year, date.month)
         }
     }
 
@@ -87,9 +85,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         dialog.show()
 
         dialog.binding.tvAgree.setOnClickListener {
-            val month =
-                (dialog.binding.npYear.value - NOW_YEAR) * 12 + (dialog.binding.npMonth.value - NOW_MONTH)
-            homeViewModel.viewPagerPosition = INIT_POSITION + month
+            val month = homeViewModel.selectedMonthMinusNow(
+                dialog.binding.npYear.value,
+                dialog.binding.npMonth.value
+            )
             binding.vpCalendar.setCurrentItem(INIT_POSITION + month, false)
             dialog.dismiss()
         }
