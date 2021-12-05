@@ -132,6 +132,23 @@ class MapViewModel(private val repository: Repository) : ViewModel() {
         isCategoryBackgroundChange.value = false
     }
 
+    fun refreshData(){
+        byteMoneyType.value = EXPENSE
+        intStartMoney.value = InitMoneyFilter.Start.money
+        intEndMoney.value = InitMoneyFilter.End.money
+        startYear = NOW_YEAR
+        startMonth = NOW_MONTH
+        startDay = 1
+        endYear = NOW_YEAR
+        endMonth = NOW_MONTH
+        endDay = END_DAY
+        initLoadCategory()
+
+        isMoneyFilterChange.value = false
+        isPeriodFilterChange.value = false
+        isCategoryBackgroundChange.value = false
+    }
+
     private fun initLoadCategory() {
         viewModelScope.launch {
             val deferredExpenseCategory = async { repository.loadCategoryList(EXPENSE) }

@@ -3,7 +3,10 @@ package com.example.gagyeboost.common
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.TextView
+import com.example.gagyeboost.model.data.CustomDate
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,6 +33,12 @@ fun dateToLong(year: Int, month: Int, day: Int): Long {
     return sdf.parse(stringDate).time
 }
 
+fun longToCustomDate(long: Long): CustomDate {
+    val cal = Calendar.getInstance()
+    cal.timeInMillis = long
+    return CustomDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE))
+}
+
 fun intToStringDate(year: Int, month: Int, day: Int): String {
     val m = if (month < 10) "0$month" else "$month"
     val d = if (day < 10) "0$day" else "$day"
@@ -42,3 +51,13 @@ fun isValidPosition(lat: Double?, lng: Double?) =
 
 fun isValidPosition(latLng: LatLng?) =
     latLng != null && isValidPosition(latLng.latitude, latLng.longitude)
+
+fun GoogleMap.setRegionKorea() {
+    setMinZoomPreference(MIN_ZOOM_LEVEL_KOREA)
+    setLatLngBoundsForCameraTarget(
+        LatLngBounds(
+            LatLng(MIN_LAT_KOREA, MIN_LNG_KOREA),
+            LatLng(MAX_LAT_KOREA, MAX_LNG_KOREA)
+        )
+    )
+}

@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -80,10 +82,7 @@ class SelectPositionFragment :
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         binding.viewModel = viewModel
-
-        init()
         initMap()
-        viewModel.resetLocation()
     }
 
     private fun init() {
@@ -91,6 +90,7 @@ class SelectPositionFragment :
             viewModel.selectedLocation.value?.let {
                 if (isValidPosition(it.position)) {
                     viewModel.addAccountBookData {
+                        setFragmentResult(ADD_MONTH_DATA, bundleOf())
                         navController.popBackStack(R.id.homeFragment, false)
                     }
                 } else {
@@ -153,6 +153,7 @@ class SelectPositionFragment :
             .setMessage(getString(R.string.select_place_dialog_message))
             .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                 viewModel.addAccountBookData {
+                    setFragmentResult(ADD_MONTH_DATA, bundleOf())
                     navController.popBackStack(R.id.homeFragment, false)
                 }
             }
@@ -179,6 +180,8 @@ class SelectPositionFragment :
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        init()
+        viewModel.resetLocation()
         requestLocation.launch(permissions)
 
         googleMap.setOnMarkerClickListener {
@@ -187,7 +190,7 @@ class SelectPositionFragment :
         }
 
         googleMap.setOnInfoWindowCloseListener {
-            viewModel.setSelectedPlace(MyItem(-1.0, -1.0, "", ""))
+            viewModel.setSelectedPlace(MyItem(MAX_LAT, MAX_LNG, "", ""))
         }
 
         viewModel.selectedLocationList.observe(viewLifecycleOwner, { placeList ->
@@ -209,7 +212,7 @@ class SelectPositionFragment :
                                     placeDetail.lat.toDouble(),
                                     placeDetail.lng.toDouble()
                                 )
-                            ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                            ).title(if (placeDetail.placeName.isEmpty()) placeDetail.roadAddressName else placeDetail.placeName)
                     )?.let {
                         if (idx == 0) selectLocation(it)
                     }
@@ -220,6 +223,7 @@ class SelectPositionFragment :
         viewModel.selectedLocation.observe(viewLifecycleOwner, { location ->
             binding.btnSearch.text = location.title
         })
+        googleMap.setRegionKorea()
     }
 
     private fun selectLocation(marker: Marker) {

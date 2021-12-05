@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.gagyeboost.ui.home.HomeViewModel" />
+            type="com.example.gagyeboost.ui.home.calendar.CalendarViewModel" />
 
         <variable
             name="item"

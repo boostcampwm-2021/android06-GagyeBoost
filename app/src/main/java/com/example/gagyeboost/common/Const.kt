@@ -4,8 +4,10 @@ import java.text.DecimalFormat
 import java.util.*
 
 // AddFragment, CategoryFragment
-const val IS_EXPENSE_KEY = "isExpense"
 const val TODAY_STRING_KEY = "today"
+const val SELECTED_DATE_KEY = "selectedDate"
+const val YEAR_MONTH = "yearAndMonth"
+const val ADD_MONTH_DATA = "add"
 
 // Money Type
 const val INCOME = 1.toByte()
@@ -29,16 +31,26 @@ const val MAX_LIST_ITEMS = 5
 // INTENT
 const val INTENT_EXTRA_PLACE_DETAIL = "INTENT_EXTRA_PLACE_DETAIL"
 
+// Now Date
 val NOW_YEAR = Calendar.getInstance().get(Calendar.YEAR)
 val NOW_MONTH = Calendar.getInstance().get(Calendar.MONTH) + 1
 val END_DAY = Calendar.getInstance().getActualMaximum(Calendar.DATE)
 
+// Viewpager init position
+const val INIT_POSITION = Int.MAX_VALUE / 2
 // SearchFragment
 const val DEFAULT_START_YEAR = 1970
 const val DEFAULT_END_YEAR = 2500
 
 // LAT LNG
-const val MAX_LAT = 89.9
-const val MIN_LAT = -89.9
-const val MAX_LNG = 179.9
-const val MIN_LNG = -179.9
+const val MAX_LAT = 90.0
+const val MIN_LAT = -90.0
+const val MAX_LNG = 180.0
+const val MIN_LNG = -180.0
+const val MAX_LAT_KOREA = 43.0
+const val MIN_LAT_KOREA = 33.0
+const val MAX_LNG_KOREA = 132.0
+const val MIN_LNG_KOREA = 124.0
+
+// Zoom Level
+const val MIN_ZOOM_LEVEL_KOREA = 5.8f

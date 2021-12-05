@@ -1,4 +1,4 @@
-package com.example.gagyeboost.ui.home
+package com.example.gagyeboost.ui.home.calendar
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -14,7 +14,7 @@ import com.example.gagyeboost.databinding.ItemDateBinding
 import com.example.gagyeboost.model.data.DateItem
 import java.util.*
 
-class CustomCalendarAdapter(val viewModel: HomeViewModel) :
+class CustomCalendarAdapter(val viewModel: CalendarViewModel) :
     ListAdapter<DateItem, CustomCalendarAdapter.DateViewHolder>(diffUtil) {
 
     private var selectedDatePosition: Int? = null
@@ -40,7 +40,7 @@ class CustomCalendarAdapter(val viewModel: HomeViewModel) :
             itemView.setOnClickListener {
                 if (getItem(bindingAdapterPosition).date > 0) {
                     selectedDatePosition = bindingAdapterPosition
-                    viewModel.setSelectedDate(getItem(bindingAdapterPosition))
+                    viewModel.setSelectedDate(bindingAdapterPosition, getItem(bindingAdapterPosition))
                     notifyDataSetChanged()
                 }
             }

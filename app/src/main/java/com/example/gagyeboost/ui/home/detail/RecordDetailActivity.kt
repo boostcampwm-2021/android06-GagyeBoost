@@ -32,7 +32,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import timber.log.Timber
 
 class RecordDetailActivity :
     BaseActivity<ActivityRecordDetailBinding>(R.layout.activity_record_detail),
@@ -62,51 +61,26 @@ class RecordDetailActivity :
             }
         }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initMap()
         initView()
         setListeners()
+        setDialogs()
         setObserver()
-        viewModel.resetLocation()
     }
 
     private fun initView() {
         accountBookId = intent.getIntExtra(DATE_DETAIL_ITEM_ID_KEY, 0)
         binding.viewModel = viewModel
-        viewModel.setAccountBookData {
-            binding.tvAddressBody.text = viewModel.accountBookData.value?.address
-            val latitude = viewModel.accountBookData.value?.latitude ?: DEFAULT_LAT
-            val longitude = viewModel.accountBookData.value?.longitude ?: DEFAULT_LNG
-            val address = viewModel.accountBookData.value?.address
-            //val latLng = LatLng(latitude, longitude)
-            val placeDetail = PlaceDetail(
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                roadAddressName = address ?: "",
-                lat = latitude.toString(),
-                lng = longitude.toString()
-            )
-            viewModel.setPlaceList(listOf(placeDetail))
-            moveCameraToPlace(placeDetail)
-        }
 
         categoryAdapter =
-            CategoryAdapter({ category -> categoryOnClickListener(category) }, { true }, viewModel)
+            CategoryAdapter({ category -> categoryOnClickListener(category) }, viewModel)
     }
 
     private fun setListeners() {
         with(binding.appBarUpdateRecord) {
-            setNavigationOnClickListener {
-                onBackPressed()
-            }
+            setNavigationOnClickListener { onBackPressed() }
 
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
@@ -120,29 +94,15 @@ class RecordDetailActivity :
         }
 
         binding.btnUpdate.setOnClickListener {
-            if (binding.tvCategoryBody.text.isEmpty()) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.must_enter_category_name),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                viewModel.updateAccountBookData()
-                Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT).show()
-                finish()
-            }
-        }
-
-        binding.etAddress.setOnClickListener {
-            goToAddressResultActivity.launch(Intent(this, AddressResultActivity::class.java))
+            viewModel.updateAccountBookData()
+            Toast.makeText(this, getString(R.string.update_has_been_completed), LENGTH_SHORT).show()
+            finish()
         }
 
         binding.constraintDetail.setOnClickListener {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
-
-        setDialogs()
     }
 
     private fun initMap() {
@@ -162,37 +122,26 @@ class RecordDetailActivity :
 
     private fun deleteAccountBookData() {
         viewModel.deleteAccountBookData(accountBookId)
-        Toast.makeText(
-            this, getString(R.string.record_delete_success),
-            Toast.LENGTH_SHORT
-        ).show()
+        Toast.makeText(this, getString(R.string.record_delete_success), LENGTH_SHORT).show()
         finish()
     }
 
     private fun setDialogs() {
-        binding.tvDateBody.setOnClickListener {
-            showDatePicker()
-        }
+        binding.tvDateBody.setOnClickListener { showDatePicker() }
 
-        binding.tvCategoryBody.setOnClickListener {
-            showCategoryList()
-        }
+        binding.tvCategoryBody.setOnClickListener { showCategoryList() }
     }
 
     private fun showDatePicker() {
-        val date = viewModel.date.value ?: "2021.07.19"
-        val year = date.split(".")[0].toInt()
-        val month = date.split(".")[1].toInt() - 1
-        val day = date.split(".")[2].toInt()
+        val date = (viewModel.date.value ?: "2021.07.19").split(".").map { it.toInt() }
 
         DatePickerDialog(
             this, { _, y, m, d -> viewModel.setDate(y, m + 1, d) },
-            year, month, day
+            date[0], date[1] - 1, date[2]
         ).show()
     }
 
     private fun showCategoryList() {
-        viewModel.loadCategoryList()
         val binding = BottomSheetCategoryBinding.inflate(layoutInflater)
         binding.rvCategory.adapter = categoryAdapter
         bottomSheetDialog = BottomSheetDialog(this)
@@ -205,12 +154,6 @@ class RecordDetailActivity :
     private fun setObserver() {
         viewModel.categoryList.observe(this) {
             categoryAdapter.submitList(it)
-        }
-
-        viewModel.dateDetailItemMoney.observe(this) {
-            viewModel.dateDetailItem.value?.let { item ->
-                item.money = it
-            }
         }
     }
 
@@ -238,6 +181,11 @@ class RecordDetailActivity :
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        googleMap.setRegionKorea()
+
+        binding.etAddress.setOnClickListener {
+            goToAddressResultActivity.launch(Intent(this, AddressResultActivity::class.java))
+        }
 
         googleMap.setOnMarkerClickListener {
             selectLocation(it)
@@ -245,61 +193,33 @@ class RecordDetailActivity :
         }
 
         googleMap.setOnInfoWindowCloseListener {
-            viewModel.setSelectedPlace(MyItem(DEFAULT_LAT, DEFAULT_LNG, "", ""))
+            viewModel.setSelectedPlace(MyItem(MAX_LAT, MAX_LNG, "", ""))
         }
 
-        viewModel.selectedLocationList.observe(this, { placeList ->
+        viewModel.placeDetail.observe(this) { placeDetail -> moveCameraToPlace(placeDetail) }
+
+        viewModel.searchPlaceList.observe(this, { placeList ->
             with(googleMap) {
                 val icon = ResourcesCompat.getDrawable(
                     resources,
                     R.drawable.ic_default_marker,
                     null
-                )?.let {
-                    BitmapUtils.createBitmapFromDrawable(it)
-                }
+                )?.let { BitmapUtils.createBitmapFromDrawable(it) }
 
                 clear()
                 placeList.forEachIndexed { idx, placeDetail ->
                     addMarker(
                         MarkerOptions().icon(icon?.let { BitmapDescriptorFactory.fromBitmap(it) })
                             .position(
-                                LatLng(
-                                    placeDetail.lat.toDouble(),
-                                    placeDetail.lng.toDouble()
-                                )
-                            ).title("${placeDetail.roadAddressName} ${placeDetail.placeName}")
+                                LatLng(placeDetail.lat.toDouble(), placeDetail.lng.toDouble())
+                            )
+                            .title(if (placeDetail.placeName.isEmpty()) placeDetail.roadAddressName else placeDetail.placeName)
                     )?.let {
                         if (idx == 0) selectLocation(it)
                     }
                 }
             }
         })
-
-        viewModel.selectedLocation.observe(this, { location ->
-            binding.etAddress.text = location.title
-        })
-    }
-
-    private fun addMarkerToPlace(latLng: LatLng) {
-        googleMap.clear()
-
-        if (latLng.latitude > 0 && latLng.longitude > 0) {
-            val markerOptions = MarkerOptions().apply { position(latLng) }
-
-            ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_default_marker,
-                null
-            )?.let {
-                val bitmap = BitmapUtils.createBitmapFromDrawable(it)
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-            }
-
-            googleMap.addMarker(markerOptions)
-            googleMap.moveCamera(newLatLngZoom(latLng, 15f))
-        } else {
-            googleMap.moveCamera(newLatLngZoom(gpsUtils.getUserLatLng(), 15f))
-        }
     }
 
     private fun selectLocation(marker: Marker) {
