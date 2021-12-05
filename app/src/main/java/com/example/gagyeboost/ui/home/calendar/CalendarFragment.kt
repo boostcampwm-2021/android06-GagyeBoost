@@ -46,12 +46,8 @@ class CalendarFragment(private val pageIndex: Int) :
         }
 
         viewModel.selectedDate.observe(viewLifecycleOwner) { date ->
-            date?.let {
-                setFragmentResult(
-                    SELECTED_DATE_KEY,
-                    bundleOf(SELECTED_DATE_KEY to dateToLong(it.year, it.month, it.date))
-                )
-            }
+            val selectedData = date?.let { dateToLong(it.year, it.month, it.date) }
+            setFragmentResult(SELECTED_DATE_KEY, bundleOf(SELECTED_DATE_KEY to selectedData))
         }
     }
 
@@ -60,5 +56,4 @@ class CalendarFragment(private val pageIndex: Int) :
         viewModel.setYearAndMonth(year, month)
         setFragmentResult(YEAR_MONTH, bundleOf(YEAR_MONTH to date))
     }
-
 }

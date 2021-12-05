@@ -40,7 +40,8 @@ class CustomCalendarAdapter(val viewModel: CalendarViewModel) :
             itemView.setOnClickListener {
                 if (getItem(bindingAdapterPosition).date > 0) {
                     selectedDatePosition = bindingAdapterPosition
-                    viewModel.setSelectedDate(bindingAdapterPosition, getItem(bindingAdapterPosition))
+                    viewModel.setSelectedDate(getItem(bindingAdapterPosition))
+                    viewModel.selectedDatePosition = bindingAdapterPosition
                     notifyDataSetChanged()
                 }
             }

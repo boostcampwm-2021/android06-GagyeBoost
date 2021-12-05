@@ -2,6 +2,7 @@ package com.example.gagyeboost.ui.home
 
 import androidx.lifecycle.*
 import com.example.gagyeboost.common.INIT_POSITION
+import com.example.gagyeboost.common.NOW_MONTH
 import com.example.gagyeboost.common.NOW_YEAR
 import com.example.gagyeboost.common.intToStringDate
 import com.example.gagyeboost.model.Repository
@@ -36,6 +37,14 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         _yearAndMonth.value = stringDate
         nowYearMonth = CustomDate(year, month, 0)
         loadTotalMoney()
+        checkSelectedDate(year, month)
+    }
+
+    private fun checkSelectedDate(year: Int, month: Int) {
+        val data = _selectedDate.value ?: return
+        if (data.year != year || data.month != month) {
+            _selectedDate.value = null
+        }
     }
 
     fun setSelectedDate(dateItem: CustomDate?) {
@@ -46,15 +55,21 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         intToStringDate(it.year, it.month, it.day)
     } ?: ""
 
-    fun loadTotalMoney() {
+    fun selectedMonthMinusNow(year: Int, month: Int): Int {
+        val result = (year - NOW_YEAR) * 12 + (month - NOW_MONTH)
+        viewPagerPosition = INIT_POSITION + result
+        return result
+    }
+
+    private fun loadTotalMoney() {
         viewModelScope.launch {
             _yearAndMonth.value?.let {
                 val data =
                     repository.loadMonthExpenseAndIncome(nowYearMonth.year, nowYearMonth.month)
-                monthTotalMoney.totalExpense.value = data?.expenseMoney ?: 0
-                monthTotalMoney.totalIncome.value = data?.incomeMoney ?: 0
+                monthTotalMoney.totalExpense.value = data.expenseMoney ?: 0
+                monthTotalMoney.totalIncome.value = data.incomeMoney ?: 0
                 monthTotalMoney.totalBalance.value =
-                    (data?.incomeMoney ?: 0) - (data?.expenseMoney ?: 0)
+                    (data.incomeMoney ?: 0) - (data.expenseMoney ?: 0)
             }
         }
     }

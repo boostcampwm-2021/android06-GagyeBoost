@@ -29,7 +29,7 @@ class CalendarViewModel(private val repository: Repository) : ViewModel() {
         loadAllDayDataInMonth()
     }
 
-    fun setSelectedDate(position: Int, dateItem: DateItem?) {
+    fun setSelectedDate(dateItem: DateItem?) {
         _selectedDate.value = dateItem
     }
 
