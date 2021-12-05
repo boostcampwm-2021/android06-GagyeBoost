@@ -47,8 +47,8 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun setSelectedDate(dateItem: CustomDate?) {
-        _selectedDate.value = dateItem
+    fun setSelectedDate(item: CustomDate?) {
+        _selectedDate.value = item
     }
 
     fun getTodayString() = _selectedDate.value?.let {
@@ -61,7 +61,7 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
         return result
     }
 
-    private fun loadTotalMoney() {
+    fun loadTotalMoney() {
         viewModelScope.launch {
             _yearAndMonth.value?.let {
                 val data =

@@ -20,7 +20,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{viewModel.selectedDate.date == item.date ? @color/baseColor : @color/white}">
+        android:background="@{viewModel.selectedDate.day == item.date ? @color/baseColor : @color/white}">
 
         <TextView
             android:id="@+id/tv_date"
@@ -28,7 +28,7 @@
             android:layout_height="0dp"
             android:gravity="center"
             android:text="@{String.valueOf(item.date)}"
-            android:textColor="@{viewModel.selectedDate.date == item.date ? @color/white : Color.parseColor(item.color)}"
+            android:textColor="@{viewModel.selectedDate.day == item.date ? @color/white : Color.parseColor(item.color)}"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintDimensionRatio="3:1"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@{viewModel.selectedDate.date == item.date ? @color/white : @color/income}"
+            android:textColor="@{viewModel.selectedDate.day == item.date ? @color/white : @color/income}"
             android:textSize="11sp"
             tools:text="00" />
 
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@{viewModel.selectedDate.date == item.date ? @color/white : @color/expense}"
+            android:textColor="@{viewModel.selectedDate.day == item.date ? @color/white : @color/expense}"
             android:textSize="11sp"
             tools:text="00" />
 
